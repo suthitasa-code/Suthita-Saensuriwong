@@ -1,0 +1,506 @@
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+import '../../styles/manage-admin.css';
+import axios from 'axios';
+
+const ManageAdmin = () => {
+    const currentAdminRole = localStorage.getItem('admin_role') || 'Admin'; 
+    const isSuperAdmin = currentAdminRole === 'Super Admin';
+
+    const [admins, setAdmins] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [showModal, setShowModal] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [allowEditPass, setAllowEditPass] = useState(false);
+
+    const [formData, setFormData] = useState({
+        name: '',
+        lastname: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        role: 'Admin',
+        status: 1
+    });
+
+    useEffect(() => {
+        if (!isSuperAdmin) {
+            Swal.fire({
+                icon: 'error',
+                title: 'ปฏิเสธการเข้าถึง',
+                text: 'ขออภัยค่ะ เฉพาะบัญชีสิทธิ์ Super Admin เท่านั้นที่มีสิทธิ์เข้าจัดการระบบในส่วนนี้',
+                confirmButtonColor: '#800000'
+            });
+            setLoading(false);
+            return;
+        }
+        fetchAdmins();
+    }, [isSuperAdmin]);
+
+    const fetchAdmins = async () => {
+        try {
+            setLoading(true);
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/api/admins', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (response.data && response.data.data) {
+                setAdmins(response.data.data);
+            }
+        } catch (error) {
+            console.error("Fetch Admins Error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'โหลดข้อมูลล้มเหลว',
+                text: 'ไม่สามารถดึงข้อมูลผู้ดูแลระบบจากเซิร์ฟเวอร์ได้',
+                confirmButtonColor: '#800000'
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleOpenAddModal = () => {
+        setIsEditMode(false);
+        setEditId(null);
+        setAllowEditPass(true);
+        setFormData({
+            name: '',
+            lastname: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            role: 'Admin',
+            status: 1
+        });
+        setShowModal(true);
+    };
+
+    const handleOpenEditModal = (admin) => {
+        setIsEditMode(true);
+        setEditId(admin.adminID);
+        setAllowEditPass(false);
+        setFormData({
+            name: admin.name,
+            lastname: admin.lastname,
+            email: admin.email,
+            password: admin.password || '', // แสดงรหัสผ่านปัจจุบันให้ Super Admin เห็น
+            confirmPassword: admin.password || '',
+            role: admin.role,
+            status: admin.status
+        });
+        setShowModal(true);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // ตรวจสอบความถูกต้องของรหัสผ่านกับการยืนยันรหัสผ่าน
+        if ((!isEditMode || allowEditPass) && formData.password !== formData.confirmPassword) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'รหัสผ่านไม่ตรงกัน',
+                text: 'กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกันอีกครั้ง',
+                confirmButtonColor: '#d33'
+            });
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const payload = { ...formData };
+            
+            delete payload.confirmPassword;
+            if (isEditMode && !allowEditPass) {
+                delete payload.password;
+            }
+
+            if (isEditMode) {
+                await axios.put(`http://localhost:5000/api/admins/${editId}`, payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                Swal.fire({ icon: 'success', title: 'อัปเดตข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
+            } else {
+                await axios.post('http://localhost:5000/api/admins', payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                Swal.fire({ icon: 'success', title: 'เพิ่มผู้ดูแลระบบสำเร็จ', timer: 1500, showConfirmButton: false });
+            }
+            setShowModal(false);
+            fetchAdmins();
+        } catch (error) {
+            console.error("Submit Error:", error);
+            const errorMsg = error.response?.data?.message || "กรุณาตรวจสอบข้อมูลที่กรอก";
+            Swal.fire({
+                icon: 'error',
+                title: 'บันทึกข้อมูลไม่สำเร็จ',
+                text: `สาเหตุ: ${errorMsg}`,
+                confirmButtonColor: '#800000'
+            });
+        }
+    };
+
+    const handleSuspend = (id, fullName) => {
+        if (!isSuperAdmin) return;
+
+        Swal.fire({
+            title: 'ยืนยันการระงับสิทธิ์?',
+            text: `บัญชีของ คุณ ${fullName} จะไม่สามารถใช้งานระบบหลังบ้านได้ชั่วคราว`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ระงับการใช้งาน',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'btn btn-danger px-4 rounded-pill mx-2 shadow',
+                cancelButton: 'btn btn-light px-4 rounded-pill mx-2',
+                popup: 'kuse-swal-popup',
+                title: 'kuse-swal-title'
+            },
+            buttonsStyling: false
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const token = localStorage.getItem('token');
+                    await axios.delete(`http://localhost:5000/api/admins/${id}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    Swal.fire({ icon: 'success', title: 'ระงับสิทธิ์เรียบร้อยแล้ว', confirmButtonColor: '#800000' });
+                    fetchAdmins();
+                } catch (error) {
+                    Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดจากระบบ', confirmButtonColor: '#800000' });
+                }
+            }
+        });
+    };
+
+    const handleRestore = async (admin) => {
+        if (!isSuperAdmin) return;
+
+        Swal.fire({
+            title: 'ยืนยันการคืนสิทธิ์?',
+            text: `บัญชีของ คุณ ${admin.name} ${admin.lastname} จะกลับมาใช้งานระบบได้ตามปกติ`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'คืนสิทธิ์การใช้งาน',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'btn btn-success px-4 rounded-pill mx-2 shadow',
+                cancelButton: 'btn btn-light px-4 rounded-pill mx-2',
+                popup: 'kuse-swal-popup',
+                title: 'kuse-swal-title'
+            },
+            buttonsStyling: false
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const token = localStorage.getItem('token');
+                    const payload = {
+                        name: admin.name,
+                        lastname: admin.lastname,
+                        email: admin.email,
+                        role: admin.role,
+                        status: 1
+                    };
+
+                    await axios.put(`http://localhost:5000/api/admins/${admin.adminID}`, payload, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    Swal.fire({ icon: 'success', title: 'คืนสิทธิ์การใช้งานสำเร็จ', timer: 1500, showConfirmButton: false });
+                    fetchAdmins();
+                } catch (error) {
+                    Swal.fire({ icon: 'error', title: 'ไม่สามารถคืนสิทธิ์ได้', confirmButtonColor: '#800000' });
+                }
+            }
+        });
+    };
+
+    const handleDelete = (id, fullName) => {
+        if (!isSuperAdmin) return;
+
+        Swal.fire({
+            title: 'ยืนยันการลบออกจากระบบ?',
+            text: `คุณกำลังจะลบบัญชีของ คุณ ${fullName} ออกจากระบบอย่างถาวร ข้อมูลนี้จะไม่สามารถกู้คืนได้!`,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'ลบข้อมูลถาวร',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'btn btn-danger px-4 rounded-pill mx-2 shadow',
+                cancelButton: 'btn btn-light px-4 rounded-pill mx-2',
+                popup: 'kuse-swal-popup',
+                title: 'kuse-swal-title'
+            },
+            buttonsStyling: false
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const token = localStorage.getItem('token');
+                    await axios.delete(`http://localhost:5000/api/admins/${id}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    Swal.fire({ icon: 'success', title: 'ลบข้อมูลผู้ดูแลระบบเรียบร้อยแล้ว', confirmButtonColor: '#800000' });
+                    fetchAdmins();
+                } catch (error) {
+                    Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดจากระบบ', confirmButtonColor: '#800000' });
+                }
+            }
+        });
+    };
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                <div className="spinner-border text-danger" role="status">
+                    <span className="visually-hidden">กำลังโหลด...</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="container-fluid manage-admin-container px-4 py-3">
+            <div className="report-section mb-4">
+                <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h4 className="fw-bold mb-1 text-dark">บัญชีผู้ดูแลระบบ (Admin Management)</h4>
+                        <p className="text-muted small mb-0">จัดการบัญชีและระดับสิทธิ์การเข้าใช้งานระบบควบคุมหลังบ้าน KUSE</p>
+                    </div>
+                    {isSuperAdmin && (
+                        <button className="btn btn-add-admin d-flex align-items-center gap-2" onClick={handleOpenAddModal}>
+                            <i className="fas fa-plus-circle"></i> เพิ่มผู้ดูแลระบบใหม่
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            <div className="report-section">
+                <div className="table-responsive">
+                    <table className="table custom-admin-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>อีเมลแอดมิน</th>
+                                <th>ระดับสิทธิ์</th>
+                                <th>สถานะสิทธิ์</th>
+                                <th className="text-center">การจัดการบัญชี</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {admins.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" className="text-center py-4 text-muted">ไม่พบข้อมูลบัญชีผู้ดูแลระบบในคลังข้อมูล</td>
+                                </tr>
+                            ) : (
+                                admins.map((admin) => (
+                                    <tr key={admin.adminID}>
+                                        <td>
+                                            <div className="d-flex align-items-center gap-2">
+                                                <div className="avatar-placeholder">
+                                                    {admin.name?.charAt(0).toUpperCase()}
+                                                </div>
+                                                <span className="fw-semibold text-dark">{admin.name} {admin.lastname}</span>
+                                            </div>
+                                        </td>
+                                        <td className="text-muted">{admin.email}</td>
+                                        <td>
+                                            <span className={`badge-role ${admin.role === 'Super Admin' ? 'bg-super' : 'bg-admin'}`}>
+                                                <i className={`fas ${admin.role === 'Super Admin' ? 'fa-crown' : 'fa-user-shield'} me-1`}></i>
+                                                {admin.role}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {Number(admin.status) === 1 ? (
+                                                <span className="status-active"><i className="fas fa-check-circle me-1"></i> ปกติ</span>
+                                            ) : (
+                                                <span className="status-suspended"><i className="fas fa-ban me-1"></i> ถูกระงับสิทธิ์</span>
+                                            )}
+                                        </td>
+                                        <td className="text-center">
+                                            <div className="d-flex justify-content-center gap-2">
+                                                <button className="btn btn-action btn-edit" onClick={() => handleOpenEditModal(admin)} title="แก้ไขข้อมูลข้อมูล">
+                                                    <i className="fas fa-edit"></i>
+                                                </button>
+                                                {Number(admin.status) === 1 ? (
+                                                    <button 
+                                                        className="btn btn-action btn-suspend" 
+                                                        onClick={() => handleSuspend(admin.adminID, `${admin.name} ${admin.lastname}`)}
+                                                        disabled={!isSuperAdmin}
+                                                        title="ระงับการใช้งานบัญชี"
+                                                    >
+                                                        <i className="fas fa-user-slash"></i>
+                                                    </button>
+                                                ) : (
+                                                    <button 
+                                                        className="btn btn-action btn-restore text-success" 
+                                                        onClick={() => handleRestore(admin)}
+                                                        disabled={!isSuperAdmin}
+                                                        title="คืนสิทธิ์การใช้งานบัญชี"
+                                                    >
+                                                        <i className="fas fa-user-check"></i>
+                                                    </button>
+                                                )}
+                                                <button 
+                                                    className="btn btn-action btn-delete-account text-danger" 
+                                                    onClick={() => handleDelete(admin.adminID, `${admin.name} ${admin.lastname}`)}
+                                                    disabled={!isSuperAdmin}
+                                                    title="ลบออกจากระบบถาวร"
+                                                >
+                                                    <i className="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* ส่วนแนะนำการจัดการบัญชี ดีไซน์หรูหราขึ้น */}
+            <div className="card info-card-premium mt-4">
+                <div className="card-body p-4">
+                    <div className="d-flex align-items-center gap-2 mb-4 border-bottom pb-2">
+                        <i className="fas fa-shield-alt text-danger fs-4"></i>
+                        <h5 className="fw-bold text-dark mb-0">คำแนะนำการจัดการบัญชี</h5>
+                    </div>
+                    <div className="row g-4">
+                        <div className="col-md-4">
+                            <div className="info-box-premium h-100 border-top-super">
+                                <div className="d-flex align-items-center gap-2 mb-2">
+                                    <span className="badge bg-super-premium"><i className="fas fa-crown"></i> Super Admin</span>
+                                </div>
+                                <p className="text-secondary small-text mb-0">มีสิทธิ์เต็มในการจัดการระบบทั้งหมด รวมถึงการจัดการบัญชีแอดมินรายอื่น</p>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="info-box-premium h-100 border-top-admin">
+                                <div className="d-flex align-items-center gap-2 mb-2">
+                                    <span className="badge bg-admin-premium"><i className="fas fa-user-shield"></i> Admin</span>
+                                </div>
+                                <p className="text-secondary small-text mb-0">สามารถจัดการข้อมูลทั่วไปในระบบได้ แต่ไม่สามารถจัดการบัญชีผู้ดูแลระบบอื่นได้</p>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="info-box-premium h-100 border-top-suspend">
+                                <div className="d-flex align-items-center gap-2 mb-2">
+                                    <span className="badge bg-suspend-premium"><i className="fas fa-ban"></i> การระงับการใช้งาน</span>
+                                </div>
+                                <p className="text-secondary small-text mb-0">จะทำให้ผู้ดูแลระบบคนดังกล่าวไม่สามารถเข้าสู่ระบบเพื่อจัดการข้อมูลได้ทันที</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {showModal && (
+                <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
+                    <div className="modal-dialog modal-dialog-centered modal-lg">
+                        <div className="modal-content border-0 shadow-xl style-modal-custom">
+                            <div className="modal-header border-0 modal-custom-header py-3 px-4">
+                                <h5 className="modal-title fw-bold text-white mb-0">
+                                    <i className={`fas ${isEditMode ? 'fa-user-edit' : 'fa-user-plus'} me-2`}></i>
+                                    {isEditMode ? 'แก้ไขข้อมูลผู้ดูแลระบบ' : 'เพิ่มผู้ดูแลระบบใหม่เข้าสู่ระบบ'}
+                                </h5>
+                                <button type="button" className="btn-close btn-close-white" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <div className="modal-body p-4 bg-modal-light">
+                                <form onSubmit={handleSubmit} className="form-horizontal-custom">
+                                    
+                                    {/* แถว ชื่อจริง - นามสกุล */}
+                                    <div className="form-row-group mb-3">
+                                        <div className="form-row-half">
+                                            <label className="form-label-left"><i className="fas fa-user text-muted me-2"></i>ชื่อจริง</label>
+                                            <div className="form-input-right">
+                                                <input type="text" className="form-control-kuse" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="กรอกชื่อจริง" />
+                                            </div>
+                                        </div>
+                                        <div className="form-row-half">
+                                            <label className="form-label-left"><i className="fas fa-address-card text-muted me-2"></i>นามสกุล</label>
+                                            <div className="form-input-right">
+                                                <input type="text" className="form-control-kuse" required value={formData.lastname} onChange={(e) => setFormData({...formData, lastname: e.target.value})} placeholder="กรอกนามสกุล" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* แถว อีเมลแอดมิน */}
+                                    <div className="form-row-single mb-3">
+                                        <label className="form-label-left"><i className="fas fa-envelope text-muted me-2"></i>อีเมลแอดมิน</label>
+                                        <div className="form-input-right">
+                                            <input type="email" className="form-control-kuse" required disabled={isEditMode} value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="example@kuse.com" />
+                                        </div>
+                                    </div>
+
+                                    {/* สวิตช์สลับปลดล็อกรหัสผ่านกรณีเป็นโหมดแก้ไข */}
+                                    {isEditMode && (
+                                        <div className="form-row-single mb-3">
+                                            <div className="form-label-left"></div>
+                                            <div className="form-input-right">
+                                                <div className="form-check form-switch bg-switch-custom p-2 rounded ps-5">
+                                                    <input className="form-check-input" type="checkbox" id="allowPass" checked={allowEditPass} onChange={(e) => setAllowEditPass(e.target.checked)} />
+                                                    <label className="form-check-label small fw-bold text-dark" htmlFor="allowPass">ต้องการเปลี่ยนรหัสผ่านใหม่ของแอดมินท่านนี้</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* แถว รหัสผ่านระบบ */}
+                                    {(!isEditMode || allowEditPass) && (
+                                        <>
+                                            <div className="form-row-single mb-3">
+                                                <label className="form-label-left"><i className="fas fa-lock text-muted me-2"></i>รหัสผ่านระบบ {isEditMode && '(ใหม่)'}</label>
+                                                <div className="form-input-right position-relative">
+                                                    <input type={showPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="ตั้งรหัสผ่านขั้นต่ำ 6 ตัวอักษร" />
+                                                    <div className="pass-toggle-wrapper" onClick={() => setShowPassword(!showPassword)}>
+                                                        <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* แถว ยืนยันรหัสผ่านใหม่ */}
+                                            <div className="form-row-single mb-3">
+                                                <label className="form-label-left"><i className="fas fa-shield-alt text-muted me-2"></i>ยืนยันรหัสผ่าน</label>
+                                                <div className="form-input-right position-relative">
+                                                    <input type={showConfirmPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน" />
+                                                    <div className="pass-toggle-wrapper" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                                        <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* แถว ระดับสิทธิ์ */}
+                                    <div className="form-row-single mb-4">
+                                        <label className="form-label-left"><i className="fas fa-user-tag text-muted me-2"></i>ระดับสิทธิ์</label>
+                                        <div className="form-input-right">
+                                            <select className="form-select-kuse" value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}>
+                                                <option value="Admin">Admin (ผู้ดูแลระบบ)</option>
+                                                <option value="Super Admin">Super Admin (ผู้ดูแลระบบสูงสุด)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="modal-footer border-0 p-0 d-flex justify-content-end gap-2 mt-4">
+                                        <button type="button" className="btn btn-cancel-premium" onClick={() => setShowModal(false)}>ยกเลิก</button>
+                                        <button type="submit" className="btn btn-save-premium">บันทึกข้อมูลระบบ</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ManageAdmin;

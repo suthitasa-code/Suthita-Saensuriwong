@@ -1,0 +1,610 @@
+/* ==========================================================================
+   manageCourse.css
+   สไตล์เฉพาะหน้า "จัดการหลักสูตร" — ดึงมาจากดีไซน์ manage-course.html
+   ใช้คู่กับ ManageCourse.jsx (โครง sidebar/header ใช้ AdminLayout.jsx เดิม)
+   ========================================================================== */
+
+:root {
+  --kuse-maroon: #800000;
+  --kuse-maroon-dark: #4a0000;
+  --kuse-gold: #D4AF37;
+  --kuse-gold-glow: rgba(212, 175, 55, 0.4);
+}
+
+/* ---------- ปุ่มหลักสไตล์ KUSE (ไล่เฉดสี + เอฟเฟกต์แสงวิ่งตอน Hover) ---------- */
+.btn-kuse {
+  position: relative;
+  background: linear-gradient(135deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 18px;
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 6px 16px rgba(128, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease;
+}
+
+/* แถบแสงวิ่งพาดผ่านตอน Hover */
+.btn-kuse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  background-size: 220% 100%;
+  background-position: 120% 0;
+  transition: background-position 0.6s ease;
+}
+
+.btn-kuse:hover {
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(128, 0, 0, 0.38), 0 0 0 3px var(--kuse-gold-glow);
+}
+
+.btn-kuse:hover::before {
+  background-position: -20% 0;
+}
+
+.btn-kuse:active {
+  transform: translateY(-1px);
+}
+
+.btn-kuse:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- การ์ด/ตาราง ---------- */
+.report-section {
+  background: white;
+  border-radius: 35px;
+  padding: 35px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.02);
+}
+
+.course-toolbar {
+  margin-bottom: 22px;
+}
+
+.course-toolbar-btn-only {
+  justify-content: flex-end;
+}
+
+.course-report-section {
+  min-height: 200px;
+}
+
+/* ==========================================================================
+   🎴 Course Grid — การ์ดหลักสูตรพร้อมรูปหน้าปก (แทนที่ตารางแบบเดิม)
+   ========================================================================== */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 22px;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 20px 38px rgba(128, 0, 0, 0.12);
+}
+
+.course-card-cover {
+  position: relative;
+  height: 150px;
+  background: linear-gradient(135deg, #fdf6e3, #f4e6c8);
+  overflow: hidden;
+}
+
+.course-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.course-card:hover .course-card-cover img {
+  transform: scale(1.08);
+}
+
+.course-card-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: rgba(128, 0, 0, 0.25);
+  background: linear-gradient(135deg, #fdf6e3, #f0e0bd);
+}
+
+/* ไล่เฉดเงาด้านล่างรูป ให้ป้าย/ไอคอนอ่านง่ายขึ้นไม่ว่าพื้นรูปจะสีอะไร */
+.course-card-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%);
+  pointer-events: none;
+}
+
+.course-degree-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 13px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(2px);
+}
+
+.deg-bachelor { background: linear-gradient(135deg, #4e73df, #2c4fc0); }
+.deg-master   { background: linear-gradient(135deg, #7c3aed, #5b21b6); }
+.deg-doctor   { background: linear-gradient(135deg, var(--kuse-gold), var(--kuse-maroon)); }
+.deg-other    { background: linear-gradient(135deg, #6b7280, #4b5563); }
+
+.course-card-body {
+  padding: 18px;
+}
+
+.course-card-title {
+  display: flex;
+  align-items: center;
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #222;
+}
+
+.course-card-title-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-card-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  margin-right: 8px;
+  font-size: 0.7rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--kuse-maroon), var(--kuse-maroon-dark));
+  box-shadow: 0 3px 6px rgba(128, 0, 0, 0.3);
+}
+
+.course-card-subtitle {
+  font-size: 0.78rem;
+  color: #9aa0a6;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.btn-course-edit,
+.btn-course-del {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-course-edit {
+  background: rgba(78, 115, 223, 0.1);
+  color: #3854b0;
+}
+.btn-course-edit:hover {
+  background: linear-gradient(135deg, #6688f2, #4e73df);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(78, 115, 223, 0.35);
+}
+
+.btn-course-del {
+  background: rgba(192, 57, 43, 0.08);
+  color: #c0392b;
+}
+.btn-course-del:hover {
+  background: linear-gradient(135deg, #e0574a, #c0392b);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(192, 57, 43, 0.3);
+}
+
+/* ---------- ฟอร์ม / อินพุต ---------- */
+.form-control-kuse,
+.form-select.form-control-kuse {
+  border-radius: 15px;
+  border: 1px solid #eee;
+  padding: 12px 18px;
+  background: #fdfdfd;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.form-control-kuse:focus {
+  outline: none;
+  border-color: var(--kuse-gold);
+  box-shadow: 0 0 0 3px var(--kuse-gold-glow);
+  background: #fff;
+}
+
+.label-kuse-bold {
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #444;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.gold-card {
+  position: relative;
+  border-radius: 25px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 25px;
+  background: white;
+  overflow: hidden;
+}
+
+.gold-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--kuse-gold), var(--kuse-maroon));
+}
+
+.section-step-title {
+  display: flex;
+  align-items: center;
+  color: var(--kuse-maroon);
+}
+
+.section-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--kuse-gold), var(--kuse-maroon));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* ---------- กล่องอัปโหลดรูป ---------- */
+.image-upload-box {
+  width: 100%;
+  min-height: 180px;
+  border: 2px dashed var(--kuse-gold);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: visible;
+  background: #fffef9;
+  position: relative;
+  padding: 14px;
+}
+
+.image-upload-box.shop-box {
+  min-height: 140px;
+}
+
+/* กรอบที่ "หุ้ม" ตัวรูปพอดี ไม่มีที่ว่างเหลือ ไม่ว่ารูปจะแนวนอนหรือแนวตั้ง */
+.preview-frame {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image-upload-box img.preview-img {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.image-upload-box.shop-box img.preview-img {
+  max-height: 280px;
+}
+
+/* ---------- ปุ่มกากะบาทลบรูป (มุมขวาบนของรูปจริง ไม่ใช่มุมกรอบ) ---------- */
+.image-remove-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+
+.image-remove-btn:hover {
+  background: #a71d2a;
+  transform: scale(1.08);
+}
+
+/* ---------- ตัวเลือกไอคอนสาขา (จัดกลุ่มตามสายวิชา) ---------- */
+.icon-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 12px;
+  background: #fdfdfd;
+  border-radius: 15px;
+  border: 1px solid #eee;
+}
+
+.icon-selector::-webkit-scrollbar { width: 6px; }
+.icon-selector::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.45);
+  border-radius: 10px;
+}
+
+.icon-group-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--kuse-maroon);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.icon-group-label::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 8px;
+  background: linear-gradient(180deg, var(--kuse-gold), var(--kuse-maroon));
+}
+
+.icon-group-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.icon-opt {
+  position: relative;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  background: #fff;
+  font-size: 1.15rem;
+  color: #888;
+  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s ease, background 0.25s ease, color 0.25s ease, border-color 0.2s ease;
+}
+
+.icon-opt:hover {
+  transform: translateY(-3px) scale(1.06);
+  border-color: var(--kuse-gold);
+  color: var(--kuse-maroon);
+  box-shadow: 0 8px 16px rgba(212, 175, 55, 0.3);
+}
+
+.icon-opt.selected {
+  background: linear-gradient(135deg, var(--kuse-gold) 0%, #c9971f 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(212, 175, 55, 0.45);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.icon-opt-check {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--kuse-maroon);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- ไฟล์ PDF ---------- */
+.pdf-slot {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 1rem;
+  background: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pdf-existing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fdfdfd;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 5px 8px 5px 14px;
+  font-size: 0.8rem;
+  color: #555;
+  margin: 3px 4px 3px 0;
+}
+
+.pdf-existing-chip a,
+.pdf-existing-chip span.pdf-file-name {
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.pdf-existing-chip a:hover {
+  color: var(--kuse-maroon);
+}
+
+.pdf-existing-chip:hover {
+  border-color: var(--kuse-gold);
+}
+
+/* ---------- ปุ่มกากะบาทลบไฟล์ PDF แต่ละไฟล์ ---------- */
+.pdf-remove-btn {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pdf-remove-btn:hover {
+  background: #a71d2a;
+  transform: scale(1.08);
+}
+
+/* ---------- Modal (สร้างเองด้วย React state ไม่พึ่ง bootstrap.js) ---------- */
+.kuse-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 40px 15px;
+}
+
+.kuse-modal-box {
+  background: #fff;
+  border-radius: 35px;
+  width: 100%;
+  max-width: 1140px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.kuse-modal-header {
+  background: linear-gradient(180deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kuse-modal-header .btn-close {
+  filter: invert(1) brightness(2);
+}
+
+.kuse-modal-body {
+  padding: 1.5rem;
+  background: #f0f2f5;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.kuse-modal-footer {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ---------- Loading / Empty state ---------- */
+.course-loading,
+.course-empty {
+  text-align: center;
+  padding: 70px 20px;
+  color: #999;
+}
+
+.course-state-icon {
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--kuse-maroon);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(128, 0, 0, 0.08));
+}
+
+.spin-icon {
+  animation: kuse-spin 1s linear infinite;
+}
+
+@keyframes kuse-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

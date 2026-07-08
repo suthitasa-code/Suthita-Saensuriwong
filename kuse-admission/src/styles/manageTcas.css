@@ -1,0 +1,537 @@
+/* ===== manageTcas.css ===== */
+/* Fonts loaded from AdminLayout / global */
+
+:root {
+  --kuse-maroon: #800000;
+  --kuse-maroon-dark: #4a0000;
+  --kuse-gold: #D4AF37;
+  --maroon-grad: linear-gradient(135deg, #a00000 0%, #800000 100%);
+}
+
+/* ---- Wrapper ---- */
+.manage-tcas-wrapper {
+  font-family: 'IBM Plex Sans Thai', 'Anuphan', sans-serif;
+}
+
+/* ============================================================
+   LAYOUT / SCROLL FIX
+   ปัญหาเดิม: ที่ซูม 90-100% หน้าจอเลื่อนขึ้นลงไม่ได้ ทำให้ตัวกรอง
+   กับตารางถูกบีบอัดจนซ้อนทับกัน ต้องลดซูมเหลือ 67% ถึงจะพอดีจอ
+   สาเหตุคือ container หลัก (.admin-layout-container / .main-content)
+   ถูกจำกัดความสูงไว้ที่ 100vh แบบ overflow ปิด เลยไม่มี scrollbar
+   แก้โดยให้ main-content เลื่อนได้เองตามความสูงของเนื้อหาจริง
+   ============================================================ */
+.admin-layout-container {
+  min-height: 100vh;
+  height: auto !important;
+  overflow: visible !important;
+}
+.main-content {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 100vh;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+html, body {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+
+/* ---- Page header ---- */
+.page-header-tcas {
+  margin-bottom: 32px;
+}
+.page-title {
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin: 0;
+}
+.page-subtitle {
+  color: #9ca3af;
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+}
+
+/* ---- Filter box ---- */
+.filter-container {
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 25px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+}
+.filter-title {
+  color: var(--kuse-maroon);
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+.filter-label {
+  font-size: 0.83rem;
+  color: #888;
+  margin-bottom: 6px;
+  display: block;
+}
+.filter-control {
+  border-radius: 12px !important;
+  border: 1px solid #eee !important;
+  padding: 11px 14px !important;
+  font-size: 0.93rem !important;
+  font-family: 'IBM Plex Sans Thai', sans-serif !important;
+  background-color: #fafafa !important;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.filter-control:focus {
+  background-color: #fff !important;
+  border-color: var(--kuse-gold) !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.28) !important;
+  outline: none;
+}
+
+/* ---- Filter grid: เรียงต่อกันเป็นแถวเดียวยาว ๆ เหมือนต้นแบบ ---- */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+.filter-field {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.filter-field.field-search {
+  flex: 3 1 340px;
+}
+.filter-field.field-year {
+  flex: 1 1 150px;
+}
+.filter-field.field-round,
+.filter-field.field-status {
+  flex: 1.6 1 220px;
+}
+@media (max-width: 640px) {
+  .filter-field,
+  .filter-field.field-search,
+  .filter-field.field-year,
+  .filter-field.field-round,
+  .filter-field.field-status {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- Section header row (title left, action button right) ----
+   ใช้ flexbox ของเราเอง แทนคลาส d-flex ของ Bootstrap เพื่อกันปัญหา
+   กรณีที่ไม่ได้โหลด Bootstrap CSS จริง ๆ ในโปรเจกต์ ---- */
+.section-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.section-header-row > *:first-child {
+  margin-right: auto;
+}
+
+/* ============================================================
+   FORM GRID (สำหรับ Modal เพิ่ม/แก้ไขประกาศ)
+   ใช้ CSS Grid ของเราเองแทนการพึ่งพา Bootstrap .row/.col-md-*
+   เพื่อการันตีว่าฟอร์มจะเรียงเป็นหลายคอลัมน์จริง ไม่ใช่แถวเดียวยาว
+   ============================================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}
+.form-col-12 { grid-column: span 12; }
+.form-col-9  { grid-column: span 9; }
+.form-col-6  { grid-column: span 6; }
+.form-col-4  { grid-column: span 4; }
+.form-col-3  { grid-column: span 3; }
+
+@media (max-width: 900px) {
+  .form-col-9, .form-col-6, .form-col-4, .form-col-3 {
+    grid-column: span 6;
+  }
+}
+@media (max-width: 576px) {
+  .form-col-9, .form-col-6, .form-col-4, .form-col-3 {
+    grid-column: span 12;
+  }
+}
+
+/* ---- Report section ---- */
+.report-section {
+  background: white;
+  border-radius: 30px;
+  padding: 32px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.03);
+}
+.section-title {
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* ---- Add button ---- */
+.btn-add-tcas {
+  background: var(--maroon-grad);
+  color: white;
+  border: 2px solid transparent;
+  padding: 11px 24px;
+  border-radius: 18px;
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 14px rgba(128, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+}
+.btn-add-tcas:hover:not(:disabled) {
+  transform: translateY(-3px);
+  border-color: var(--kuse-gold);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+}
+.btn-add-tcas:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ---- Cancel button (modal footer) ---- */
+.btn-cancel-tcas {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid transparent;
+  padding: 11px 24px;
+  border-radius: 18px;
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 10px;
+}
+.btn-cancel-tcas:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+.btn-cancel-tcas:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ---- Modal footer row ---- */
+.modal-footer-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 8px;
+}
+
+/* ---- Table ---- */
+.tcas-table thead th {
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #555;
+  background: #f8f9fa;
+  border: none;
+  padding: 14px 16px;
+}
+.tcas-table tbody tr {
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+}
+.tcas-table tbody tr:hover {
+  background: #fdf8f8;
+}
+.tcas-table td {
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  color: #333;
+  vertical-align: middle;
+  border: none;
+}
+.empty-row {
+  text-align: center;
+  padding: 48px !important;
+  color: #aaa;
+  font-family: 'Anuphan', sans-serif;
+}
+.loading-state {
+  text-align: center;
+  padding: 60px 0;
+}
+
+/* ---- Status badges ---- */
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'Anuphan', sans-serif;
+  letter-spacing: 0.3px;
+}
+.badge-open   { background: #d1fae5; color: #065f46; }
+.badge-wait   { background: #fef9c3; color: #78350f; }
+.badge-closed { background: #fee2e2; color: #991b1b; }
+.badge-none   { background: #f3f4f6; color: #6b7280; }
+
+/* ---- Action buttons ---- */
+.btn-action {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Anuphan', sans-serif;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-edit {
+  background: #f3f4f6;
+  color: #374151;
+  margin-right: 6px;
+}
+.btn-edit:hover { background: #e5e7eb; }
+.btn-del {
+  background: #fff0f0;
+  color: #c0392b;
+  border: 1px solid #fca5a5;
+}
+.btn-del:hover { background: #fee2e2; }
+
+/* ---- Pagination ---- */
+.pagination .page-link {
+  border-radius: 10px;
+  margin: 0 3px;
+  color: var(--kuse-maroon);
+  border: 1px solid #eee;
+  font-family: 'Anuphan', sans-serif;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+.pagination .page-item.active .page-link {
+  background-color: var(--kuse-maroon);
+  border-color: var(--kuse-maroon);
+  color: white;
+  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.2);
+}
+
+/* ---- Animation ---- */
+.animate-in {
+  animation: fadeInUp 0.4s ease both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.tcas-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  animation: fadeOverlay 0.2s ease;
+}
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.tcas-modal-box {
+  background: #fff;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 1000px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.22);
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: linear-gradient(180deg, #800000 0%, #4a0000 100%);
+  color: white;
+}
+.modal-head-title {
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.95rem;
+}
+.modal-close-btn:hover { background: rgba(255, 255, 255, 0.28); }
+
+.modal-body-scroll {
+  padding: 28px;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+.modal-body-scroll::-webkit-scrollbar { width: 6px; }
+.modal-body-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.modal-body-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+/* ---- Upload cards ---- */
+.upload-card {
+  background: #fafafa;
+  border: 1px solid #ebebeb;
+  border-radius: 18px;
+  padding: 16px;
+  height: 100%;
+}
+.upload-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 10px;
+  font-family: 'Anuphan', sans-serif;
+}
+
+.upload-card input[type="file"] {
+  margin-bottom: 8px;
+}
+.preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+.preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.preview-img {
+  max-width: 140px;
+  max-height: 140px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  object-fit: cover;
+}
+.btn-remove-img {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 5;
+}
+
+/* ---- Existing files ---- */
+.existing-files {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: #fff8e1;
+  border: 1px dashed var(--kuse-gold);
+  border-radius: 12px;
+}
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 3px 12px 3px 4px;
+  font-size: 0.78rem;
+  color: #374151;
+  margin: 4px 4px 4px 0;
+}
+.chip-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.pdf-chip { padding: 4px 12px; }
+.btn-clear-existing {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: 1px solid #fca5a5;
+  color: #c0392b;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-left: 4px;
+  margin-top: 4px;
+  transition: background 0.2s;
+  font-family: 'Anuphan', sans-serif;
+}
+.btn-clear-existing:hover { background: #fee2e2; }
+
+/* ---- SweetAlert2 overrides ---- */
+.swal2-popup {
+  border-radius: 25px !important;
+  padding: 2rem !important;
+  font-family: 'Anuphan', 'IBM Plex Sans Thai', sans-serif !important;
+}
+.swal2-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+.swal2-confirm {
+  background-color: var(--kuse-maroon) !important;
+  border-radius: 12px !important;
+  padding: 10px 28px !important;
+}
+.swal2-cancel {
+  border-radius: 12px !important;
+  padding: 10px 28px !important;
+}

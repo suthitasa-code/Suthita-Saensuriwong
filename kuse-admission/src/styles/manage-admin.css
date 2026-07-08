@@ -1,0 +1,254 @@
+:root {
+    --kuse-gold: #D4AF37;
+    --kuse-maroon: #800000;
+    --kuse-maroon-dark: #5a0000;
+    --bg-light-gray: #f8f9fa;
+    --border-color-soft: #e9ecef;
+}
+
+/* --- Container & Table Animation --- */
+.manage-admin-container {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.report-section {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Premium Info Cards ด้านล่าง --- */
+.info-card-premium {
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.info-box-premium {
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color-soft);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-box-premium:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+}
+
+.border-top-super { border-top: 4px solid #d9480f !important; }
+.border-top-admin { border-top: 4px solid #1971c2 !important; }
+.border-top-suspend { border-top: 4px solid #cc5de8 !important; }
+
+.bg-super-premium { background-color: #ffe8cc; color: #d9480f; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
+.bg-admin-premium { background-color: #d0ebff; color: #1971c2; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
+.bg-suspend-premium { background-color: #f3d9fa; color: #cc5de8; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
+
+.small-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+/* --- Layout ฟอร์มแนวนอน (Label ซ้าย / Input ขวา) --- */
+.form-horizontal-custom .form-row-single {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.form-horizontal-custom .form-row-group {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-row-half {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.form-label-left {
+    width: 140px;
+    min-width: 140px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.92rem;
+    margin-bottom: 0;
+    text-align: left;
+    padding-right: 10px;
+}
+
+.form-input-right {
+    flex-grow: 1;
+}
+
+/* --- Input & Select Styling --- */
+.form-control-kuse, .form-select-kuse {
+    padding: 10px 16px;
+    border: 1px solid #ced4da;
+    border-radius: 10px !important;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    width: 100%;
+}
+
+.form-control-kuse:focus, .form-select-kuse:focus {
+    border-color: var(--kuse-maroon);
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.12);
+    background-color: #ffffff;
+    outline: none;
+}
+
+.form-control-kuse:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* --- ไอคอนเปิดปิดตา จัดกึ่งกลางแนวตั้งพอดีเป๊ะ --- */
+.pass-toggle-wrapper {
+    position: absolute;
+    right: 14px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #adb5bd;
+    z-index: 5;
+    padding: 0 5px;
+}
+
+.pass-toggle-wrapper:hover {
+    color: #495057;
+}
+
+/* --- Modal Base Customization --- */
+.style-modal-custom {
+    border-radius: 16px !important;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
+}
+
+.modal-custom-header {
+    background: linear-gradient(135deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%) !important;
+    border-bottom: none;
+}
+
+.bg-modal-light {
+    background-color: #fdfdfd;
+}
+
+.bg-switch-custom {
+    background-color: #fff9db !important;
+    border: 1px solid #fff3bf;
+    border-radius: 10px;
+    width: 100%;
+}
+
+/* --- Action Buttons --- */
+.btn-save-premium {
+    background-color: var(--kuse-maroon);
+    color: white;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-save-premium:hover {
+    background-color: var(--kuse-maroon-dark);
+    color: white;
+    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.2);
+}
+
+.btn-cancel-premium {
+    background-color: #fff;
+    color: #495057;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid #ced4da;
+    transition: all 0.2s;
+}
+
+.btn-cancel-premium:hover {
+    background-color: #f1f3f5;
+    color: #212529;
+}
+
+/* ตารางและปุ่มทั่วไป */
+.avatar-placeholder {
+    width: 36px;
+    height: 36px;
+    background: var(--kuse-maroon);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.btn-add-admin {
+    background: linear-gradient(135deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+.btn-action {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #f8f9fa;
+}
+
+.badge-role { padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
+.bg-super { background: #fff4e6; color: #d9480f; }
+.bg-admin { background: #e7f5ff; color: #1971c2; }
+
+.status-active { color: #28a745; font-weight: 600; }
+.status-suspended { color: #dc3545; font-weight: 600; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive สำหรับหน้าจอขนาดเล็ก */
+@media (max-width: 768px) {
+    .form-horizontal-custom .form-row-single,
+    .form-horizontal-custom .form-row-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .form-row-half {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .form-label-left {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+    .form-input-right {
+        width: 100%;
+    }
+}
