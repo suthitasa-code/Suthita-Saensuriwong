@@ -44,9 +44,19 @@
 .border-top-admin { border-top: 4px solid #1971c2 !important; }
 .border-top-suspend { border-top: 4px solid #cc5de8 !important; }
 
-.bg-super-premium { background-color: #ffe8cc; color: #d9480f; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
-.bg-admin-premium { background-color: #d0ebff; color: #1971c2; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
-.bg-suspend-premium { background-color: #f3d9fa; color: #cc5de8; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; }
+.bg-super-premium,
+.bg-admin-premium,
+.bg-suspend-premium {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.bg-super-premium { background: linear-gradient(135deg, #ffa94d, #d9480f); }
+.bg-admin-premium { background: linear-gradient(135deg, #74c0fc, #1971c2); }
+.bg-suspend-premium { background: linear-gradient(135deg, #e599f7, #ae3ec9); }
 
 .small-text {
     font-size: 0.88rem;
@@ -156,19 +166,20 @@
 
 /* --- Action Buttons --- */
 .btn-save-premium {
-    background-color: var(--kuse-maroon);
+    background: linear-gradient(135deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%);
     color: white;
     font-weight: 600;
     padding: 10px 24px;
     border-radius: 50px;
     border: none;
-    transition: all 0.2s;
+    box-shadow: 0 6px 14px rgba(128, 0, 0, 0.25);
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease;
 }
 
 .btn-save-premium:hover {
-    background-color: var(--kuse-maroon-dark);
     color: white;
-    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(128, 0, 0, 0.35);
 }
 
 .btn-cancel-premium {
@@ -186,19 +197,6 @@
     color: #212529;
 }
 
-/* ตารางและปุ่มทั่วไป */
-.avatar-placeholder {
-    width: 36px;
-    height: 36px;
-    background: var(--kuse-maroon);
-    color: white;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
 .btn-add-admin {
     background: linear-gradient(135deg, var(--kuse-maroon) 0%, var(--kuse-maroon-dark) 100%);
     color: white;
@@ -206,25 +204,122 @@
     padding: 10px 22px;
     border-radius: 50px;
     font-weight: 600;
+    box-shadow: 0 6px 16px rgba(128, 0, 0, 0.25);
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease;
+}
+.btn-add-admin:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(128, 0, 0, 0.35);
 }
 
-.btn-action {
+.badge-role {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+.bg-super { background: linear-gradient(135deg, #ffa94d, #d9480f); }
+.bg-admin { background: linear-gradient(135deg, #74c0fc, #1971c2); }
+
+/* ==========================================================================
+   🧑‍💼 ตารางรายชื่อแอดมิน (เลย์เอาต์แบบเดิม + สี/ปุ่มไล่เฉดแบบใหม่)
+   ========================================================================== */
+.admin-toolbar-title h4 { letter-spacing: 0.2px; }
+
+.admin-table thead th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #9aa0a6;
+    font-weight: 700;
+    border-top: none;
+    border-bottom: 2px solid var(--border-color-soft);
+}
+.admin-table tbody tr {
+    transition: background 0.2s ease;
+}
+.admin-table tbody tr:hover {
+    background: #fdf8f8;
+}
+.admin-table tbody tr.is-suspended-row {
+    opacity: 0.65;
+}
+
+.admin-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.avatar-super {
+    background: linear-gradient(135deg, #ffa94d, #d9480f);
+    box-shadow: 0 4px 10px rgba(217, 72, 15, 0.35);
+}
+.avatar-admin {
+    background: linear-gradient(135deg, var(--kuse-maroon), var(--kuse-maroon-dark));
+    box-shadow: 0 4px 10px rgba(128, 0, 0, 0.35);
+}
+
+.admin-status-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
+.status-ok { background: rgba(40, 167, 69, 0.12); color: #1e7e34; }
+.status-suspend { background: rgba(220, 53, 69, 0.1); color: #c0392b; }
+
+.admin-action-btn {
     width: 34px;
     height: 34px;
-    border-radius: 50%;
+    border-radius: 10px;
+    border: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    background: #f8f9fa;
+    font-size: 0.8rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease;
+}
+.admin-action-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.06);
+    filter: brightness(1.06);
+}
+.admin-action-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
-.badge-role { padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
-.bg-super { background: #fff4e6; color: #d9480f; }
-.bg-admin { background: #e7f5ff; color: #1971c2; }
-
-.status-active { color: #28a745; font-weight: 600; }
-.status-suspended { color: #dc3545; font-weight: 600; }
+.action-edit {
+    background: linear-gradient(135deg, #6a8ef5, #3f5fd9);
+    box-shadow: 0 4px 10px rgba(63, 95, 217, 0.3);
+}
+.action-suspend {
+    background: linear-gradient(135deg, #ffb454, #e8590c);
+    box-shadow: 0 4px 10px rgba(232, 89, 12, 0.3);
+}
+.action-restore {
+    background: linear-gradient(135deg, #51cf66, #2b8a3e);
+    box-shadow: 0 4px 10px rgba(43, 138, 62, 0.3);
+}
+.action-delete {
+    background: linear-gradient(135deg, #f0685a, #c0392b);
+    box-shadow: 0 4px 10px rgba(192, 57, 43, 0.3);
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }

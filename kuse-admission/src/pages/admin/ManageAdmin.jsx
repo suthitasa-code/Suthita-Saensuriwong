@@ -3,8 +3,15 @@ import Swal from 'sweetalert2';
 import '../../styles/manage-admin.css';
 import axios from 'axios';
 
+// ================================================================
+// หน้านี้คือ "จัดการบัญชีผู้ดูแลระบบ" เฉพาะ Super Admin เท่านั้นที่เข้าได้
+// ใช้เพิ่ม/แก้ไข/ระงับ/ลบบัญชีแอดมินคนอื่น ๆ ในระบบ
+// ================================================================
+
 const ManageAdmin = () => {
-    const currentAdminRole = localStorage.getItem('admin_role') || 'Admin'; 
+    // เช็คสิทธิ์จาก localStorage ว่าคนที่ล็อกอินอยู่ตอนนี้เป็น Super Admin ไหม
+    // ถ้าไม่ใช่ จะโดนกันไม่ให้เพิ่ม/แก้/ลบใคร (ดูได้อย่างเดียว)
+    const currentAdminRole = localStorage.getItem('admin_role') || 'Admin';
     const isSuperAdmin = currentAdminRole === 'Super Admin';
 
     const [admins, setAdmins] = useState([]);
@@ -41,6 +48,7 @@ const ManageAdmin = () => {
         fetchAdmins();
     }, [isSuperAdmin]);
 
+    // ----- ดึงรายชื่อแอดมินทั้งหมดจาก API มาโชว์ -----
     const fetchAdmins = async () => {
         try {
             setLoading(true);
@@ -64,6 +72,7 @@ const ManageAdmin = () => {
         }
     };
 
+    // ----- เปิด modal โหมด "เพิ่มแอดมินใหม่" (ฟอร์มว่างเปล่า) -----
     const handleOpenAddModal = () => {
         setIsEditMode(false);
         setEditId(null);
@@ -80,6 +89,7 @@ const ManageAdmin = () => {
         setShowModal(true);
     };
 
+    // ----- เปิด modal โหมด "แก้ไข" โดยเติมข้อมูลแอดมินคนนั้นลงฟอร์ม -----
     const handleOpenEditModal = (admin) => {
         setIsEditMode(true);
         setEditId(admin.adminID);
@@ -96,6 +106,7 @@ const ManageAdmin = () => {
         setShowModal(true);
     };
 
+    // ----- กดปุ่ม "บันทึกข้อมูลระบบ" ในฟอร์ม ใช้ทั้งเพิ่มใหม่และแก้ไข -----
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -144,6 +155,7 @@ const ManageAdmin = () => {
         }
     };
 
+    // ----- ระงับสิทธิ์ชั่วคราว (ไม่ได้ลบจริง แค่เปลี่ยน status เป็น 0) -----
     const handleSuspend = (id, fullName) => {
         if (!isSuperAdmin) return;
 
@@ -178,6 +190,7 @@ const ManageAdmin = () => {
         });
     };
 
+    // ----- คืนสิทธิ์ให้บัญชีที่เคยถูกระงับไว้ (เปลี่ยน status กลับเป็น 1) -----
     const handleRestore = async (admin) => {
         if (!isSuperAdmin) return;
 
@@ -221,6 +234,7 @@ const ManageAdmin = () => {
         });
     };
 
+    // ----- ลบบัญชีออกจากระบบถาวร กู้คืนไม่ได้ ต้องยืนยันก่อนเสมอ -----
     const handleDelete = (id, fullName) => {
         if (!isSuperAdmin) return;
 
@@ -265,13 +279,17 @@ const ManageAdmin = () => {
         );
     }
 
+    // ----- ส่วนแสดงผล (JSX) เริ่มจากตรงนี้ลงไป -----
     return (
         <div className="container-fluid manage-admin-container px-4 py-3">
-            <div className="report-section mb-4">
+            {/* แถบหัวข้อ + ปุ่มเพิ่มแอดมินใหม่ (ปุ่มนี้จะโชว์เฉพาะ Super Admin เท่านั้น) */}
+            <div className="report-section mb-4 admin-toolbar">
                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                    <div>
-                        <h4 className="fw-bold mb-1 text-dark">บัญชีผู้ดูแลระบบ (Admin Management)</h4>
-                        <p className="text-muted small mb-0">จัดการบัญชีและระดับสิทธิ์การเข้าใช้งานระบบควบคุมหลังบ้าน KUSE</p>
+                    <div className="admin-toolbar-title">
+                        <h4 className="fw-bold mb-1 text-dark">บัญชีผู้ดูแลระบบ</h4>
+                        <p className="text-muted small mb-0">
+                            จัดการบัญชีและระดับสิทธิ์การเข้าใช้งานระบบควบคุมหลังบ้าน KUSE — ทั้งหมด {admins.length} บัญชี
+                        </p>
                     </div>
                     {isSuperAdmin && (
                         <button className="btn btn-add-admin d-flex align-items-center gap-2" onClick={handleOpenAddModal}>
@@ -281,9 +299,10 @@ const ManageAdmin = () => {
                 </div>
             </div>
 
+            {/* รายชื่อแอดมิน — กลับมาเป็นตารางแบบเดิมตามที่ขอ แต่ยังใช้สี/ปุ่มไล่เฉดแบบใหม่ */}
             <div className="report-section">
                 <div className="table-responsive">
-                    <table className="table custom-admin-table align-middle mb-0">
+                    <table className="table admin-table align-middle mb-0">
                         <thead>
                             <tr>
                                 <th>ชื่อ-นามสกุล</th>
@@ -299,66 +318,70 @@ const ManageAdmin = () => {
                                     <td colSpan="5" className="text-center py-4 text-muted">ไม่พบข้อมูลบัญชีผู้ดูแลระบบในคลังข้อมูล</td>
                                 </tr>
                             ) : (
-                                admins.map((admin) => (
-                                    <tr key={admin.adminID}>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <div className="avatar-placeholder">
-                                                    {admin.name?.charAt(0).toUpperCase()}
+                                admins.map((admin) => {
+                                    const isActive = Number(admin.status) === 1;
+                                    const isSuper = admin.role === 'Super Admin';
+                                    return (
+                                        <tr key={admin.adminID} className={!isActive ? 'is-suspended-row' : ''}>
+                                            <td>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    <div className={`admin-avatar ${isSuper ? 'avatar-super' : 'avatar-admin'}`}>
+                                                        {admin.name?.charAt(0).toUpperCase()}
+                                                    </div>
+                                                    <span className="fw-semibold text-dark">{admin.name} {admin.lastname}</span>
                                                 </div>
-                                                <span className="fw-semibold text-dark">{admin.name} {admin.lastname}</span>
-                                            </div>
-                                        </td>
-                                        <td className="text-muted">{admin.email}</td>
-                                        <td>
-                                            <span className={`badge-role ${admin.role === 'Super Admin' ? 'bg-super' : 'bg-admin'}`}>
-                                                <i className={`fas ${admin.role === 'Super Admin' ? 'fa-crown' : 'fa-user-shield'} me-1`}></i>
-                                                {admin.role}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {Number(admin.status) === 1 ? (
-                                                <span className="status-active"><i className="fas fa-check-circle me-1"></i> ปกติ</span>
-                                            ) : (
-                                                <span className="status-suspended"><i className="fas fa-ban me-1"></i> ถูกระงับสิทธิ์</span>
-                                            )}
-                                        </td>
-                                        <td className="text-center">
-                                            <div className="d-flex justify-content-center gap-2">
-                                                <button className="btn btn-action btn-edit" onClick={() => handleOpenEditModal(admin)} title="แก้ไขข้อมูลข้อมูล">
-                                                    <i className="fas fa-edit"></i>
-                                                </button>
-                                                {Number(admin.status) === 1 ? (
-                                                    <button 
-                                                        className="btn btn-action btn-suspend" 
-                                                        onClick={() => handleSuspend(admin.adminID, `${admin.name} ${admin.lastname}`)}
-                                                        disabled={!isSuperAdmin}
-                                                        title="ระงับการใช้งานบัญชี"
-                                                    >
-                                                        <i className="fas fa-user-slash"></i>
-                                                    </button>
+                                            </td>
+                                            <td className="text-muted">{admin.email}</td>
+                                            <td>
+                                                <span className={`badge-role ${isSuper ? 'bg-super' : 'bg-admin'}`}>
+                                                    <i className={`fas ${isSuper ? 'fa-crown' : 'fa-user-shield'} me-1`}></i>
+                                                    {admin.role}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {isActive ? (
+                                                    <span className="admin-status-badge status-ok"><i className="fas fa-check-circle me-1"></i>ปกติ</span>
                                                 ) : (
-                                                    <button 
-                                                        className="btn btn-action btn-restore text-success" 
-                                                        onClick={() => handleRestore(admin)}
-                                                        disabled={!isSuperAdmin}
-                                                        title="คืนสิทธิ์การใช้งานบัญชี"
-                                                    >
-                                                        <i className="fas fa-user-check"></i>
-                                                    </button>
+                                                    <span className="admin-status-badge status-suspend"><i className="fas fa-ban me-1"></i>ถูกระงับสิทธิ์</span>
                                                 )}
-                                                <button 
-                                                    className="btn btn-action btn-delete-account text-danger" 
-                                                    onClick={() => handleDelete(admin.adminID, `${admin.name} ${admin.lastname}`)}
-                                                    disabled={!isSuperAdmin}
-                                                    title="ลบออกจากระบบถาวร"
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
+                                            </td>
+                                            <td className="text-center">
+                                                <div className="d-flex justify-content-center gap-2">
+                                                    <button className="admin-action-btn action-edit" onClick={() => handleOpenEditModal(admin)} title="แก้ไขข้อมูล">
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                    {isActive ? (
+                                                        <button
+                                                            className="admin-action-btn action-suspend"
+                                                            onClick={() => handleSuspend(admin.adminID, `${admin.name} ${admin.lastname}`)}
+                                                            disabled={!isSuperAdmin}
+                                                            title="ระงับการใช้งานบัญชี"
+                                                        >
+                                                            <i className="fas fa-user-slash"></i>
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="admin-action-btn action-restore"
+                                                            onClick={() => handleRestore(admin)}
+                                                            disabled={!isSuperAdmin}
+                                                            title="คืนสิทธิ์การใช้งานบัญชี"
+                                                        >
+                                                            <i className="fas fa-user-check"></i>
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        className="admin-action-btn action-delete"
+                                                        onClick={() => handleDelete(admin.adminID, `${admin.name} ${admin.lastname}`)}
+                                                        disabled={!isSuperAdmin}
+                                                        title="ลบออกจากระบบถาวร"
+                                                    >
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             )}
                         </tbody>
                     </table>
