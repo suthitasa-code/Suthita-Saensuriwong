@@ -99,9 +99,13 @@ async function updateAdmin(id, admin) {
   return result.affectedRows;
 }
 
-// ระงับสิทธิ์บัญชีผู้ใช้ (Soft Delete แทนการลบจริงเพื่อป้องกัน Foreign Key Error)
+// ลบบัญชีแอดมินออกจากฐานข้อมูลถาวร
+// หมายเหตุ: ตาราง announcement / curriculum / carouselbanner / document ทุกตัว
+// มี Foreign Key ชี้มาที่ adminID นี้แบบ RESTRICT ถ้าแอดมินคนนี้เคยสร้างข้อมูลไว้
+// MySQL จะไม่ยอมให้ลบ (โยน error ER_ROW_IS_REFERENCED_2) ต้องไประงับสิทธิ์แทน
+// ดูการดักจับ error นี้ให้ขึ้นข้อความสวยๆ ได้ที่ middlewares/errorHandler.js
 async function deleteAdmin(id) {
-  const sql = "UPDATE admin SET status = 0 WHERE adminID = ?";
+  const sql = "DELETE FROM admin WHERE adminID = ?";
   const [result] = await pool.query(sql, [id]);
   return result.affectedRows;
 }

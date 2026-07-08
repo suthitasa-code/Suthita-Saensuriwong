@@ -155,13 +155,15 @@ const ManageAdmin = () => {
         }
     };
 
-    // ----- ระงับสิทธิ์ชั่วคราว (ไม่ได้ลบจริง แค่เปลี่ยน status เป็น 0) -----
-    const handleSuspend = (id, fullName) => {
+    // ----- ระงับสิทธิ์ชั่วคราว -----
+    // ใช้ PUT ตั้ง status = 0 (คนละอันกับปุ่ม "ลบ" ที่ลบข้อมูลออกจากฐานข้อมูลจริง)
+    // ข้อมูลของแอดมินคนนี้ยังอยู่ครบ แค่ล็อกอินเข้าระบบไม่ได้ชั่วคราว คืนสิทธิ์ทีหลังได้
+    const handleSuspend = (admin) => {
         if (!isSuperAdmin) return;
 
         Swal.fire({
             title: 'ยืนยันการระงับสิทธิ์?',
-            text: `บัญชีของ คุณ ${fullName} จะไม่สามารถใช้งานระบบหลังบ้านได้ชั่วคราว`,
+            text: `บัญชีของ คุณ ${admin.name} ${admin.lastname} จะไม่สามารถล็อกอินเข้าใช้งานระบบหลังบ้านได้ชั่วคราว (ข้อมูลยังอยู่ในระบบ คืนสิทธิ์ได้ภายหลัง)`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'ระงับการใช้งาน',
@@ -178,13 +180,21 @@ const ManageAdmin = () => {
             if (result.isConfirmed) {
                 try {
                     const token = localStorage.getItem('token');
-                    await axios.delete(`http://localhost:5000/api/admins/${id}`, {
+                    const payload = {
+                        name: admin.name,
+                        lastname: admin.lastname,
+                        email: admin.email,
+                        role: admin.role,
+                        status: 0
+                    };
+                    await axios.put(`http://localhost:5000/api/admins/${admin.adminID}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     Swal.fire({ icon: 'success', title: 'ระงับสิทธิ์เรียบร้อยแล้ว', confirmButtonColor: '#800000' });
                     fetchAdmins();
                 } catch (error) {
-                    Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดจากระบบ', confirmButtonColor: '#800000' });
+                    const errorMsg = error.response?.data?.message || 'เกิดข้อผิดพลาดจากระบบ';
+                    Swal.fire({ icon: 'error', title: 'ระงับสิทธิ์ไม่สำเร็จ', text: errorMsg, confirmButtonColor: '#800000' });
                 }
             }
         });
@@ -263,7 +273,10 @@ const ManageAdmin = () => {
                     Swal.fire({ icon: 'success', title: 'ลบข้อมูลผู้ดูแลระบบเรียบร้อยแล้ว', confirmButtonColor: '#800000' });
                     fetchAdmins();
                 } catch (error) {
-                    Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดจากระบบ', confirmButtonColor: '#800000' });
+                    // ถ้าแอดมินคนนี้เคยสร้างประกาศ/หลักสูตร/แบนเนอร์/เอกสารไว้ ฐานข้อมูลจะกันลบ
+                    // (Foreign Key) แล้วส่งข้อความอธิบายกลับมา ให้เอามาโชว์ตรงๆ ไม่ต้องเดา
+                    const errorMsg = error.response?.data?.message || 'เกิดข้อผิดพลาดจากระบบ';
+                    Swal.fire({ icon: 'error', title: 'ลบไม่สำเร็จ', text: errorMsg, confirmButtonColor: '#800000' });
                 }
             }
         });
@@ -353,7 +366,7 @@ const ManageAdmin = () => {
                                                     {isActive ? (
                                                         <button
                                                             className="admin-action-btn action-suspend"
-                                                            onClick={() => handleSuspend(admin.adminID, `${admin.name} ${admin.lastname}`)}
+                                                            onClick={() => handleSuspend(admin)}
                                                             disabled={!isSuperAdmin}
                                                             title="ระงับการใช้งานบัญชี"
                                                         >

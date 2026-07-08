@@ -65,7 +65,7 @@ async function updateAdmin(id, adminData) {
   return getAdminById(adminId);
 }
 
-// ระงับสิทธิ์การใช้งานแอดมิน
+// ลบบัญชีแอดมินออกจากระบบถาวร (แยกจากการ "ระงับสิทธิ์" ซึ่งใช้ updateAdmin ตั้ง status = 0 แทน)
 async function deleteAdmin(id) {
   const adminId = validateId(id);
   await getAdminById(adminId); 

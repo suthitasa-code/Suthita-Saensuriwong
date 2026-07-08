@@ -21,6 +21,12 @@ function errorHandler(err, req, res, next) {
     return error(res, "This entry already exists in the database", 409);
   }
 
+  // เกิดตอนพยายามลบแถวที่ยังมีตารางอื่นอ้างอิงอยู่ผ่าน Foreign Key (เช่น ลบแอดมิน
+  // ที่เคยสร้างประกาศ/หลักสูตร/แบนเนอร์/เอกสารไว้) แนะนำให้ระงับสิทธิ์แทนการลบ
+  if (err.code === "ER_ROW_IS_REFERENCED_2" || err.code === "ER_ROW_IS_REFERENCED") {
+    return error(res, "ไม่สามารถลบบัญชีนี้ได้ เนื่องจากเคยมีการสร้างข้อมูล (ประกาศ/หลักสูตร/แบนเนอร์/เอกสาร) ไว้ในระบบ กรุณาระงับสิทธิ์การใช้งานแทนค่ะ", 409);
+  }
+
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal server error";
 
