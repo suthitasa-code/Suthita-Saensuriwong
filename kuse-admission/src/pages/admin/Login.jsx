@@ -12,6 +12,17 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate(); // 👑 เรียกใช้งานฟังก์ชันนำทางของ React Router
 
+    const handleForgotPassword = (e) => {
+        e.preventDefault();
+        Swal.fire({
+            icon: 'info',
+            title: 'ลืมรหัสผ่าน?',
+            text: 'กรุณาติดต่อผู้ดูแลระบบสูงสุด (Super Admin) เพื่อขอรีเซ็ตรหัสผ่านใหม่ให้กับบัญชีของท่าน',
+            confirmButtonColor: '#800000',
+            customClass: { popup: 'kuse-swal-popup', title: 'kuse-swal-title' }
+        });
+    };
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -146,7 +157,7 @@ const Login = () => {
                             </div>
 
                             <div className="forgot-password-wrapper">
-                                <a href="#!" className="forgot-password-link">ลืมรหัสผ่านใช่หรือไม่?</a>
+                                <a href="#!" className="forgot-password-link" onClick={handleForgotPassword}>ลืมรหัสผ่านใช่หรือไม่?</a>
                             </div>
 
                             <button type="submit" className="btn-login">
