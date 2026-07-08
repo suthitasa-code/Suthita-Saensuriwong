@@ -2,11 +2,17 @@ import { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/manageTcas.css';
 
+// ================================================================
+// หน้านี้คือ "จัดการประกาศรับสมัคร" ใช้เพิ่ม/แก้ไข/ลบประกาศ TCAS
+// แต่ละรอบ แล้วดึงมาโชว์เป็นตาราง มีช่องค้นหา+กรองข้อมูลด้วย
+// ================================================================
+
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const UPLOAD_URL = `${API_BASE}/uploads/announcements`;
 
 const ADMIN_ID = localStorage.getItem('admin_id') || 1;
 
+// ค่าเริ่มต้นของฟอร์ม เวลากดปุ่ม "เพิ่มประกาศใหม่" จะรีเซ็ตฟอร์มกลับมาเป็นแบบนี้
 const emptyForm = {
   title: '',
   subtitle: '',
@@ -22,6 +28,8 @@ const emptyForm = {
   status: '1',
 };
 
+// เช็คว่าประกาศแต่ละอันตอนนี้ "เปิดรับ / รอเปิด / ปิดแล้ว" โดยเทียบวันที่ปัจจุบันกับ
+// วันเปิด-ปิดรับสมัครที่แอดมินกรอกไว้ (ไม่ได้ให้แอดมินมากดปิดเอง ระบบคำนวณให้อัตโนมัติ)
 const getLabelStatus = (item) => {
   if (item.labelStatus) return item.labelStatus;
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -125,6 +133,7 @@ const ExistingPdfChip = ({ label, icon, iconColor, value, fieldKey, onClear }) =
 };
 
 export default function ManageTcas() {
+  // ----- ตัวแปรเก็บข้อมูลหลักของหน้านี้ -----
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -142,6 +151,7 @@ export default function ManageTcas() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
+  // ----- ดึงข้อมูลประกาศทั้งหมดจาก API มาเก็บไว้ใน state -----
   const fetchAll = async () => {
     try {
       setLoading(true);
@@ -157,7 +167,9 @@ export default function ManageTcas() {
 
   useEffect(() => { fetchAll(); }, []);
 
-  // Filtered list
+  // ----- ส่วนค้นหา + กรองข้อมูล -----
+  // กรองจาก announcements ที่โหลดมาแล้ว (ไม่ได้ยิง API ใหม่ทุกครั้งที่พิมพ์ค้นหา
+  // เพราะข้อมูลทั้งหมดโหลดมาไว้แล้วตั้งแต่แรก กรองในเครื่องได้เลย เร็วกว่า)
   const getRoundNumber = (tcasRound) => {
     const m = (tcasRound || '').match(/รอบที่\s*(\d+)/);
     return m ? m[1] : '';
@@ -191,6 +203,7 @@ export default function ManageTcas() {
     setModalOpen(true);
   };
 
+  // ----- เปิด modal โหมด "แก้ไข" โดยดึงข้อมูลของประกาศอันนั้นมาเติมลงฟอร์ม -----
   const openEdit = async (id) => {
     try {
       const res = await fetch(`${API_BASE}/api/announcement/${id}`);
@@ -230,6 +243,8 @@ export default function ManageTcas() {
     setExistingFiles(prev => ({ ...prev, [fieldKey]: '' }));
   };
 
+  // ----- กดปุ่ม "บันทึกข้อมูล" ในฟอร์ม เพิ่มใหม่/แก้ไข ทำงานร่วมกันตรงนี้ -----
+  // ใช้ FormData เพราะต้องส่งทั้งข้อความและไฟล์ (รูป/PDF) ไปพร้อมกันในคำขอเดียว
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.tcasRound || !form.academicYear || !form.openDate || !form.closeDate) {
@@ -280,6 +295,7 @@ export default function ManageTcas() {
     }
   };
 
+  // ----- กดปุ่ม "ลบ" ให้เด้งถามยืนยันก่อนลบจริงกันมือลั่น -----
   const handleDelete = (id, title) => {
     Swal.fire({
       title: 'ยืนยันการลบข้อมูล',
@@ -311,9 +327,10 @@ export default function ManageTcas() {
     ...announcements.map(a => String(a.academicYear)).filter(Boolean),
   ])].sort((a, b) => b - a);
 
+  // ----- ส่วนแสดงผล (JSX) เริ่มจากตรงนี้ลงไป -----
   return (
     <div className="manage-tcas-wrapper">
-      {/* Filter Box */}
+      {/* กล่องค้นหา + กรองข้อมูล — search กรองจาก title/subtitle/รอบ/ปี/คุณสมบัติผู้สมัคร */}
       <div className="filter-container animate-in">
         <div className="filter-title">
           <i className="fas fa-search me-2"></i> ค้นหาและกรองข้อมูล
@@ -321,13 +338,31 @@ export default function ManageTcas() {
         <div className="filter-row">
           <div className="filter-field field-search">
             <label className="filter-label">ค้นหาชื่อประกาศ (TCAS, Portfolio, ฯลฯ)</label>
-            <input
-              type="text"
-              className="form-control filter-control"
-              placeholder="พิมพ์เพื่อค้นหา..."
-              value={search}
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-            />
+            <div className="search-input-wrap">
+              <i className="fas fa-search search-input-icon"></i>
+              <input
+                type="text"
+                className="form-control filter-control search-input"
+                placeholder="พิมพ์ชื่อประกาศ รอบ หรือปีการศึกษา..."
+                value={search}
+                onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+              />
+              {search && (
+                <button
+                  type="button"
+                  className="search-clear-btn"
+                  title="ล้างคำค้นหา"
+                  onClick={() => { setSearch(''); setCurrentPage(1); }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
+            {search && (
+              <small className="search-result-hint">
+                พบ {filtered.length} รายการ จากทั้งหมด {announcements.length} รายการ
+              </small>
+            )}
           </div>
           <div className="filter-field field-year">
             <label className="filter-label">ปีการศึกษา</label>
@@ -423,10 +458,10 @@ export default function ManageTcas() {
                         <span className={`status-badge ${statusBadge(label)}`}>{label}</span>
                       </td>
                       <td className="text-center">
-                        <button className="btn-action btn-edit" onClick={() => openEdit(item.announcementID)}>
+                        <button className="tcas-btn-action tcas-btn-edit" onClick={() => openEdit(item.announcementID)}>
                           <i className="fas fa-edit me-1"></i>แก้ไข
                         </button>
-                        <button className="btn-action btn-del" onClick={() => handleDelete(item.announcementID, item.title)}>
+                        <button className="tcas-btn-action tcas-btn-del" onClick={() => handleDelete(item.announcementID, item.title)}>
                           <i className="fas fa-trash-alt me-1"></i>ลบ
                         </button>
                       </td>
@@ -471,153 +506,177 @@ export default function ManageTcas() {
 
             <div className="modal-body-scroll">
               <form onSubmit={handleSubmit}>
-                <div className="form-grid">
-                  {/* Title + Year */}
-                  <div className="form-col-9">
-                    <label className="filter-label fw-bold text-dark">หัวข้อหลัก <span className="text-danger">*</span></label>
-                    <input type="text" className="form-control filter-control" placeholder="เช่น รับสมัครนักศึกษาใหม่ รอบที่ 2"
-                      value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required />
-                  </div>
-                  <div className="form-col-3">
-                    <label className="filter-label fw-bold text-dark">ปีการศึกษา <span className="text-danger">*</span></label>
-                    <input type="number" className="form-control filter-control" placeholder="เช่น 2569"
-                      value={form.academicYear} onChange={e => setForm(p => ({ ...p, academicYear: e.target.value }))} required />
-                  </div>
 
-                  {/* Subtitle */}
-                  <div className="form-col-12">
-                    <label className="filter-label fw-bold text-dark">หัวข้อย่อย</label>
-                    <input type="text" className="form-control filter-control" placeholder="เช่น โควตาภาคตะวันออกเฉียงเหนือ..."
-                      value={form.subtitle} onChange={e => setForm(p => ({ ...p, subtitle: e.target.value }))} />
+                {/* หมวด 1: ข้อมูลหลักของประกาศ (หัวข้อ, ปี, รอบ, สถานะ) */}
+                <div className="tcas-form-section">
+                  <div className="tcas-form-section-title">
+                    <span className="tcas-step-num">1</span>ข้อมูลหลักของประกาศ
                   </div>
+                  <div className="form-grid">
+                    <div className="form-col-9">
+                      <label className="filter-label fw-bold text-dark">หัวข้อหลัก <span className="text-danger">*</span></label>
+                      <input type="text" className="form-control filter-control" placeholder="เช่น รับสมัครนักศึกษาใหม่ รอบที่ 2"
+                        value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required />
+                    </div>
+                    <div className="form-col-3">
+                      <label className="filter-label fw-bold text-dark">ปีการศึกษา <span className="text-danger">*</span></label>
+                      <input type="number" className="form-control filter-control" placeholder="เช่น 2569"
+                        value={form.academicYear} onChange={e => setForm(p => ({ ...p, academicYear: e.target.value }))} required />
+                    </div>
 
-                  {/* tcasRound + status */}
-                  <div className="form-col-6">
-                    <label className="filter-label fw-bold text-dark">รอบ TCAS <span className="text-danger">*</span></label>
-                    <select className="form-select filter-control" value={form.tcasRound} onChange={e => setForm(p => ({ ...p, tcasRound: e.target.value }))} required>
-                      <option value="">-- เลือกรอบการรับสมัคร --</option>
-                      <option value="รอบที่ 1 Portfolio">รอบที่ 1 Portfolio</option>
-                      <option value="รอบที่ 2 Quota">รอบที่ 2 Quota</option>
-                      <option value="รอบที่ 3 Admission">รอบที่ 3 Admission</option>
-                      <option value="รอบที่ 4 รับอิสระ">รอบที่ 4 รับอิสระ</option>
-                    </select>
-                  </div>
-                  <div className="form-col-6">
-                    <label className="filter-label fw-bold text-dark">สถานะการแสดงผล</label>
-                    <select className="form-select filter-control" value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))}>
-                      <option value="1">เปิดใช้งาน</option>
-                      <option value="0">ปิดใช้งาน</option>
-                    </select>
-                  </div>
+                    <div className="form-col-12">
+                      <label className="filter-label fw-bold text-dark">หัวข้อย่อย</label>
+                      <input type="text" className="form-control filter-control" placeholder="เช่น โควตาภาคตะวันออกเฉียงเหนือ..."
+                        value={form.subtitle} onChange={e => setForm(p => ({ ...p, subtitle: e.target.value }))} />
+                    </div>
 
-                  {/* Dates + Quota + Scholarship */}
-                  <div className="form-col-3">
-                    <label className="filter-label fw-bold" style={{ color: '#2563eb' }}>วันที่เริ่มสมัคร <span className="text-danger">*</span></label>
-                    <input type="date" className="form-control filter-control"
-                      value={form.openDate} onChange={e => setForm(p => ({ ...p, openDate: e.target.value }))} required />
-                  </div>
-                  <div className="form-col-3">
-                    <label className="filter-label fw-bold" style={{ color: '#2563eb' }}>วันที่สิ้นสุดสมัคร <span className="text-danger">*</span></label>
-                    <input type="date" className="form-control filter-control"
-                      value={form.closeDate} onChange={e => setForm(p => ({ ...p, closeDate: e.target.value }))} required />
-                  </div>
-                  <div className="form-col-3">
-                    <label className="filter-label fw-bold text-dark">จำนวนรับ (คน)</label>
-                    <input type="number" className="form-control filter-control" placeholder="เช่น 540"
-                      value={form.totalQuota} onChange={e => setForm(p => ({ ...p, totalQuota: e.target.value }))} />
-                  </div>
-                  <div className="form-col-3">
-                    <label className="filter-label fw-bold text-dark">ทุนเรียนดี (ทุน)</label>
-                    <input type="number" className="form-control filter-control" placeholder="เช่น 50"
-                      value={form.totalScholarships} onChange={e => setForm(p => ({ ...p, totalScholarships: e.target.value }))} />
-                  </div>
-
-                  {/* Image uploads */}
-                  <div className="form-col-4">
-                    {editId && existingFiles.scheduleImg && (
-                      <ExistingImageChips label="กำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
-                        value={existingFiles.scheduleImg} fieldKey="scheduleImg" onClear={clearExisting} />
-                    )}
-                    <ImagePreviewField label="1. รูปภาพกำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
-                      inputId="file_schedule" files={files} setFiles={setFiles} field="scheduleImg" />
-                  </div>
-                  <div className="form-col-4">
-                    {editId && existingFiles.majorTableImg && (
-                      <ExistingImageChips label="สาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
-                        value={existingFiles.majorTableImg} fieldKey="majorTableImg" onClear={clearExisting} />
-                    )}
-                    <ImagePreviewField label="2. รูปภาพสาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
-                      inputId="file_majors" files={files} setFiles={setFiles} field="majorTableImg" />
-                  </div>
-                  <div className="form-col-4">
-                    {editId && existingFiles.posterImg && (
-                      <ExistingImageChips label="โปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
-                        value={existingFiles.posterImg} fieldKey="posterImg" onClear={clearExisting} />
-                    )}
-                    <ImagePreviewField label="3. รูปภาพโปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
-                      inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" />
-                  </div>
-
-                  {/* PDF uploads */}
-                  <div className="form-col-6">
-                    <div className="upload-card">
-                      <label className="upload-label">
-                        <i className="fas fa-file-pdf me-2 text-danger"></i>อัปโหลดประกาศรับสมัคร (PDF)
-                      </label>
-                      {editId && existingFiles.announcementPdf && (
-                        <ExistingPdfChip label="ประกาศรับสมัคร" icon="fa-file-pdf" iconColor="#ef4444"
-                          value={existingFiles.announcementPdf} fieldKey="announcementPdf" onClear={clearExisting} />
-                      )}
-                      <input type="file" className="form-control filter-control" accept=".pdf"
-                        onChange={e => setFiles(p => ({ ...p, announcementPdf: [e.target.files[0]] }))} />
-                      <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
+                    <div className="form-col-6">
+                      <label className="filter-label fw-bold text-dark">รอบ TCAS <span className="text-danger">*</span></label>
+                      <select className="form-select filter-control" value={form.tcasRound} onChange={e => setForm(p => ({ ...p, tcasRound: e.target.value }))} required>
+                        <option value="">-- เลือกรอบการรับสมัคร --</option>
+                        <option value="รอบที่ 1 Portfolio">รอบที่ 1 Portfolio</option>
+                        <option value="รอบที่ 2 Quota">รอบที่ 2 Quota</option>
+                        <option value="รอบที่ 3 Admission">รอบที่ 3 Admission</option>
+                        <option value="รอบที่ 4 รับอิสระ">รอบที่ 4 รับอิสระ</option>
+                      </select>
+                    </div>
+                    <div className="form-col-6">
+                      <label className="filter-label fw-bold text-dark">สถานะการแสดงผล</label>
+                      <select className="form-select filter-control" value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))}>
+                        <option value="1">เปิดใช้งาน</option>
+                        <option value="0">ปิดใช้งาน</option>
+                      </select>
                     </div>
                   </div>
-                  <div className="form-col-6">
-                    <div className="upload-card">
-                      <label className="upload-label">
-                        <i className="fas fa-book me-2 text-primary"></i>อัปโหลดคู่มือการสมัคร (PDF)
-                      </label>
-                      {editId && existingFiles.manualPdf && (
-                        <ExistingPdfChip label="คู่มือการสมัคร" icon="fa-book" iconColor="#3b82f6"
-                          value={existingFiles.manualPdf} fieldKey="manualPdf" onClear={clearExisting} />
-                      )}
-                      <input type="file" className="form-control filter-control" accept=".pdf"
-                        onChange={e => setFiles(p => ({ ...p, manualPdf: [e.target.files[0]] }))} />
-                      <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
+                </div>
+
+                {/* หมวด 2: วันรับสมัคร + จำนวนรับ/ทุน (ระบบใช้วันที่ตรงนี้คำนวณสถานะเปิด/ปิดรับอัตโนมัติ) */}
+                <div className="tcas-form-section">
+                  <div className="tcas-form-section-title">
+                    <span className="tcas-step-num">2</span>วันรับสมัครและจำนวนรับ
+                  </div>
+                  <div className="form-grid">
+                    <div className="form-col-3">
+                      <label className="filter-label fw-bold" style={{ color: '#2563eb' }}>วันที่เริ่มสมัคร <span className="text-danger">*</span></label>
+                      <input type="date" className="form-control filter-control"
+                        value={form.openDate} onChange={e => setForm(p => ({ ...p, openDate: e.target.value }))} required />
+                    </div>
+                    <div className="form-col-3">
+                      <label className="filter-label fw-bold" style={{ color: '#2563eb' }}>วันที่สิ้นสุดสมัคร <span className="text-danger">*</span></label>
+                      <input type="date" className="form-control filter-control"
+                        value={form.closeDate} onChange={e => setForm(p => ({ ...p, closeDate: e.target.value }))} required />
+                    </div>
+                    <div className="form-col-3">
+                      <label className="filter-label fw-bold text-dark">จำนวนรับ (คน)</label>
+                      <input type="number" className="form-control filter-control" placeholder="เช่น 540"
+                        value={form.totalQuota} onChange={e => setForm(p => ({ ...p, totalQuota: e.target.value }))} />
+                    </div>
+                    <div className="form-col-3">
+                      <label className="filter-label fw-bold text-dark">ทุนเรียนดี (ทุน)</label>
+                      <input type="number" className="form-control filter-control" placeholder="เช่น 50"
+                        value={form.totalScholarships} onChange={e => setForm(p => ({ ...p, totalScholarships: e.target.value }))} />
                     </div>
                   </div>
+                </div>
 
-                  {/* Text areas */}
-                  <div className="form-col-6">
-                    <label className="filter-label fw-bold text-danger">คุณสมบัติผู้สมัคร</label>
-                    <textarea className="form-control filter-control" rows="4"
-                      value={form.candidateDetail} onChange={e => setForm(p => ({ ...p, candidateDetail: e.target.value }))}
-                      placeholder="เช่น เกรดเฉลี่ยสะสม 3.00 ขึ้นไป..."></textarea>
+                {/* หมวด 3: ไฟล์แนบ (รูปภาพ 3 ช่อง + PDF 2 ช่อง) */}
+                <div className="tcas-form-section">
+                  <div className="tcas-form-section-title">
+                    <span className="tcas-step-num">3</span>ไฟล์แนบประกอบประกาศ
                   </div>
-                  <div className="form-col-6">
-                    <label className="filter-label fw-bold text-danger">เงื่อนไขการสมัคร</label>
-                    <textarea className="form-control filter-control" rows="4"
-                      value={form.conditions} onChange={e => setForm(p => ({ ...p, conditions: e.target.value }))}
-                      placeholder="เช่น สมัครผ่านระบบ TCAS..."></textarea>
-                  </div>
-                  <div className="form-col-12">
-                    <label className="filter-label fw-bold text-dark">หมายเหตุ</label>
-                    <textarea className="form-control filter-control" rows="3"
-                      value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}></textarea>
-                  </div>
+                  <div className="form-grid">
+                    <div className="form-col-4">
+                      {editId && existingFiles.scheduleImg && (
+                        <ExistingImageChips label="กำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
+                          value={existingFiles.scheduleImg} fieldKey="scheduleImg" onClear={clearExisting} />
+                      )}
+                      <ImagePreviewField label="1. รูปภาพกำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
+                        inputId="file_schedule" files={files} setFiles={setFiles} field="scheduleImg" />
+                    </div>
+                    <div className="form-col-4">
+                      {editId && existingFiles.majorTableImg && (
+                        <ExistingImageChips label="สาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
+                          value={existingFiles.majorTableImg} fieldKey="majorTableImg" onClear={clearExisting} />
+                      )}
+                      <ImagePreviewField label="2. รูปภาพสาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
+                        inputId="file_majors" files={files} setFiles={setFiles} field="majorTableImg" />
+                    </div>
+                    <div className="form-col-4">
+                      {editId && existingFiles.posterImg && (
+                        <ExistingImageChips label="โปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
+                          value={existingFiles.posterImg} fieldKey="posterImg" onClear={clearExisting} />
+                      )}
+                      <ImagePreviewField label="3. รูปภาพโปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
+                        inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" />
+                    </div>
 
-                  {/* Action buttons */}
-                  <div className="form-col-12 modal-footer-row">
-                    <button type="button" className="btn-cancel-tcas" onClick={() => setModalOpen(false)} disabled={submitting}>
-                      ยกเลิก
-                    </button>
-                    <button type="submit" className="btn-add-tcas px-5" disabled={submitting}>
-                      {submitting
-                        ? <><span className="spinner-border spinner-border-sm me-2"></span>กำลังบันทึก...</>
-                        : <><i className="fas fa-save me-2"></i>บันทึกข้อมูล</>}
-                    </button>
+                    <div className="form-col-6">
+                      <div className="upload-card">
+                        <label className="upload-label">
+                          <i className="fas fa-file-pdf me-2 text-danger"></i>อัปโหลดประกาศรับสมัคร (PDF)
+                        </label>
+                        {editId && existingFiles.announcementPdf && (
+                          <ExistingPdfChip label="ประกาศรับสมัคร" icon="fa-file-pdf" iconColor="#ef4444"
+                            value={existingFiles.announcementPdf} fieldKey="announcementPdf" onClear={clearExisting} />
+                        )}
+                        <input type="file" className="form-control filter-control" accept=".pdf"
+                          onChange={e => setFiles(p => ({ ...p, announcementPdf: [e.target.files[0]] }))} />
+                        <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
+                      </div>
+                    </div>
+                    <div className="form-col-6">
+                      <div className="upload-card">
+                        <label className="upload-label">
+                          <i className="fas fa-book me-2 text-primary"></i>อัปโหลดคู่มือการสมัคร (PDF)
+                        </label>
+                        {editId && existingFiles.manualPdf && (
+                          <ExistingPdfChip label="คู่มือการสมัคร" icon="fa-book" iconColor="#3b82f6"
+                            value={existingFiles.manualPdf} fieldKey="manualPdf" onClear={clearExisting} />
+                        )}
+                        <input type="file" className="form-control filter-control" accept=".pdf"
+                          onChange={e => setFiles(p => ({ ...p, manualPdf: [e.target.files[0]] }))} />
+                        <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
+                      </div>
+                    </div>
                   </div>
+                </div>
+
+                {/* หมวด 4: รายละเอียดเพิ่มเติม (คุณสมบัติ, เงื่อนไข, หมายเหตุ) */}
+                <div className="tcas-form-section">
+                  <div className="tcas-form-section-title">
+                    <span className="tcas-step-num">4</span>รายละเอียดเพิ่มเติม
+                  </div>
+                  <div className="form-grid">
+                    <div className="form-col-6">
+                      <label className="filter-label fw-bold text-danger">คุณสมบัติผู้สมัคร</label>
+                      <textarea className="form-control filter-control" rows="4"
+                        value={form.candidateDetail} onChange={e => setForm(p => ({ ...p, candidateDetail: e.target.value }))}
+                        placeholder="เช่น เกรดเฉลี่ยสะสม 3.00 ขึ้นไป..."></textarea>
+                    </div>
+                    <div className="form-col-6">
+                      <label className="filter-label fw-bold text-danger">เงื่อนไขการสมัคร</label>
+                      <textarea className="form-control filter-control" rows="4"
+                        value={form.conditions} onChange={e => setForm(p => ({ ...p, conditions: e.target.value }))}
+                        placeholder="เช่น สมัครผ่านระบบ TCAS..."></textarea>
+                    </div>
+                    <div className="form-col-12">
+                      <label className="filter-label fw-bold text-dark">หมายเหตุ</label>
+                      <textarea className="form-control filter-control" rows="3"
+                        value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ปุ่มยกเลิก / บันทึก */}
+                <div className="modal-footer-row">
+                  <button type="button" className="btn-cancel-tcas" onClick={() => setModalOpen(false)} disabled={submitting}>
+                    ยกเลิก
+                  </button>
+                  <button type="submit" className="btn-add-tcas px-5" disabled={submitting}>
+                    {submitting
+                      ? <><span className="spinner-border spinner-border-sm me-2"></span>กำลังบันทึก...</>
+                      : <><i className="fas fa-save me-2"></i>บันทึกข้อมูล</>}
+                  </button>
                 </div>
               </form>
             </div>

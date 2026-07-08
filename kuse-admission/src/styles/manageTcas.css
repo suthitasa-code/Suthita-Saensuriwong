@@ -95,6 +95,47 @@ html, body {
   outline: none;
 }
 
+/* ---- ช่องค้นหา (มีไอคอนแว่นขยาย + ปุ่มล้างคำค้นหา + บอกจำนวนผลลัพธ์) ---- */
+.search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #b0b0b0;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+.search-input {
+  padding-left: 38px !important;
+  padding-right: 34px !important;
+}
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: #eee;
+  color: #777;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.search-clear-btn:hover { background: #ddd; }
+.search-result-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--kuse-maroon);
+  font-weight: 600;
+}
+
 /* ---- Filter grid: เรียงต่อกันเป็นแถวเดียวยาว ๆ เหมือนต้นแบบ ---- */
 .filter-row {
   display: flex;
@@ -166,6 +207,53 @@ html, body {
   .form-col-9, .form-col-6, .form-col-4, .form-col-3 {
     grid-column: span 12;
   }
+}
+
+/* ---- หมวดหมู่ในฟอร์ม (การ์ดแยกแต่ละส่วน พร้อมเลขขั้นตอน ชิดซ้ายเสมอ) ---- */
+.tcas-form-section {
+  position: relative;
+  background: #fdfdfd;
+  border: 1px solid #f0f0f0;
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.tcas-form-section:last-of-type { margin-bottom: 0; }
+
+.tcas-form-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--kuse-gold), var(--kuse-maroon));
+}
+
+.tcas-form-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  font-family: 'Anuphan', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--kuse-maroon);
+  margin-bottom: 18px;
+}
+
+.tcas-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--kuse-gold), var(--kuse-maroon));
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-right: 10px;
+  flex-shrink: 0;
 }
 
 /* ---- Report section ---- */
@@ -289,31 +377,50 @@ html, body {
 .badge-closed { background: #fee2e2; color: #991b1b; }
 .badge-none   { background: #f3f4f6; color: #6b7280; }
 
-/* ---- Action buttons ---- */
-.btn-action {
+/* ---- Action buttons (ไล่เฉดสีเต็มตัวตลอดเวลา ไม่ใช่แค่ตอน hover) ----
+   ตั้งชื่อคลาสขึ้นต้นด้วย tcas- กันชื่อชนกับ .btn-action ของหน้า
+   "ผู้ดูแลระบบ" (manage-admin.css) ที่ใช้ชื่อคลาสเดียวกันแต่ดีไซน์คนละแบบ
+   เมื่อก่อนชื่อชนกัน สไตล์เลยถูกทับจนปุ่มกลายเป็นสีขาวเปล่าๆ ---- */
+.tcas-btn-action {
   border: none;
   border-radius: 999px;
-  padding: 6px 16px;
-  font-size: 0.82rem;
-  font-weight: 600;
+  padding: 7px 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease;
   font-family: 'Anuphan', sans-serif;
   display: inline-flex;
   align-items: center;
+  color: #fff;
 }
-.btn-edit {
-  background: #f3f4f6;
-  color: #374151;
-  margin-right: 6px;
+.tcas-btn-action i { transition: transform 0.3s ease; }
+
+.tcas-btn-edit {
+  margin-right: 8px;
+  background: linear-gradient(135deg, #6a8ef5 0%, #3f5fd9 100%);
+  box-shadow: 0 4px 12px rgba(63, 95, 217, 0.35);
 }
-.btn-edit:hover { background: #e5e7eb; }
-.btn-del {
-  background: #fff0f0;
-  color: #c0392b;
-  border: 1px solid #fca5a5;
+.tcas-btn-edit:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 22px rgba(63, 95, 217, 0.45);
+  filter: brightness(1.06);
 }
-.btn-del:hover { background: #fee2e2; }
+.tcas-btn-edit:hover i { transform: rotate(-8deg); }
+.tcas-btn-edit:active { transform: translateY(-1px) scale(0.98); }
+
+.tcas-btn-del {
+  background: linear-gradient(135deg, #f0685a 0%, #c0392b 100%);
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
+}
+.tcas-btn-del:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 22px rgba(192, 57, 43, 0.45);
+  filter: brightness(1.06);
+}
+.tcas-btn-del:hover i { transform: rotate(8deg) scale(1.1); }
+.tcas-btn-del:active { transform: translateY(-1px) scale(0.98); }
 
 /* ---- Pagination ---- */
 .pagination .page-link {
