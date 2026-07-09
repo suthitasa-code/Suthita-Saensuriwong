@@ -536,6 +536,9 @@ input[type="reset"],
     padding: 18px 20px;
     border: 1px solid #f0f0f0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    height: 420px;
 }
 
 .panel-header {
@@ -543,6 +546,23 @@ input[type="reset"],
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.dashboard-panel .table-responsive,
+.dashboard-panel .recent-doc-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.dashboard-panel .panel-empty {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .panel-title {
@@ -578,6 +598,10 @@ input[type="reset"],
     color: #9aa0a6;
     border-top: none;
     font-weight: 600;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
 }
 
 .recent-doc-list {
