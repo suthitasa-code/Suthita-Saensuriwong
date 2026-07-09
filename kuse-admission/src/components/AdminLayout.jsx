@@ -33,7 +33,12 @@ const PAGE_HEADERS = {
 const AdminLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [adminInfo, setAdminInfo] = useState({ name: '', lastname: '', role: '', email: '' });
+    const [adminInfo, setAdminInfo] = useState({
+        name: '',
+        lastname: '',
+        role: localStorage.getItem('admin_role') || '',
+        email: '',
+    });
 
     const pageHeader = PAGE_HEADERS[location.pathname] || PAGE_HEADERS['/admin/dashboard'];
 
@@ -79,6 +84,8 @@ const AdminLayout = () => {
         if (role === 'Admin') return 'ผู้ดูแลระบบ';
         return role;
     };
+
+    const isSuperAdmin = adminInfo.role === 'Super Admin';
 
     return (
         <div className="admin-layout-container">
@@ -135,13 +142,17 @@ const AdminLayout = () => {
                         <i className="fas fa-file-archive me-2"></i> คลังไฟล์เอกสาร
                     </div>
 
-                    <div className="nav-label">บัญชีผู้ใช้</div>
-                    <div
-                        className={getMenuClass('/admin/users')}
-                        onClick={() => navigate('/admin/users')}
-                    >
-                        <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
-                    </div>
+                    {isSuperAdmin && (
+                        <>
+                            <div className="nav-label">บัญชีผู้ใช้</div>
+                            <div
+                                className={getMenuClass('/admin/users')}
+                                onClick={() => navigate('/admin/users')}
+                            >
+                                <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Logout */}
