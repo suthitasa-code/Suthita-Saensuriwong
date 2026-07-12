@@ -374,6 +374,7 @@ html, body {
   font-weight: 600;
   font-family: 'Anuphan', sans-serif;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 .badge-open   { background: #d1fae5; color: #065f46; }
 .badge-wait   { background: #fef9c3; color: #78350f; }
