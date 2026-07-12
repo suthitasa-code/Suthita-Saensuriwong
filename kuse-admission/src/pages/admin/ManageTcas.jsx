@@ -62,12 +62,21 @@ const openImageLightbox = (url, label) => {
 };
 
 // Image preview component
-const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, field }) => {
+const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, field, maxFiles }) => {
   const inputRef = useRef(null);
   const previews = files[field] || [];
 
   const handleChange = (e) => {
-    const chosen = Array.from(e.target.files);
+    let chosen = Array.from(e.target.files);
+    if (maxFiles && chosen.length > maxFiles) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'เลือกรูปเกินจำนวนที่กำหนด',
+        text: `เลือกได้สูงสุด ${maxFiles} รูป ระบบจะเก็บไว้ให้ ${maxFiles} รูปแรกเท่านั้นนะคะ`,
+        confirmButtonColor: '#800000',
+      });
+      chosen = chosen.slice(0, maxFiles);
+    }
     setFiles(prev => ({ ...prev, [field]: chosen }));
   };
 
@@ -675,8 +684,8 @@ export default function ManageTcas() {
                         <ExistingImageChips label="โปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
                           value={existingFiles.posterImg} fieldKey="posterImg" onClear={clearExisting} />
                       )}
-                      <ImagePreviewField label="3. รูปภาพโปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
-                        inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" />
+                      <ImagePreviewField label="3. รูปภาพโปสเตอร์ประชาสัมพันธ์ (สูงสุด 5 รูป)" icon="fa-image" iconColor="#22c55e"
+                        inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" maxFiles={5} />
                     </div>
 
                     <div className="form-col-6">

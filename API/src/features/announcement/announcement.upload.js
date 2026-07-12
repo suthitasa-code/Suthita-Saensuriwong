@@ -35,7 +35,7 @@ const upload = multer({
 });
 
 const announcementUpload = upload.fields([
-  { name: 'posterImg', maxCount: 2 },
+  { name: 'posterImg', maxCount: 5 },
   { name: 'scheduleImg', maxCount: 2 },
   { name: 'majorTableImg', maxCount: 2 },
   { name: 'manualPdf', maxCount: 1 },
