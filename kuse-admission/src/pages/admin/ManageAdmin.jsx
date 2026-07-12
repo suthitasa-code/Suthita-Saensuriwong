@@ -5,12 +5,12 @@ import axios from 'axios';
 
 // ================================================================
 // หน้านี้คือ "จัดการบัญชีผู้ดูแลระบบ" เฉพาะ Super Admin เท่านั้นที่เข้าได้
-// ใช้เพิ่ม/แก้ไข/ระงับ/ลบบัญชีแอดมินคนอื่น ๆ ในระบบ
+// ใช้เพิ่ม/แก้ไข/ระงับสิทธิ์บัญชีแอดมินคนอื่น ๆ ในระบบ (ไม่มีปุ่มลบถาวรแล้ว)
 // ================================================================
 
 const ManageAdmin = () => {
     // เช็คสิทธิ์จาก localStorage ว่าคนที่ล็อกอินอยู่ตอนนี้เป็น Super Admin ไหม
-    // ถ้าไม่ใช่ จะโดนกันไม่ให้เพิ่ม/แก้/ลบใคร (ดูได้อย่างเดียว)
+    // ถ้าไม่ใช่ จะโดนกันไม่ให้เพิ่ม/แก้/ระงับสิทธิ์ใคร (ดูได้อย่างเดียว)
     const currentAdminRole = localStorage.getItem('admin_role') || 'Admin';
     const isSuperAdmin = currentAdminRole === 'Super Admin';
 
@@ -244,44 +244,6 @@ const ManageAdmin = () => {
         });
     };
 
-    // ----- ลบบัญชีออกจากระบบถาวร กู้คืนไม่ได้ ต้องยืนยันก่อนเสมอ -----
-    const handleDelete = (id, fullName) => {
-        if (!isSuperAdmin) return;
-
-        Swal.fire({
-            title: 'ยืนยันการลบออกจากระบบ?',
-            text: `คุณกำลังจะลบบัญชีของ คุณ ${fullName} ออกจากระบบอย่างถาวร ข้อมูลนี้จะไม่สามารถกู้คืนได้!`,
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: 'ลบข้อมูลถาวร',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true,
-            customClass: {
-                confirmButton: 'btn btn-danger px-4 rounded-pill mx-2 shadow',
-                cancelButton: 'btn btn-light px-4 rounded-pill mx-2',
-                popup: 'kuse-swal-popup',
-                title: 'kuse-swal-title'
-            },
-            buttonsStyling: false
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const token = localStorage.getItem('token');
-                    await axios.delete(`http://localhost:5000/api/admins/${id}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    Swal.fire({ icon: 'success', title: 'ลบข้อมูลผู้ดูแลระบบเรียบร้อยแล้ว', confirmButtonColor: '#800000' });
-                    fetchAdmins();
-                } catch (error) {
-                    // ถ้าแอดมินคนนี้เคยสร้างประกาศ/หลักสูตร/แบนเนอร์/เอกสารไว้ ฐานข้อมูลจะกันลบ
-                    // (Foreign Key) แล้วส่งข้อความอธิบายกลับมา ให้เอามาโชว์ตรงๆ ไม่ต้องเดา
-                    const errorMsg = error.response?.data?.message || 'เกิดข้อผิดพลาดจากระบบ';
-                    Swal.fire({ icon: 'error', title: 'ลบไม่สำเร็จ', text: errorMsg, confirmButtonColor: '#800000' });
-                }
-            }
-        });
-    };
-
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
@@ -312,7 +274,7 @@ const ManageAdmin = () => {
                 </div>
             </div>
 
-            {/* รายชื่อแอดมิน — กลับมาเป็นตารางแบบเดิมตามที่ขอ แต่ยังใช้สี/ปุ่มไล่เฉดแบบใหม่ */}
+            {/* รายชื่อแอดมิน*/}
             <div className="report-section">
                 <div className="table-responsive">
                     <table className="table admin-table align-middle mb-0">
@@ -382,14 +344,6 @@ const ManageAdmin = () => {
                                                             <i className="fas fa-user-check"></i>
                                                         </button>
                                                     )}
-                                                    <button
-                                                        className="admin-action-btn action-delete"
-                                                        onClick={() => handleDelete(admin.adminID, `${admin.name} ${admin.lastname}`)}
-                                                        disabled={!isSuperAdmin}
-                                                        title="ลบออกจากระบบถาวร"
-                                                    >
-                                                        <i className="fas fa-trash-alt"></i>
-                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
