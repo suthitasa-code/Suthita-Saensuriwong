@@ -273,7 +273,9 @@ html, body {
 
 /* ---- Add button ---- */
 .btn-add-tcas {
-  background: var(--maroon-grad);
+  background: linear-gradient(135deg, #c0001f 0%, #800000 45%, #4a0000 100%);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
   color: white;
   border: 2px solid transparent;
   padding: 11px 24px;
@@ -282,15 +284,16 @@ html, body {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 14px rgba(128, 0, 0, 0.2);
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.35s ease, background-position 0.6s ease;
+  box-shadow: 0 4px 14px rgba(128, 0, 0, 0.25);
   display: inline-flex;
   align-items: center;
 }
 .btn-add-tcas:hover:not(:disabled) {
+  background-position: 100% 50%;
   transform: translateY(-3px);
   border-color: var(--kuse-gold);
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
 }
 .btn-add-tcas:disabled {
   opacity: 0.7;
@@ -554,11 +557,17 @@ html, body {
   display: inline-block;
 }
 .preview-img {
-  max-width: 140px;
-  max-height: 140px;
+  width: 140px;
+  height: 140px;
   border-radius: 12px;
   border: 2px solid #e5e7eb;
   object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.preview-img:hover {
+  transform: scale(1.03);
+  border-color: var(--kuse-gold);
 }
 .btn-remove-img {
   position: absolute;
@@ -604,6 +613,11 @@ html, body {
   height: 26px;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.chip-thumb:hover {
+  transform: scale(1.35);
 }
 .pdf-chip { padding: 4px 12px; }
 .btn-clear-existing {
@@ -623,7 +637,33 @@ html, body {
 }
 .btn-clear-existing:hover { background: #fee2e2; }
 
+.new-file-chip {
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+  margin-top: 8px;
+}
+.btn-remove-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.62rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.btn-remove-chip:hover { background: #dc2626; }
+
 /* ---- SweetAlert2 overrides ---- */
+/* ต้องลอยเหนือ tcas-modal-overlay (z-index: 2000) เสมอ เพราะ Swal ถูกเรียกใช้ตอนที่ modal เปิดอยู่บ่อยๆ (เช่น แจ้งเตือนกรอกข้อมูลไม่ครบ, ดูรูปขนาดเต็ม) */
+.swal2-container {
+  z-index: 3000 !important;
+}
 .swal2-popup {
   border-radius: 25px !important;
   padding: 2rem !important;
@@ -641,4 +681,25 @@ html, body {
 .swal2-cancel {
   border-radius: 12px !important;
   padding: 10px 28px !important;
+}
+
+/* ---- Image lightbox (คลิกดูรูปขนาดเต็ม) ---- */
+.kuse-lightbox-popup {
+  background: rgba(20, 20, 20, 0.92) !important;
+  box-shadow: none !important;
+  padding: 1.2rem !important;
+}
+.kuse-lightbox-popup .swal2-image {
+  border-radius: 14px !important;
+  max-height: 75vh !important;
+  width: auto !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+.kuse-lightbox-title {
+  color: #fff !important;
+  font-size: 1rem !important;
+  opacity: 0.85;
+}
+.kuse-lightbox-popup .swal2-close {
+  color: #fff !important;
 }

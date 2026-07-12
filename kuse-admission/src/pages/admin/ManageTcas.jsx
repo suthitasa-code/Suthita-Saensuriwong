@@ -48,6 +48,19 @@ const statusBadge = (label) => {
   return 'badge-none';
 };
 
+// เปิดรูปแบบเต็มขนาดให้ดูว่าไฟล์ที่เลือก/อัปโหลดไปคือรูปอะไร
+const openImageLightbox = (url, label) => {
+  Swal.fire({
+    imageUrl: url,
+    imageAlt: label || 'ตัวอย่างรูปภาพ',
+    title: label || '',
+    showConfirmButton: false,
+    showCloseButton: true,
+    background: 'transparent',
+    customClass: { popup: 'kuse-lightbox-popup', title: 'kuse-lightbox-title' },
+  });
+};
+
 // Image preview component
 const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, field }) => {
   const inputRef = useRef(null);
@@ -85,7 +98,13 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
         <div className="preview-grid">
           {previews.map((f, i) => (
             <div key={i} className="preview-wrapper">
-              <img src={URL.createObjectURL(f)} className="preview-img" alt="" />
+              <img
+                src={URL.createObjectURL(f)}
+                className="preview-img"
+                alt=""
+                title="คลิกเพื่อดูรูปขนาดเต็ม"
+                onClick={() => openImageLightbox(URL.createObjectURL(f), f.name)}
+              />
               <button type="button" className="btn-remove-img" onClick={() => removeFile(i)}>
                 <i className="fas fa-times"></i>
               </button>
@@ -106,7 +125,13 @@ const ExistingImageChips = ({ label, icon, iconColor, value, fieldKey, onClear }
       <small className="text-muted d-block mb-1"><i className={`fas ${icon} me-1`} style={{ color: iconColor }}></i>{label} (ไฟล์ปัจจุบัน)</small>
       {names.map((n, i) => (
         <span key={i} className="file-chip">
-          <img src={`${UPLOAD_URL}/${n.trim()}`} className="chip-thumb" alt="" />
+          <img
+            src={`${UPLOAD_URL}/${n.trim()}`}
+            className="chip-thumb"
+            alt=""
+            title="คลิกเพื่อดูรูปขนาดเต็ม"
+            onClick={() => openImageLightbox(`${UPLOAD_URL}/${n.trim()}`, n.trim())}
+          />
           {n.trim()}
         </span>
       ))}
@@ -128,6 +153,50 @@ const ExistingPdfChip = ({ label, icon, iconColor, value, fieldKey, onClear }) =
       <button type="button" className="btn-clear-existing" onClick={() => onClear(fieldKey)}>
         <i className="fas fa-trash-alt me-1"></i>ล้างไฟล์เดิม
       </button>
+    </div>
+  );
+};
+
+// PDF upload field: shows the newly chosen file as a chip with an X button to remove it before submitting
+const PdfUploadField = ({ label, icon, iconColor, inputId, files, setFiles, field, existingValue, onClearExisting }) => {
+  const inputRef = useRef(null);
+  const selected = files[field]?.[0];
+
+  const handleChange = (e) => {
+    setFiles(prev => ({ ...prev, [field]: e.target.files[0] ? [e.target.files[0]] : [] }));
+  };
+
+  const removeFile = () => {
+    setFiles(prev => ({ ...prev, [field]: [] }));
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
+  return (
+    <div className="upload-card">
+      <label className="upload-label">
+        <i className={`fas ${icon} me-2`} style={{ color: iconColor }}></i>{label}
+      </label>
+      {existingValue && (
+        <ExistingPdfChip label={label} icon={icon} iconColor={iconColor}
+          value={existingValue} fieldKey={field} onClear={onClearExisting} />
+      )}
+      <input
+        ref={inputRef}
+        type="file"
+        id={inputId}
+        className="form-control filter-control"
+        accept=".pdf"
+        onChange={handleChange}
+      />
+      {selected && (
+        <div className="file-chip pdf-chip new-file-chip">
+          <i className="fas fa-file-pdf me-1 text-danger"></i>{selected.name}
+          <button type="button" className="btn-remove-chip" onClick={removeFile} title="เอาไฟล์ออก">
+            <i className="fas fa-times"></i>
+          </button>
+        </div>
+      )}
+      <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
     </div>
   );
 };
@@ -611,32 +680,14 @@ export default function ManageTcas() {
                     </div>
 
                     <div className="form-col-6">
-                      <div className="upload-card">
-                        <label className="upload-label">
-                          <i className="fas fa-file-pdf me-2 text-danger"></i>อัปโหลดประกาศรับสมัคร (PDF)
-                        </label>
-                        {editId && existingFiles.announcementPdf && (
-                          <ExistingPdfChip label="ประกาศรับสมัคร" icon="fa-file-pdf" iconColor="#ef4444"
-                            value={existingFiles.announcementPdf} fieldKey="announcementPdf" onClear={clearExisting} />
-                        )}
-                        <input type="file" className="form-control filter-control" accept=".pdf"
-                          onChange={e => setFiles(p => ({ ...p, announcementPdf: [e.target.files[0]] }))} />
-                        <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
-                      </div>
+                      <PdfUploadField label="อัปโหลดประกาศรับสมัคร (PDF)" icon="fa-file-pdf" iconColor="#ef4444"
+                        inputId="file_announcement_pdf" files={files} setFiles={setFiles} field="announcementPdf"
+                        existingValue={editId ? existingFiles.announcementPdf : ''} onClearExisting={clearExisting} />
                     </div>
                     <div className="form-col-6">
-                      <div className="upload-card">
-                        <label className="upload-label">
-                          <i className="fas fa-book me-2 text-primary"></i>อัปโหลดคู่มือการสมัคร (PDF)
-                        </label>
-                        {editId && existingFiles.manualPdf && (
-                          <ExistingPdfChip label="คู่มือการสมัคร" icon="fa-book" iconColor="#3b82f6"
-                            value={existingFiles.manualPdf} fieldKey="manualPdf" onClear={clearExisting} />
-                        )}
-                        <input type="file" className="form-control filter-control" accept=".pdf"
-                          onChange={e => setFiles(p => ({ ...p, manualPdf: [e.target.files[0]] }))} />
-                        <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
-                      </div>
+                      <PdfUploadField label="อัปโหลดคู่มือการสมัคร (PDF)" icon="fa-book" iconColor="#3b82f6"
+                        inputId="file_manual_pdf" files={files} setFiles={setFiles} field="manualPdf"
+                        existingValue={editId ? existingFiles.manualPdf : ''} onClearExisting={clearExisting} />
                     </div>
                   </div>
                 </div>
