@@ -227,7 +227,7 @@ export default function ManageTcas() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 4;
 
   // ----- ดึงข้อมูลประกาศทั้งหมดจาก API มาเก็บไว้ใน state -----
   const fetchAll = async () => {

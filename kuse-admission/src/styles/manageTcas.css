@@ -397,6 +397,8 @@ html, body {
   font-family: 'Anuphan', sans-serif;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 92px;
   color: #fff;
 }
 .tcas-btn-action i { transition: transform 0.3s ease; }
@@ -415,6 +417,8 @@ html, body {
 .tcas-btn-edit:active { transform: translateY(-1px) scale(0.98); }
 
 .tcas-btn-del {
+  min-width: 84px;
+  padding: 7px 14px;
   background: linear-gradient(135deg, #f0685a 0%, #c0392b 100%);
   box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
 }
