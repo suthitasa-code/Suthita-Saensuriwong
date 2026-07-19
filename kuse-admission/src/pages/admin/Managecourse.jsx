@@ -47,6 +47,15 @@ const CURRICULUM_TYPES = [
     'วิศวกรรมศาสตรมหาบัณฑิต (วศ.ม.)',
 ];
 
+// ไอคอน + สีประจำแต่ละประเภทหลักสูตร ใช้แยกกลุ่มการ์ดในหน้ารายการให้ดูออกง่าย
+const CURRICULUM_TYPE_META = {
+    'หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)': { icon: 'fas fa-hard-hat', accent: '#800000' },
+    'หลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.)': { icon: 'fas fa-flask', accent: '#0891b2' },
+    'วิศวกรรมศาสตรมหาบัณฑิต (วศ.ม.)': { icon: 'fas fa-user-graduate', accent: '#7c3aed' },
+};
+const OTHER_TYPE_LABEL = 'อื่นๆ / ยังไม่ระบุประเภทหลักสูตร';
+const OTHER_TYPE_META = { icon: 'fas fa-layer-group', accent: '#6c757d' };
+
 const emptyForm = {
     curriculumID: '',
     curriculumName: '',
@@ -274,6 +283,58 @@ const ManageCourse = () => {
         }
     };
 
+    // ===================== จัดกลุ่มหลักสูตรตามประเภท (วศ.บ. / วท.บ. / วศ.ม.) =====================
+    const groupedCourses = [
+        ...CURRICULUM_TYPES.map((type) => ({
+            type,
+            meta: CURRICULUM_TYPE_META[type],
+            items: courses.filter((c) => c.curriculumType === type),
+        })),
+        {
+            type: OTHER_TYPE_LABEL,
+            meta: OTHER_TYPE_META,
+            items: courses.filter((c) => !CURRICULUM_TYPES.includes(c.curriculumType)),
+        },
+    ].filter((group) => group.items.length > 0);
+
+    const renderCourseCard = (course) => (
+        <div className="course-card" key={course.curriculumID}>
+            <div className="course-card-cover">
+                {course.Images ? (
+                    <img src={fileUrl(course.Images, 'images')} alt={course.curriculumName} />
+                ) : (
+                    <div className="course-card-cover-placeholder">
+                        <i className="fas fa-image"></i>
+                    </div>
+                )}
+                <div className="course-card-cover-overlay"></div>
+                <span className={`course-degree-badge deg-${degreeSlug(course.degreeLevel)}`}>
+                    {course.degreeLevel || 'ไม่ระบุระดับ'}
+                </span>
+            </div>
+            <div className="course-card-body">
+                <div className="course-card-title">
+                    <span className="course-card-title-icon">
+                        <i className={course.icon || 'fas fa-graduation-cap'}></i>
+                    </span>
+                    <span className="course-card-title-text">{course.curriculumName || 'ไม่ระบุชื่อ'}</span>
+                </div>
+                <div className="course-card-subtitle">
+                    <i className="fas fa-building-columns me-1"></i>
+                    {course.deptNameEN || course.deptNameTH || 'ไม่ระบุภาควิชา'}
+                </div>
+                <div className="course-card-actions">
+                    <button className="btn-course-edit" onClick={() => openEditModal(course)}>
+                        <i className="fas fa-pen"></i> แก้ไข
+                    </button>
+                    <button className="btn-course-del" onClick={() => handleDelete(course)}>
+                        <i className="fas fa-trash"></i> ลบ
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+
     // ===================== RENDER =====================
     return (
         <>
@@ -299,47 +360,18 @@ const ManageCourse = () => {
                     </div>
                 )}
 
-                {!loading && courses.length > 0 && (
-                    <div className="course-grid">
-                        {courses.map((course) => (
-                            <div className="course-card" key={course.curriculumID}>
-                                <div className="course-card-cover">
-                                    {course.Images ? (
-                                        <img src={fileUrl(course.Images, 'images')} alt={course.curriculumName} />
-                                    ) : (
-                                        <div className="course-card-cover-placeholder">
-                                            <i className="fas fa-image"></i>
-                                        </div>
-                                    )}
-                                    <div className="course-card-cover-overlay"></div>
-                                    <span className={`course-degree-badge deg-${degreeSlug(course.degreeLevel)}`}>
-                                        {course.degreeLevel || 'ไม่ระบุระดับ'}
-                                    </span>
-                                </div>
-                                <div className="course-card-body">
-                                    <div className="course-card-title">
-                                        <span className="course-card-title-icon">
-                                            <i className={course.icon || 'fas fa-graduation-cap'}></i>
-                                        </span>
-                                        <span className="course-card-title-text">{course.curriculumName || 'ไม่ระบุชื่อ'}</span>
-                                    </div>
-                                    <div className="course-card-subtitle">
-                                        <i className="fas fa-building-columns me-1"></i>
-                                        {course.deptNameEN || course.deptNameTH || 'ไม่ระบุภาควิชา'}
-                                    </div>
-                                    <div className="course-card-actions">
-                                        <button className="btn-course-edit" onClick={() => openEditModal(course)}>
-                                            <i className="fas fa-pen"></i> แก้ไข
-                                        </button>
-                                        <button className="btn-course-del" onClick={() => handleDelete(course)}>
-                                            <i className="fas fa-trash"></i> ลบ
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                {!loading && courses.length > 0 && groupedCourses.map((group) => (
+                    <div className="course-type-section" key={group.type}>
+                        <div className="course-type-header" style={{ '--type-accent': group.meta.accent }}>
+                            <span className="course-type-icon"><i className={group.meta.icon}></i></span>
+                            <h6 className="course-type-title">{group.type}</h6>
+                            <span className="course-type-count">{group.items.length} หลักสูตร</span>
+                        </div>
+                        <div className="course-grid">
+                            {group.items.map((course) => renderCourseCard(course))}
+                        </div>
                     </div>
-                )}
+                ))}
             </div>
 
             {showModal && (

@@ -81,6 +81,58 @@
 }
 
 /* ==========================================================================
+   🏷️ Course Type Section — จัดกลุ่มการ์ดตามประเภทหลักสูตร (วศ.บ. / วท.บ. / วศ.ม.)
+   ========================================================================== */
+.course-type-section {
+  margin-bottom: 32px;
+}
+
+.course-type-section:last-child {
+  margin-bottom: 0;
+}
+
+.course-type-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.course-type-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--type-accent, var(--kuse-maroon));
+  color: #fff;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.course-type-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--type-accent, var(--kuse-maroon));
+}
+
+.course-type-count {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #888;
+  background: #f5f5f5;
+  padding: 4px 12px;
+  border-radius: 50px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
    🎴 Course Grid — การ์ดหลักสูตรพร้อมรูปหน้าปก (แทนที่ตารางแบบเดิม)
    ========================================================================== */
 .course-grid {
