@@ -9,6 +9,16 @@ const curriculumController = {
     } catch (err) { next(err); }
   },
 
+  getCurriculumById: async (req, res, next) => {
+    try {
+      const data = await curriculumRepository.findById(req.params.id);
+      if (!data) {
+        return res.status(404).json({ success: false, message: "ไม่พบหลักสูตรนี้ค่ะ" });
+      }
+      res.json({ success: true, data });
+    } catch (err) { next(err); }
+  },
+
   createCurriculum: async (req, res, next) => {
     try {
       const result = await curriculumService.createCurriculum(req.body, req.files);

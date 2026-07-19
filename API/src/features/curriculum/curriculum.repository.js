@@ -5,7 +5,13 @@ const curriculumRepository = {
     const [rows] = await pool.query("SELECT * FROM curriculum");
     return rows;
   },
-  
+
+  findById: async (id) => {
+    const [rows] = await pool.query("SELECT * FROM curriculum WHERE curriculumID = ?", [id]);
+    return rows[0] || null;
+  },
+
+
   create: async (data) => {
     //  อัปเดตรายชื่อคอลัมน์ใหม่ให้ตรงตามฐานข้อมูลขเป๊ะๆ 
     // 🌟 เพิ่มคอลัมน์ icon เข้าไปในรายการ (ต้องรัน ALTER TABLE เพิ่มคอลัมน์นี้ในฐานข้อมูลก่อนด้วย)

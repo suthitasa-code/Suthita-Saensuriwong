@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+:root {
+    --maroon: #800000;
+    --dark-maroon: #600000;
+    --gold: #b08d57;
+    --gold-bright: #ffd700;
+    --light-bg: #fcfcfc;
+    --footer-bg: #4a0000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    font-family: 'Anuphan', sans-serif;
+    background-color: var(--light-bg);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    letter-spacing: 0.02rem;
+}
+
+/* ===== พื้นหลังธีมเทคโนโลยี/วิศวกรรม — เส้นกริดบลูปรินต์จางๆ + แสงไล่เฉดลอยตัวช้าๆ =====
+   ใช้ fixed pseudo-element แปะไว้หลังสุด ไม่กระทบ layout เนื้อหาเลย */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--light-bg);
+    background-image:
+        linear-gradient(rgba(128, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(128, 0, 0, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 12% 15%, rgba(128, 0, 0, 0.10), transparent 40%),
+        radial-gradient(circle at 88% 8%, rgba(176, 141, 87, 0.16), transparent 38%),
+        radial-gradient(circle at 50% 95%, rgba(128, 0, 0, 0.08), transparent 45%);
+    background-size: 44px 44px, 44px 44px, auto, auto, auto;
+    animation: bg-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes bg-drift {
+    0% {
+        background-position: 0 0, 0 0, 0% 0%, 100% 0%, 50% 100%;
+    }
+    100% {
+        background-position: 22px 22px, 22px 22px, 6% 6%, 94% 6%, 54% 94%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before {
+        animation: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}

@@ -16,8 +16,14 @@ const app = express();
 
 app.set('json spaces', 2); 
 
+// 🌟 รับ 2 ฝั่ง: หลังบ้านแอดมิน (5173) และเว็บฝั่งผู้ใช้งานทั่วไป (5174)
+// ปรับ/เพิ่มพอร์ตได้ผ่าน .env ด้วย CLIENT_URL="http://a.com,http://b.com"
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173,http://localhost:5174")
+  .split(",")
+  .map((url) => url.trim());
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173"
+  origin: allowedOrigins
 }));
 app.use(express.json());
 

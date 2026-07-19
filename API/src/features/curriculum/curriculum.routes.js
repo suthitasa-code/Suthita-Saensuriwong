@@ -11,6 +11,7 @@ const cpUpload = uploadCurriculum.fields([
 ]);
 
 router.get("/", curriculumController.getCurriculums);
+router.get("/:id", curriculumController.getCurriculumById);
 router.post("/", cpUpload, curriculumController.createCurriculum);
 router.put("/:id", cpUpload, curriculumController.updateCurriculum);
 router.delete("/:id", curriculumController.deleteCurriculum);
