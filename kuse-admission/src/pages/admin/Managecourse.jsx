@@ -40,12 +40,21 @@ const ICON_GROUPS = [
 
 const DEGREE_LEVELS = ['ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก'];
 
+// ตัวเลือกประเภทหลักสูตร (วศ.บ. / วท.บ. / วศ.ม. ฯลฯ)
+const CURRICULUM_TYPES = [
+    'หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)',
+    'หลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.)',
+    'วิศวกรรมศาสตรมหาบัณฑิต (วศ.ม.)',
+];
+
 const emptyForm = {
     curriculumID: '',
     curriculumName: '',
+    curriculumNameEN: '',
     deptNameTH: '',
     deptNameEN: '',
     degreeLevel: 'ปริญญาตรี',
+    curriculumType: CURRICULUM_TYPES[0],
     highlights: '',
     whatWeLearn: '',
     insideKuse: '',
@@ -130,9 +139,11 @@ const ManageCourse = () => {
         setForm({
             curriculumID: course.curriculumID || '',
             curriculumName: course.curriculumName || '',
+            curriculumNameEN: course.curriculumNameEN || '',
             deptNameTH: course.deptNameTH || '',
             deptNameEN: course.deptNameEN || '',
             degreeLevel: course.degreeLevel || 'ปริญญาตรี',
+            curriculumType: course.curriculumType || CURRICULUM_TYPES[0],
             highlights: course.highlights || '',
             whatWeLearn: course.whatWeLearn || '',
             insideKuse: course.insideKuse || '',
@@ -157,6 +168,12 @@ const ManageCourse = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // รหัสหลักสูตรต้องเป็นภาษาอังกฤษเท่านั้นและยาวไม่เกิน 3 ตัวอักษร
+    const handleCurriculumIdChange = (e) => {
+        const filtered = e.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 3);
+        setForm((prev) => ({ ...prev, curriculumID: filtered }));
     };
 
     const handleCoverChange = (e) => {
@@ -342,7 +359,8 @@ const ManageCourse = () => {
                                     {/* ----- คอลัมน์ซ้าย: รูป + ไอคอน ----- */}
                                     <div className="col-md-4">
                                         <div className="card border-0 shadow-sm p-4 gold-card bg-white mb-4">
-                                            <h6 className="fw-bold mb-3" style={{ color: 'var(--kuse-gold)' }}>รูปหน้าปก (1 รูป)</h6>
+                                            <h6 className="fw-bold mb-1" style={{ color: 'var(--kuse-gold)' }}>รูปหน้าปก (1 รูป)</h6>
+                                            <small className="text-muted d-block mb-2">แนะนำขนาด 800 x 450 พิกเซล (16:9)</small>
                                             <div
                                                 className="image-upload-box mb-3"
                                                 onClick={() => document.getElementById('coverInput').click()}
@@ -440,40 +458,54 @@ const ManageCourse = () => {
                                                     <h6 className="fw-bold mb-3 section-step-title"><span className="section-step-num">1</span>ข้อมูลพื้นฐาน</h6>
                                                     <div className="row g-2">
                                                         <div className="col-md-4">
-                                                            <label className="label-kuse-bold">รหัสหลักสูตร (สูงสุด 3 ตัว)</label>
+                                                            <label className="label-kuse-bold">รหัสหลักสูตร (สูงสุด 3 ตัวอักษร)</label>
                                                             <input
-                                                                type="text" name="curriculumID" maxLength={3}
-                                                                className="form-control-kuse mb-2" placeholder="เช่น CE"
-                                                                value={form.curriculumID} onChange={handleChange}
-                                                            />
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <label className="label-kuse-bold">ชื่อหลักสูตร (ภาษาไทย)</label>
-                                                            <input
-                                                                type="text" name="curriculumName"
-                                                                className="form-control-kuse mb-2" placeholder="เช่น วิศวกรรมโยธา"
-                                                                value={form.curriculumName} onChange={handleChange} required
+                                                                type="text" name="curriculumID"
+                                                                className="form-control-kuse mb-2 text-uppercase" placeholder="เช่น CE"
+                                                                value={form.curriculumID} onChange={handleCurriculumIdChange}
                                                             />
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="label-kuse-bold">ระดับการศึกษา</label>
-                                                            <select name="degreeLevel" className="form-control-kuse" value={form.degreeLevel} onChange={handleChange}>
+                                                            <select name="degreeLevel" className="form-control-kuse mb-2" value={form.degreeLevel} onChange={handleChange}>
                                                                 {DEGREE_LEVELS.map((lvl) => <option key={lvl} value={lvl}>{lvl}</option>)}
                                                             </select>
                                                         </div>
-                                                        <div className="col-md-6">
+                                                        <div className="col-md-4">
+                                                            <label className="label-kuse-bold">หลักสูตร</label>
+                                                            <select name="curriculumType" className="form-control-kuse mb-2" value={form.curriculumType} onChange={handleChange}>
+                                                                {CURRICULUM_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                                                            </select>
+                                                        </div>
+                                                        <div className="col-12">
+                                                            <label className="label-kuse-bold">ชื่อหลักสูตร (ภาษาไทย)</label>
+                                                            <input
+                                                                type="text" name="curriculumName"
+                                                                className="form-control-kuse form-control-kuse-lg mb-2" placeholder="กรอกชื่อหลักสูตร"
+                                                                value={form.curriculumName} onChange={handleChange} required
+                                                            />
+                                                        </div>
+                                                        <div className="col-12">
+                                                            <label className="label-kuse-bold">ชื่อหลักสูตร (ภาษาอังกฤษ)</label>
+                                                            <input
+                                                                type="text" name="curriculumNameEN"
+                                                                className="form-control-kuse form-control-kuse-lg mb-2" placeholder="กรอกชื่อหลักสูตร"
+                                                                value={form.curriculumNameEN} onChange={handleChange}
+                                                            />
+                                                        </div>
+                                                        <div className="col-12">
                                                             <label className="label-kuse-bold">ภาควิชา (ภาษาไทย)</label>
                                                             <input
                                                                 type="text" name="deptNameTH"
-                                                                className="form-control-kuse mb-2" placeholder="ระบุภาควิชาที่สังกัด"
+                                                                className="form-control-kuse form-control-kuse-lg mb-2" placeholder="ระบุภาควิชาที่สังกัด"
                                                                 value={form.deptNameTH} onChange={handleChange}
                                                             />
                                                         </div>
-                                                        <div className="col-md-6">
-                                                            <label className="label-kuse-bold">ชื่อหลักสูตร (ภาษาอังกฤษ)</label>
+                                                        <div className="col-12">
+                                                            <label className="label-kuse-bold">ภาควิชา (ภาษาอังกฤษ)</label>
                                                             <input
                                                                 type="text" name="deptNameEN"
-                                                                className="form-control-kuse mb-2" placeholder="Civil Engineering"
+                                                                className="form-control-kuse form-control-kuse-lg mb-2" placeholder="Department of Civil Engineering"
                                                                 value={form.deptNameEN} onChange={handleChange}
                                                             />
                                                         </div>

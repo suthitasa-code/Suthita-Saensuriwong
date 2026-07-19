@@ -261,6 +261,14 @@
   background: #fff;
 }
 
+/* ช่องกรอกชื่อหลักสูตร ให้ใหญ่และเด่นกว่าช่องทั่วไปเพราะชื่อหลักสูตรมักยาว */
+.form-control-kuse-lg {
+  padding: 14px 20px;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--kuse-maroon);
+}
+
 .label-kuse-bold {
   font-family: 'Anuphan', sans-serif;
   font-weight: 600;

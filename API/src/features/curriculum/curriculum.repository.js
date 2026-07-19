@@ -9,11 +9,11 @@ const curriculumRepository = {
   create: async (data) => {
     //  อัปเดตรายชื่อคอลัมน์ใหม่ให้ตรงตามฐานข้อมูลขเป๊ะๆ 
     // 🌟 เพิ่มคอลัมน์ icon เข้าไปในรายการ (ต้องรัน ALTER TABLE เพิ่มคอลัมน์นี้ในฐานข้อมูลก่อนด้วย)
-    const sql = `INSERT INTO curriculum 
-      (curriculumID, curriculumName, deptNameTH, deptNameEN, degreeLevel, highlights, whatWeLearn, insideKuse, jobOpportunities, careerPrivate, careerGovernment, Images, shopPhoto, pdfFiles, icon, adminID) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO curriculum
+      (curriculumID, curriculumName, curriculumNameEN, deptNameTH, deptNameEN, degreeLevel, curriculumType, highlights, whatWeLearn, insideKuse, jobOpportunities, careerPrivate, careerGovernment, Images, shopPhoto, pdfFiles, icon, adminID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const [result] = await pool.query(sql, [
-      data.curriculumID, data.curriculumName, data.deptNameTH, data.deptNameEN, data.degreeLevel,
+      data.curriculumID, data.curriculumName, data.curriculumNameEN, data.deptNameTH, data.deptNameEN, data.degreeLevel, data.curriculumType,
       data.highlights, data.whatWeLearn, data.insideKuse, data.jobOpportunities,
       data.careerPrivate, data.careerGovernment, data.Images, data.shopPhoto, data.pdfFiles, data.icon, data.adminID
     ]);

@@ -1,10 +1,11 @@
 const { body, validationResult } = require("express-validator");
 
 const curriculumValidation = [
-  // 1. ด่านตรวจรหัสหลักสูตร (ต้องไม่เกิน 2 ตัวอักษร เช่น CE, CS)
+  // 1. ด่านตรวจรหัสหลักสูตร (ต้องไม่เกิน 3 ตัวอักษร และเป็นภาษาอังกฤษเท่านั้น เช่น CE, CS)
   body("curriculumID")
     .optional({ checkFalsy: true })
-    .isLength({ max: 2 }).withMessage("curriculumID ต้องยาวไม่เกิน 2 ตัวอักษรนะจ๊ะ!"),
+    .isLength({ max: 3 }).withMessage("รหัสหลักสูตรต้องยาวไม่เกิน 3 ตัวอักษรนะจ๊ะ!")
+    .matches(/^[A-Za-z]*$/).withMessage("รหัสหลักสูตรต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้นนะจ๊ะ!"),
     
   // 2. ด่านตรวจชื่อหลักสูตร (ห้ามปล่อยว่าง)
   body("curriculumName")
