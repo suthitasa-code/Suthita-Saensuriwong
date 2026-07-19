@@ -103,7 +103,7 @@ const Curriculum = () => {
 
   return (
     <>
-      {banners.length > 0 && <HeroCarousel banners={banners} />}
+      {banners.length > 0 && <HeroCarousel banners={banners} intervalMs={8000} />}
 
       <div className="container px-4">
         <div className="section-title-main">
