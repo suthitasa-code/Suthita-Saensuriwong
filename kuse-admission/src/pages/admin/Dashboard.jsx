@@ -348,13 +348,13 @@ const Dashboard = () => {
       </div>
       <div className="dashboard-content-overview mb-4">
         <div className="row g-3 d-flex align-items-stretch stat-cards-row content-stat-cards">
-          <StatCard iconClass="ic-5" icon="fa-university" number={padNum(curriculums.length)} label="หลักสูตรทั้งหมด" delay={0} />
+          <StatCard iconClass="ic-5" icon="fa-book" number={padNum(curriculums.length)} label="หลักสูตรทั้งหมด" delay={0} />
           <StatCard iconClass="ic-6" icon="fa-file-archive" number={padNum(documents.length)} label="เอกสารในคลัง" delay={60} />
           <StatCard iconClass="ic-7" icon="fa-images" number={padNum(banners.length)} label="แบนเนอร์แนะนำ" delay={120} />
           <StatCard iconClass="ic-8" icon="fa-user-shield" number={padNum(activeAdminCount)} label="ผู้ดูแลระบบที่ใช้งานอยู่" delay={180} />
         </div>
         <ChartCard
-          title="เปรียบเทียบข้อมูลในระบบ"
+          title="ภาพรวมข้อมูลในระบบ"
           icon="fa-chart-simple"
           className="content-bar-card"
         >
@@ -366,7 +366,7 @@ const Dashboard = () => {
       <div className="dashboard-panels-row">
         <div className="dashboard-panel fade-in-up">
           <div className="panel-header">
-            <h6 className="panel-title"><i className="fas fa-list me-2 text-danger"></i>ประกาศรับสมัครล่าสุด</h6>
+            <h6 className="panel-title"><i className="fas fa-copy me-2 text-danger"></i>ประกาศรับสมัครล่าสุด</h6>
             <button className="panel-link" onClick={() => navigate('/admin/manage-tcas')}>
               ดูทั้งหมด <i className="fas fa-arrow-right ms-1"></i>
             </button>

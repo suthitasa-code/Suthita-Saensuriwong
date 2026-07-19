@@ -592,6 +592,11 @@ input[type="reset"],
     font-size: 0.82rem;
     margin-bottom: 0;
 }
+.dashboard-recent-table th,
+.dashboard-recent-table td {
+    text-align: left;
+}
+
 .dashboard-recent-table th {
     font-size: 0.72rem;
     text-transform: uppercase;
