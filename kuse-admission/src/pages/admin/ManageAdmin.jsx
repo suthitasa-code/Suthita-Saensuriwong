@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import Chart from 'react-apexcharts';
 import '../../styles/manage-admin.css';
 import axios from 'axios';
 
@@ -254,9 +255,79 @@ const ManageAdmin = () => {
         );
     }
 
+    // ----- สรุปจำนวนตามระดับสิทธิ์และสถานะ สำหรับการ์ดสรุป + กราฟวงกลมด้านบน -----
+    const superAdminCount = admins.filter((a) => a.role === 'Super Admin').length;
+    const adminCount = admins.filter((a) => a.role !== 'Super Admin').length;
+    const activeCount = admins.filter((a) => Number(a.status) === 1).length;
+    const suspendedCount = admins.filter((a) => Number(a.status) === 0).length;
+
+    const statusChartOptions = {
+        chart: { type: 'donut', fontFamily: "'IBM Plex Sans Thai', 'Anuphan', sans-serif" },
+        labels: ['ปกติ', 'ถูกระงับสิทธิ์'],
+        colors: ['#2b8a3e', '#c0392b'],
+        stroke: { width: 2, colors: ['#fff'] },
+        legend: { position: 'right', fontSize: '12px', markers: { size: 6 }, itemMargin: { vertical: 4 }, offsetY: 8 },
+        dataLabels: {
+            enabled: true,
+            style: { fontSize: '10px', fontWeight: 600 },
+            formatter: (val) => `${val.toFixed(0)}%`,
+            dropShadow: { enabled: false },
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '65%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'ทั้งหมด',
+                            fontSize: '11px',
+                            color: '#9aa0a6',
+                            formatter: () => admins.length,
+                        },
+                        value: { fontSize: '16px', fontWeight: 700, color: '#1a1a2e' },
+                    },
+                },
+            },
+        },
+        tooltip: { y: { formatter: (val) => `${val} บัญชี` } },
+    };
+    const statusChartSeries = [activeCount, suspendedCount];
+
     // ----- ส่วนแสดงผล (JSX) เริ่มจากตรงนี้ลงไป -----
     return (
         <div className="container-fluid manage-admin-container px-4 py-3">
+            {/* การ์ดสรุปจำนวนตามระดับสิทธิ์ + กราฟวงกลมสถานะสิทธิ์ */}
+            <div className="row g-3 mb-3 admin-summary-row">
+                <div className="col-md-3">
+                    <div className="admin-summary-card card-super-summary">
+                        <div className="summary-icon-shape"><i className="fas fa-crown"></i></div>
+                        <div>
+                            <div className="summary-number">{superAdminCount}</div>
+                            <div className="summary-label">Super Admin</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <div className="admin-summary-card card-admin-summary">
+                        <div className="summary-icon-shape"><i className="fas fa-user-shield"></i></div>
+                        <div>
+                            <div className="summary-number">{adminCount}</div>
+                            <div className="summary-label">Admin</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="admin-summary-card card-status-chart">
+                        <div className="summary-chart-title">สถานะสิทธิ์<br />การใช้งาน</div>
+                        <div className="summary-chart-body">
+                            <Chart options={statusChartOptions} series={statusChartSeries} type="donut" height={110} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* แถบหัวข้อ + ปุ่มเพิ่มแอดมินใหม่ (ปุ่มนี้จะโชว์เฉพาะ Super Admin เท่านั้น) */}
             <div className="report-section mb-4 admin-toolbar">
                 <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -384,7 +455,7 @@ const ManageAdmin = () => {
                                 <div className="d-flex align-items-center gap-2 mb-2">
                                     <span className="badge bg-suspend-premium"><i className="fas fa-ban"></i> การระงับการใช้งาน</span>
                                 </div>
-                                <p className="text-secondary small-text mb-0">จะทำให้ผู้ดูแลระบบคนดังกล่าวไม่สามารถเข้าสู่ระบบเพื่อจัดการข้อมูลได้ทันที</p>
+                                <p className="text-suspend-warning small-text mb-0">จะทำให้ผู้ดูแลระบบคนดังกล่าวไม่สามารถเข้าสู่ระบบเพื่อจัดการข้อมูลได้ทันที</p>
                             </div>
                         </div>
                     </div>

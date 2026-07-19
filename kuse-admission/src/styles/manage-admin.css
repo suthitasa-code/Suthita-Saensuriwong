@@ -42,7 +42,7 @@
 
 .border-top-super { border-top: 4px solid #d9480f !important; }
 .border-top-admin { border-top: 4px solid #1971c2 !important; }
-.border-top-suspend { border-top: 4px solid #cc5de8 !important; }
+.border-top-suspend { border-top: 4px solid #8b0000 !important; }
 
 .bg-super-premium,
 .bg-admin-premium,
@@ -56,11 +56,90 @@
 }
 .bg-super-premium { background: linear-gradient(135deg, #ffa94d, #d9480f); }
 .bg-admin-premium { background: linear-gradient(135deg, #74c0fc, #1971c2); }
-.bg-suspend-premium { background: linear-gradient(135deg, #e599f7, #ae3ec9); }
+.bg-suspend-premium { background: linear-gradient(135deg, #e05a5a, #8b0000); }
 
 .small-text {
     font-size: 0.88rem;
     line-height: 1.6;
+}
+
+.text-suspend-warning {
+    color: #8b0000;
+    font-weight: 600;
+}
+
+/* --- การ์ดสรุปจำนวนสิทธิ์ + กราฟวงกลมสถานะ --- */
+.admin-summary-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    height: 100%;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.admin-summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+}
+
+.summary-icon-shape {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.card-super-summary .summary-icon-shape {
+    background: linear-gradient(135deg, #ffa94d, #d9480f);
+    box-shadow: 0 4px 10px rgba(217, 72, 15, 0.3);
+}
+
+.card-admin-summary .summary-icon-shape {
+    background: linear-gradient(135deg, #74c0fc, #1971c2);
+    box-shadow: 0 4px 10px rgba(25, 113, 194, 0.3);
+}
+
+.summary-number {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.1;
+}
+
+.summary-label {
+    font-size: 0.78rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    margin-top: 1px;
+}
+
+.card-status-chart {
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+}
+
+.summary-chart-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+.summary-chart-body {
+    flex: 1;
+    min-width: 0;
 }
 
 /* --- Layout ฟอร์มแนวนอน (Label ซ้าย / Input ขวา) --- */
