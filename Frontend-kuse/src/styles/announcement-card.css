@@ -1,102 +1,121 @@
 .announcement-card {
+    display: flex;
+    flex-direction: column;
     background: white;
-    border-radius: 20px;
-    padding: 25px;
+    border-radius: 22px;
     height: 100%;
     border: 1px solid #eee;
-    transition: 0.5s ease-in-out;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-}
-
-.announcement-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(176, 141, 87, 0.05), rgba(176, 141, 87, 0.2), rgba(176, 141, 87, 0.05), transparent);
-    transition: all 1.2s ease;
-    z-index: 1;
 }
 
 .announcement-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(176, 141, 87, 0.25);
+    box-shadow: 0 22px 40px rgba(128, 0, 0, 0.14), 0 0 0 1px rgba(176, 141, 87, 0.35);
     border-color: var(--gold);
 }
 
-.announcement-card:hover::before {
-    left: 150%;
+/* แถบหัวการ์ดไล่เฉดมารูน ใส่ไอคอน + ปีการศึกษาให้เด่นตั้งแต่แวบแรก */
+.announcement-card-top {
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-maroon) 100%);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.announcement-card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.year-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    color: white;
+}
+
+.announcement-card-body {
+    padding: 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .badge-status {
     border-radius: 50px;
-    padding: 6px 16px;
-    font-size: 0.8rem;
+    padding: 5px 15px;
+    font-size: 0.75rem;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: inline-block;
+    align-self: flex-end;
+    letter-spacing: 0.02em;
 }
 
-.status-open { background-color: #28a745; color: white; }
-.status-waiting { background-color: #ffc107; color: #333; }
-.status-closed { background-color: #dc3545; color: white; }
-.status-none { background-color: #adb5bd; color: white; }
-
-.year-text {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    color: #444;
-    font-weight: 700;
-    font-size: 1.1rem;
-}
+.status-open { background-color: rgba(40, 167, 69, 0.12); color: #1e8a3a; }
+.status-waiting { background-color: rgba(255, 193, 7, 0.16); color: #a3760a; }
+.status-closed { background-color: rgba(220, 53, 69, 0.1); color: #c72a3b; }
+.status-none { background-color: #f1f1f1; color: #777; }
 
 .card-title-sub {
     font-weight: 700;
-    font-size: 1.2rem;
-    margin-top: 10px;
+    font-size: 1.15rem;
     color: #222;
-    min-height: 54px;
-    position: relative;
-    z-index: 2;
+    margin-bottom: 10px;
+    min-height: 52px;
+    line-height: 1.35;
 }
 
 .card-tcas-round {
     font-family: 'IBM Plex Sans Thai', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     color: var(--gold);
+    background: rgba(176, 141, 87, 0.08);
+    border-radius: 10px;
+    padding: 6px 12px;
     font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
+    font-size: 0.85rem;
+    margin-bottom: 22px;
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 .btn-detail {
     width: 100%;
     border-radius: 50px;
-    padding: 12px;
+    padding: 11px;
     font-weight: 600;
-    background: linear-gradient(135deg, #c0001f 0%, #800000 45%, #4a0000 100%);
-    background-size: 220% 220%;
-    background-position: 0% 50%;
-    color: white !important;
-    border: none;
+    background: linear-gradient(135deg, #fafafa 0%, #ececec 50%, #dcdcdc 100%);
+    color: var(--dark-maroon) !important;
+    border: 1.5px solid #e2e2e2;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    transition: background-position 0.5s ease, transform 0.25s ease, box-shadow 0.25s ease;
-    position: relative;
-    z-index: 3;
+    transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     box-sizing: border-box;
-    box-shadow: 0 4px 14px rgba(128, 0, 0, 0.25);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-.btn-detail:hover {
-    background-position: 100% 50%;
+.btn-detail:hover,
+.btn-detail:active {
+    background: linear-gradient(135deg, #f0f0f0 0%, #dedede 50%, #c8c8c8 100%);
+    border-color: var(--gold);
     transform: scale(1.03) translateY(-2px);
-    box-shadow: 0 8px 22px rgba(128, 0, 0, 0.4);
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.45), 0 0 32px rgba(176, 141, 87, 0.3), 0 8px 20px rgba(0, 0, 0, 0.12);
 }
