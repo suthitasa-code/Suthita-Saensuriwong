@@ -1,0 +1,193 @@
+.section-title-main {
+    text-align: center;
+    margin-top: 50px;
+    padding: 0 15px;
+}
+
+.section-title-main h2 {
+    color: var(--maroon);
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+.section-title-main p {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    color: #111;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.level-heading {
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 40px 0 25px;
+    color: #333;
+    position: relative;
+    padding-left: 20px;
+}
+
+.level-heading::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;
+    height: 70%;
+    width: 6px;
+    background: var(--maroon);
+    border-radius: 10px;
+}
+
+/* หัวข้อย่อยแยกประเภทหลักสูตร (วศ.บ./วท.บ./วศ.ม.) ภายในแต่ละระดับการศึกษา */
+.type-heading {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0 0 20px 20px;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.type-heading::before {
+    content: "\f19d";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--maroon);
+}
+
+/* ===== การ์ดหลักสูตร ===== */
+.course-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 2px solid transparent;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.course-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--maroon);
+    box-shadow: 0 0 22px rgba(192, 0, 31, 0.35), 0 0 46px rgba(128, 0, 0, 0.2), 0 15px 40px rgba(128, 0, 0, 0.12);
+}
+
+.course-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--maroon);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 1.8rem;
+}
+
+/* บังคับความสูงหัวข้อ/คำอธิบายให้เท่ากันทุกใบ ไม่ว่าข้อความจะยาวแค่ไหน
+   (ตัดด้วย line-clamp แล้วจำกัด min-height ไว้ล่วงหน้า) เพื่อให้ปุ่มอยู่ตำแหน่งเดียวกันทุกการ์ด */
+.course-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.course-info h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--maroon);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6em;
+    line-height: 1.3;
+}
+
+.course-info p {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.5em;
+}
+
+.btn-view-detail {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    background: linear-gradient(135deg, #c0001f 0%, #800000 45%, #4a0000 100%);
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    color: white;
+    padding: 7px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+    align-self: flex-start;
+    transition: background-position 0.5s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.22);
+}
+
+.course-card:hover .btn-view-detail {
+    background-position: 100% 50%;
+    box-shadow: 0 6px 16px rgba(128, 0, 0, 0.35);
+}
+
+.curriculum-loading,
+.curriculum-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+}
+
+@media (max-width: 991px) {
+    .section-title-main h2 {
+        font-size: 2.1rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .course-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .course-info {
+        align-items: center;
+    }
+    .course-info h3,
+    .course-info p {
+        min-height: 0;
+        -webkit-line-clamp: unset;
+    }
+    .btn-view-detail {
+        align-self: center;
+    }
+    .section-title-main h2 {
+        font-size: 1.8rem;
+    }
+    .level-heading {
+        font-size: 1.5rem;
+    }
+    .type-heading {
+        font-size: 1.05rem;
+        margin-left: 15px;
+    }
+}

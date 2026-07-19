@@ -157,8 +157,8 @@
 
 .social-links {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: 18px;
 }
 
 .social-links a {
