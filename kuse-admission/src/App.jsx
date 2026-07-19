@@ -6,6 +6,7 @@ import Dashboard from './pages/admin/Dashboard'
 import ManageTcas from './pages/admin/ManageTcas'
 import ManageCourse from './pages/admin/Managecourse'   
 import ManageBanner from './pages/admin/ManageBanner'
+import ManageCourseBanner from './pages/admin/ManageCourseBanner'
 import ManageDocument from './pages/admin/ManageDocument' 
 import ManageAdmin from './pages/admin/ManageAdmin' // 👑 แทรกนำเข้าหน้าจัดการบัญชีผู้ดูแลระบบตัวใหม่
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="manage-tcas" element={<ManageTcas />} />
           <Route path="courses" element={<ManageCourse />} />
           <Route path="banners" element={<ManageBanner />} />
+          <Route path="course-banners" element={<ManageCourseBanner />} />
           
           {/* 🌟 2. ลงทะเบียนพาร์ทคลังไฟล์เอกสาร เส้นทางเต็มคือ /admin/documents */}
           <Route path="documents" element={<ManageDocument />} />

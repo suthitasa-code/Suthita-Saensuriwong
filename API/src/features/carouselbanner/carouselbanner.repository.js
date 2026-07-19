@@ -1,17 +1,24 @@
 const { pool } = require("../../config/db");
 
 const carouselbannerRepository = {
-  findAll: async () => {
+  findAll: async (pageTarget) => {
+    if (pageTarget) {
+      const [rows] = await pool.query(
+        "SELECT * FROM carouselbanner WHERE pageTarget = ? ORDER BY displayOrder ASC",
+        [pageTarget]
+      );
+      return rows;
+    }
     const [rows] = await pool.query("SELECT * FROM carouselbanner ORDER BY displayOrder ASC");
     return rows;
   },
-  
+
   create: async (data) => {
-    const sql = `INSERT INTO carouselbanner 
-      (title, subtitle, imageFile, displayOrder, bannerWidth, bannerHeight, adminID) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO carouselbanner
+      (title, subtitle, imageFile, displayOrder, pageTarget, bannerWidth, bannerHeight, adminID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     const [result] = await pool.query(sql, [
-      data.title, data.subtitle, data.imageFile, data.displayOrder,
+      data.title, data.subtitle, data.imageFile, data.displayOrder, data.pageTarget || 'home',
       data.bannerWidth, data.bannerHeight, data.adminID
     ]);
     return result;

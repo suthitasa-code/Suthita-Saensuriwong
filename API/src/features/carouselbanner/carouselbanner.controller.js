@@ -4,7 +4,7 @@ const carouselbannerService = require("./carouselbanner.service");
 const carouselbannerController = {
   getBanners: async (req, res, next) => {
     try {
-      const data = await carouselbannerRepository.findAll();
+      const data = await carouselbannerRepository.findAll(req.query.pageTarget);
       res.json(data);
     } catch (err) { next(err); }
   },

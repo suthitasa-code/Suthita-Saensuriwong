@@ -20,6 +20,10 @@ const PAGE_HEADERS = {
         title: 'จัดการรูปภาพหน้าแรก',
         subtitle: 'ควบคุมรูปภาพแบนเนอร์ที่แสดงในหน้าเว็บไซต์',
     },
+    '/admin/course-banners': {
+        title: 'จัดการรูปภาพหลักสูตร',
+        subtitle: 'ควบคุมรูปภาพแบนเนอร์ที่แสดงบนสุดของหน้ารวมหลักสูตร',
+    },
     '/admin/documents': {
         title: 'คลังไฟล์เอกสาร',
         subtitle: 'จัดการไฟล์เอกสารทั้งหมดในระบบ',
@@ -133,6 +137,13 @@ const AdminLayout = () => {
                         onClick={() => navigate('/admin/banners')}
                     >
                         <i className="fas fa-images me-2"></i> จัดการรูปภาพหน้าแรก
+                    </div>
+
+                    <div
+                        className={getMenuClass('/admin/course-banners')}
+                        onClick={() => navigate('/admin/course-banners')}
+                    >
+                        <i className="fas fa-panorama me-2"></i> จัดการรูปภาพหลักสูตร
                     </div>
 
                     <div
