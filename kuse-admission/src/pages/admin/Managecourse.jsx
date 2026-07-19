@@ -360,7 +360,7 @@ const ManageCourse = () => {
                                     <div className="col-md-4">
                                         <div className="card border-0 shadow-sm p-4 gold-card bg-white mb-4">
                                             <h6 className="fw-bold mb-1" style={{ color: 'var(--kuse-gold)' }}>รูปหน้าปก (1 รูป)</h6>
-                                            <small className="text-muted d-block mb-2">แนะนำขนาด 800 x 450 พิกเซล (16:9)</small>
+                                            <small className="text-muted d-block mb-2">แนะนำขนาด 1920 x 560 พิกเซล</small>
                                             <div
                                                 className="image-upload-box mb-3"
                                                 onClick={() => document.getElementById('coverInput').click()}
