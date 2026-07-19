@@ -204,6 +204,16 @@ const AdminLayout = () => {
 
                 {/* Page Content */}
                 <Outlet />
+
+                {/* Footer */}
+                <footer className="admin-footer">
+                    <p className="admin-footer-system">
+                        เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.
+                    </p>
+                    <p className="admin-footer-dev">
+                        พัฒนาโดย น.ส. สุธิตา แสนสุริวงค์ นิสิตชั้นปีที่ 4 สาขาวิทยาการคอมพิวเตอร์
+                    </p>
+                </footer>
             </main>
         </div>
     );

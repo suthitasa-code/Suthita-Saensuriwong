@@ -189,6 +189,26 @@ input[type="reset"],
     flex-direction: column;
 }
 
+/* ===== Footer (ปิดท้ายทุกหน้า แสดงชื่อระบบ + ผู้พัฒนา) ===== */
+.admin-footer {
+    margin-top: auto;
+    padding: 18px 0 6px;
+    text-align: center;
+    border-top: 1px solid #eaeaea;
+}
+
+.admin-footer-system {
+    font-size: 0.78rem;
+    color: #9aa0a6;
+    margin: 0;
+}
+
+.admin-footer-dev {
+    font-size: 0.75rem;
+    color: #b5b9bd;
+    margin: 2px 0 0;
+}
+
 /* ===== Header Box Layout (ปรับปรุง: ยืดขยาย 100% เพื่อดันโปรไฟล์ไปขวาสุดจอ) ===== */
 .header-box {
     display: flex;
