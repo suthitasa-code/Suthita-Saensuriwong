@@ -284,9 +284,10 @@ const ManageDocument = () => {
                 <div className="col-12">
                     <div className="custom-table-card">
                         <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h6 className="fw-bold m-0 text-danger">
-                                ผลการกรอง: พบข้อมูลทั้งหมด <span className="text-danger fw-bold">{filteredDocuments.length}</span> จาก {documents.length} รายการ
-                            </h6>
+                            <div className="doc-filter-result">
+                                <i className="fas fa-filter"></i>
+                                ผลการกรอง: พบข้อมูลทั้งหมด <span className="doc-filter-count">{filteredDocuments.length}</span> จาก {documents.length} รายการ
+                            </div>
                         </div>
                         
                         <div className="table-responsive">

@@ -297,6 +297,39 @@
     border: 1px solid #e0e0e0;
 }
 
+/* ป้ายสรุปผลการกรองให้เด่นสะดุดตา */
+.doc-filter-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fff0f0, #ffe3e3);
+    border: 1px solid #ffc2c2;
+    color: #c0392b;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 9px 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.14);
+}
+
+.doc-filter-result i {
+    color: #c0392b;
+}
+
+.doc-filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 7px;
+    background: #c0392b;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    margin: 0 3px;
+}
+
 /* เอฟเฟกต์ลิงก์สำหรับชี้แล้วคลิกพรีวิวส่องเปิดดูรูปภาพ/PDF สด ๆ */
 .text-hover-preview {
     color: #212529;
