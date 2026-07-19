@@ -185,21 +185,40 @@ const ManageDocument = () => {
     };
 
     const formatThaiDate = (dateString) => {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('th-TH', options);
+        const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleString('th-TH', options);
     };
 
     return (
         <div className="container-fluid px-4 py-4 animate__animated animate__fadeIn">
-            
+
+            {/* การ์ดแนะนำขั้นตอนการอัปโหลดเอกสาร */}
+            <div className="doc-guide-card mb-4">
+                <div className="doc-guide-step">
+                    <div className="doc-guide-icon"><span>1</span></div>
+                    <div className="doc-guide-text">
+                        <div className="doc-guide-title">เลือกประเภทเอกสาร</div>
+                        <div className="doc-guide-desc">เลือกหมวดหมู่ที่ตรงกับไฟล์ที่จะอัปโหลดจากเมนูด้านล่าง</div>
+                    </div>
+                </div>
+                <div className="doc-guide-arrow"><i className="fas fa-chevron-right"></i></div>
+                <div className="doc-guide-step">
+                    <div className="doc-guide-icon"><span>2</span></div>
+                    <div className="doc-guide-text">
+                        <div className="doc-guide-title">อัปโหลดไฟล์</div>
+                        <div className="doc-guide-desc">คลิกกล่องเส้นประเพื่อเลือกไฟล์จากเครื่องแล้วบันทึกเข้าสู่ระบบ</div>
+                    </div>
+                </div>
+            </div>
+
             {/* 1. ส่วนกำหนดประเภท และกล่องอัปโหลดด้านบน */}
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="card p-3 mb-3 border-0 shadow-sm" style={{ borderRadius: '15px', backgroundColor: '#fff' }}>
                         <label className="form-label fw-bold text-dark mb-2">
-                            <i className="fas fa-tags me-2 text-maroon"></i>ขั้นตอนที่ 1: เลือกประเภทเอกสารที่ต้องการอัปโหลดก่อน:
+                            <i className="fas fa-tags me-2 text-maroon"></i>เลือกประเภทเอกสารที่ต้องการอัปโหลดก่อน
                         </label>
-                        <select 
+                        <select
                             className="form-select form-doc-control-custom"
                             value={uploadCategory}
                             onChange={(e) => setUploadCategory(e.target.value)}
@@ -214,7 +233,7 @@ const ManageDocument = () => {
 
                     <div className="upload-zone-card" onClick={() => fileInputRef.current.click()}>
                         <div className="upload-icon-wrapper"><i className="fas fa-cloud-upload-alt"></i></div>
-                        <h5 className="fw-bold text-dark mb-1">ขั้นตอนที่ 2: คลิกตรงนี้เพื่อเลือกไฟล์บันทึกเข้าสู่ระบบ</h5>
+                        <h5 className="fw-bold text-dark mb-1">คลิกตรงนี้เพื่อเลือกไฟล์บันทึกเข้าสู่ระบบ</h5>
                         <p className="text-muted small mb-3">ระบบจะเก็บชื่อไฟล์ภาษาไทยดั้งเดิมเพื่อให้คุณค้นหาง่าย และตั้งชื่อภาษาอังกฤษให้หลังบ้านเสถียร</p>
                         <button className="btn-maroon px-4 shadow-sm"><i className="fas fa-file-medical me-2"></i>เลือกไฟล์จากเครื่อง</button>
                         <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleAddFileChange} accept=".pdf, .jpg, .jpeg, .png" />
@@ -265,8 +284,8 @@ const ManageDocument = () => {
                 <div className="col-12">
                     <div className="custom-table-card">
                         <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h6 className="fw-bold m-0 text-muted">
-                                ผลการกรอง: พบข้อมูลทั้งหมด <span className="text-maroon fw-bold">{filteredDocuments.length}</span> จาก {documents.length} รายการ
+                            <h6 className="fw-bold m-0 text-danger">
+                                ผลการกรอง: พบข้อมูลทั้งหมด <span className="text-danger fw-bold">{filteredDocuments.length}</span> จาก {documents.length} รายการ
                             </h6>
                         </div>
                         

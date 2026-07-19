@@ -24,6 +24,69 @@
     margin-bottom: 12px;
 }
 
+/* การ์ดแนะนำขั้นตอนการอัปโหลดเอกสาร */
+.doc-guide-card {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    background: linear-gradient(135deg, #fff9f0 0%, #fff5f5 100%);
+    border: 1px solid #f3e3c8;
+    border-radius: 20px;
+    padding: 20px 26px;
+    box-shadow: 0 8px 24px rgba(128, 0, 0, 0.06);
+}
+
+.doc-guide-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+}
+
+.doc-guide-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d4af37, #a52a2a 55%, #800000);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px rgba(128, 0, 0, 0.3);
+}
+
+.doc-guide-title {
+    font-weight: 700;
+    color: #1a1a2e;
+    font-size: 0.95rem;
+}
+
+.doc-guide-desc {
+    color: #8a8a99;
+    font-size: 0.78rem;
+    margin-top: 2px;
+}
+
+.doc-guide-arrow {
+    color: #d4af37;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .doc-guide-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .doc-guide-arrow {
+        transform: rotate(90deg);
+        align-self: center;
+    }
+}
+
 /* ปุ่มสีแดงประจำตระกูล KUSE */
 .btn-maroon {
     background: #800000;
