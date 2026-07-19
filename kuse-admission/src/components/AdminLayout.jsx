@@ -17,7 +17,7 @@ const PAGE_HEADERS = {
         subtitle: 'จัดการข้อมูลรายสาขา จุดเด่น และไฟล์หลักสูตร (มคอ.)',
     },
     '/admin/banners': {
-        title: 'จัดการรูปภาพแนะนำ',
+        title: 'จัดการรูปภาพหน้าแรก',
         subtitle: 'ควบคุมรูปภาพแบนเนอร์ที่แสดงในหน้าเว็บไซต์',
     },
     '/admin/documents': {
@@ -132,7 +132,7 @@ const AdminLayout = () => {
                         className={getMenuClass('/admin/banners')}
                         onClick={() => navigate('/admin/banners')}
                     >
-                        <i className="fas fa-images me-2"></i> จัดการรูปภาพแนะนำ
+                        <i className="fas fa-images me-2"></i> จัดการรูปภาพหน้าแรก
                     </div>
 
                     <div

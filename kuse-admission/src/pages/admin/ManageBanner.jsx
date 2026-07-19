@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/manageBanner.css'; 
 
@@ -16,6 +16,8 @@ const ManageBanner = () => {
     const [subtitle, setSubtitle] = useState('');
     const [displayOrder, setDisplayOrder] = useState(1);
     const [imageFile, setImageFile] = useState(null);
+    const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+    const fileInputRef = useRef(null);
 
     // 🔄 ฟังก์ชันดึงข้อมูลจาก Database จริงมาแสดงผลบนหน้าจอ
     const fetchBanners = async () => {
@@ -33,6 +35,17 @@ const ManageBanner = () => {
         fetchBanners();
     }, []);
 
+    // 🖼️ สร้าง/เคลียร์ URL พรีวิวรูปที่เพิ่งเลือก ป้องกันหน่วยความจำรั่วเมื่อเปลี่ยนไฟล์
+    useEffect(() => {
+        if (!imageFile) {
+            setImagePreviewUrl(null);
+            return;
+        }
+        const url = URL.createObjectURL(imageFile);
+        setImagePreviewUrl(url);
+        return () => URL.revokeObjectURL(url);
+    }, [imageFile]);
+
     const handleAddClick = () => {
         setBannerId(null);
         setTitle('');
@@ -49,6 +62,11 @@ const ManageBanner = () => {
         setDisplayOrder(banner.displayOrder || 1);
         setImageFile(null);
         setShowModal(true);
+    };
+
+    const handleRemoveImage = () => {
+        setImageFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
     // 💾 ฟังก์ชันบันทึกข้อมูลเข้า Database (ทั้งเพิ่มใหม่และแก้ไข)
@@ -224,13 +242,24 @@ const ManageBanner = () => {
                                     </div>
                                     <div className="col-6">
                                         <label className="small fw-bold text-muted mb-1">เลือกไฟล์รูปภาพ</label>
-                                        <input 
-                                            type="file" 
-                                            className="form-control form-control-custom" 
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="form-control form-control-custom"
                                             accept="image/*"
-                                            onChange={(e) => setImageFile(e.target.files[0])}
-                                            required={bannerId === null} 
+                                            onChange={(e) => setImageFile(e.target.files[0] || null)}
+                                            required={bannerId === null}
                                         />
+                                        <span className="d-block small text-muted mt-1">แนะนำขนาด 1920 x 600 พิกเซล</span>
+                                        {imageFile && (
+                                            <div className="file-preview-chip">
+                                                <img src={imagePreviewUrl} alt={imageFile.name} />
+                                                <span className="file-preview-name" title={imageFile.name}>{imageFile.name}</span>
+                                                <button type="button" className="btn-remove-file" onClick={handleRemoveImage}>
+                                                    <i className="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="text-center mt-2">

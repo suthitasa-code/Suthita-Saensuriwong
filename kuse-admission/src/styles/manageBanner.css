@@ -70,19 +70,22 @@
 }
 
 .banner-page-container .btn-kuse-gold {
-    background: #D4AF37;
+    background: linear-gradient(135deg, #c0001f 0%, #800000 45%, #4a0000 100%);
+    background-size: 220% 220%;
+    background-position: 0% 50%;
     color: white;
     border: none;
     padding: 10px 24px;
     border-radius: 50px;
     font-weight: 600;
-    transition: 0.3s;
+    transition: background-position 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .banner-page-container .btn-kuse-gold:hover {
-    background: #b8932c;
+    background-position: 100% 50%;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(212,175,55,0.4);
+    box-shadow: 0 6px 16px rgba(128, 0, 0, 0.35);
+    color: white;
 }
 
 .banner-page-container .btn-maroon {
@@ -191,4 +194,53 @@
 .banner-page-container .form-control-custom:focus {
     border-color: #800000 !important;
     box-shadow: 0 0 0 0.2rem rgba(128,0,0,0.2) !important;
+}
+
+/* พรีวิวไฟล์รูปที่เพิ่งเลือก พร้อมปุ่มกากบาทเอาออก */
+.banner-page-container .file-preview-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.banner-page-container .file-preview-chip img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.banner-page-container .file-preview-name {
+    font-size: 0.75rem;
+    color: #555;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.banner-page-container .btn-remove-file {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    font-size: 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.banner-page-container .btn-remove-file:hover {
+    background: #dc2626;
 }
