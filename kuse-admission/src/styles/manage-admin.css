@@ -426,3 +426,14 @@
         width: 100%;
     }
 }
+
+@media (max-width: 576px) {
+    .card-status-chart {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    .summary-chart-body {
+        width: 100%;
+    }
+}

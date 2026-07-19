@@ -148,6 +148,16 @@ const Dashboard = () => {
     [admins]
   );
 
+  // แยกจำนวนแบนเนอร์ตามหน้าเป้าหมาย (pageTarget) — เดิมรูปที่ยังไม่ระบุถือเป็นของหน้าแรก
+  const homeBannerCount = useMemo(
+    () => banners.filter((b) => (b.pageTarget || 'home') === 'home').length,
+    [banners]
+  );
+  const curriculumBannerCount = useMemo(
+    () => banners.filter((b) => b.pageTarget === 'curriculum').length,
+    [banners]
+  );
+
   const recentAnnouncements = useMemo(
     () => [...announcements]
       .sort((a, b) => (b.announcementID || 0) - (a.announcementID || 0))
@@ -253,10 +263,10 @@ const Dashboard = () => {
     chart: { type: 'bar', toolbar: { show: false }, fontFamily: FONT_FAMILY },
     plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '42%', distributed: true } },
     xaxis: {
-      categories: ['หลักสูตร', 'เอกสาร', 'แบนเนอร์', 'แอดมิน'],
+      categories: ['หลักสูตร', 'เอกสาร', 'แบนเนอร์หน้าแรก', 'แบนเนอร์หลักสูตร', 'แอดมิน'],
       labels: { style: { fontSize: '11px', colors: '#9aa0a6' } },
     },
-    colors: ['#800000', '#0891b2', '#7c3aed', '#1a1a2e'],
+    colors: ['#800000', '#0891b2', '#7c3aed', '#d9480f', '#1a1a2e'],
     dataLabels: { enabled: true, style: { fontSize: '11px', fontWeight: 700, colors: ['#fff'] } },
     legend: { show: false },
     grid: { borderColor: '#f1f1f4', strokeDashArray: 4 },
@@ -264,7 +274,7 @@ const Dashboard = () => {
   };
   const contentBarSeries = [{
     name: 'จำนวน',
-    data: [curriculums.length, documents.length, banners.length, activeAdminCount],
+    data: [curriculums.length, documents.length, homeBannerCount, curriculumBannerCount, activeAdminCount],
   }];
 
   if (loading) {
@@ -350,8 +360,9 @@ const Dashboard = () => {
         <div className="row g-3 d-flex align-items-stretch stat-cards-row content-stat-cards">
           <StatCard iconClass="ic-5" icon="fa-book" number={padNum(curriculums.length)} label="หลักสูตรทั้งหมด" delay={0} />
           <StatCard iconClass="ic-6" icon="fa-file-archive" number={padNum(documents.length)} label="เอกสารในคลัง" delay={60} />
-          <StatCard iconClass="ic-7" icon="fa-images" number={padNum(banners.length)} label="แบนเนอร์แนะนำ" delay={120} />
-          <StatCard iconClass="ic-8" icon="fa-user-shield" number={padNum(activeAdminCount)} label="ผู้ดูแลระบบที่ใช้งานอยู่" delay={180} />
+          <StatCard iconClass="ic-7" icon="fa-images" number={padNum(homeBannerCount)} label="แบนเนอร์หน้าแรก" delay={120} />
+          <StatCard iconClass="ic-9" icon="fa-panorama" number={padNum(curriculumBannerCount)} label="แบนเนอร์หลักสูตร" delay={150} />
+          <StatCard iconClass="ic-8" icon="fa-user-shield" number={padNum(activeAdminCount)} label="ผู้ดูแลระบบ" delay={180} />
         </div>
         <ChartCard
           title="ภาพรวมข้อมูลในระบบ"

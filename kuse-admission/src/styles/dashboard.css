@@ -199,13 +199,13 @@ input[type="reset"],
 
 .admin-footer-system {
     font-size: 0.78rem;
-    color: #9aa0a6;
+    color: #6c7278;
     margin: 0;
 }
 
 .admin-footer-dev {
     font-size: 0.75rem;
-    color: #b5b9bd;
+    color: #8a9096;
     margin: 2px 0 0;
 }
 
@@ -338,6 +338,7 @@ input[type="reset"],
 .ic-6 { background: linear-gradient(135deg, #22b8d1, #0891b2); box-shadow: 0 6px 14px rgba(8, 145, 178, 0.35); }
 .ic-7 { background: linear-gradient(135deg, #9a63f5, #7c3aed); box-shadow: 0 6px 14px rgba(124, 58, 237, 0.35); }
 .ic-8 { background: linear-gradient(135deg, #3a3a5c, #1a1a2e); box-shadow: 0 6px 14px rgba(26, 26, 46, 0.35); }
+.ic-9 { background: linear-gradient(135deg, #ffa94d, #d9480f); box-shadow: 0 6px 14px rgba(217, 72, 15, 0.35); }
 
 .stat-content {
     display: flex;
@@ -686,4 +687,159 @@ input[type="reset"],
     border-radius: 8px;
     padding: 1px 8px;
     font-weight: 500;
+}
+
+/* ==========================================================================
+   📱 RESPONSIVE — เมนูซ้ายแบบลิ้นชักบนแท็บเล็ต/มือถือ + ปรับผังหน้าให้พอดีจอ
+   ========================================================================== */
+
+/* ปุ่มแฮมเบอร์เกอร์เปิดเมนู — โผล่เฉพาะจอเล็กผ่าน media query ด้านล่าง */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1300;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--side-gradient);
+    color: white;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 6px 16px rgba(128, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+/* ฉากหลังมืดคลิกปิดเมนู */
+.sidebar-backdrop {
+    display: none;
+}
+
+.sidebar-backdrop.show {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1150;
+}
+
+/* ปุ่มกากบาทปิดเมนูภายในลิ้นชัก — ซ่อนบนจอใหญ่ */
+.sidebar-close-btn {
+    display: none;
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* ===== แท็บเล็ต / iPad ===== */
+@media (max-width: 992px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .sidebar-close-btn {
+        display: flex;
+    }
+
+    .sidebar {
+        left: 12px;
+        top: 12px;
+        height: calc(100vh - 24px);
+        transform: translateX(-120%);
+        transition: transform 0.3s ease;
+        z-index: 1200;
+    }
+
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 90px 24px 30px;
+    }
+
+    .header-box {
+        flex-wrap: wrap;
+        row-gap: 14px;
+    }
+
+    .profile-chip {
+        margin-left: auto;
+    }
+
+    .stat-cards-row {
+        flex-wrap: wrap !important;
+        overflow-x: visible;
+    }
+
+    .stat-cards-row > div {
+        flex: 1 1 calc(50% - 8px) !important;
+        min-width: 190px;
+    }
+
+    .dashboard-charts-row {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-panels-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== มือถือ ===== */
+@media (max-width: 600px) {
+    .sidebar {
+        left: 8px;
+        top: 8px;
+        width: calc(100vw - 16px);
+        height: calc(100vh - 16px);
+        border-radius: 26px;
+    }
+
+    .main-content {
+        padding: 80px 14px 24px;
+    }
+
+    .header-box h3 {
+        font-size: 1.15rem;
+    }
+
+    .subtitle-text {
+        font-size: 0.78rem;
+    }
+
+    .profile-chip {
+        padding: 8px 14px;
+        gap: 10px;
+    }
+
+    .profile-info-wrapper {
+        display: none; /* จอเล็กมากเหลือแค่รูปโปรไฟล์ ตัดรายละเอียดชื่อ/สิทธิ์ออกกันแน่นเกินไป */
+    }
+
+    .stat-cards-row > div {
+        flex: 1 1 100% !important;
+    }
+
+    .chart-card,
+    .dashboard-panel,
+    .doc-filter-result,
+    .dashboard-content-overview {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }

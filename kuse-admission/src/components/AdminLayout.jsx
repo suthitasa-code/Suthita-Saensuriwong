@@ -43,8 +43,15 @@ const AdminLayout = () => {
         role: localStorage.getItem('admin_role') || '',
         email: '',
     });
+    // ควบคุมเมนูซ้ายบนจอเล็ก (แท็บเล็ต/มือถือ) — ซ่อนไว้เป็นลิ้นชักไว้ก่อน เปิดผ่านปุ่มแฮมเบอร์เกอร์
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const pageHeader = PAGE_HEADERS[location.pathname] || PAGE_HEADERS['/admin/dashboard'];
+
+    // ปิดเมนูอัตโนมัติทุกครั้งที่เปลี่ยนหน้า กันเมนูค้างเปิดอยู่บนจอเล็ก
+    useEffect(() => {
+        setSidebarOpen(false);
+    }, [location.pathname]);
 
     useEffect(() => {
         const name = localStorage.getItem('admin_name') || 'Suthita';
@@ -83,6 +90,12 @@ const AdminLayout = () => {
     const getMenuClass = (path) =>
         location.pathname === path ? 'nav-link-custom active' : 'nav-link-custom';
 
+    // ไปหน้าที่เลือก + ปิดเมนูลิ้นชักบนจอเล็กให้อัตโนมัติ
+    const goTo = (path) => {
+        navigate(path);
+        setSidebarOpen(false);
+    };
+
     const getRoleLabel = (role) => {
         if (role === 'Super Admin') return 'ผู้ดูแลระบบสารสนเทศสูงสุด';
         if (role === 'Admin') return 'ผู้ดูแลระบบ';
@@ -93,10 +106,33 @@ const AdminLayout = () => {
 
     return (
         <div className="admin-layout-container">
+            {/* ปุ่มแฮมเบอร์เกอร์ — แสดงเฉพาะจอแท็บเล็ต/มือถือผ่าน CSS */}
+            <button
+                type="button"
+                className="mobile-menu-toggle"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="เปิดเมนู"
+            >
+                <i className="fas fa-bars"></i>
+            </button>
+
+            {/* ฉากหลังคลิกปิดเมนู — แสดงเฉพาะตอนเมนูเปิดอยู่บนจอเล็ก */}
+            {sidebarOpen && (
+                <div className="sidebar-backdrop show" onClick={() => setSidebarOpen(false)}></div>
+            )}
+
             {/* ===== SIDEBAR ===== */}
-            <aside className="sidebar">
+            <aside className={`sidebar${sidebarOpen ? ' sidebar-open' : ''}`}>
                 {/* Brand / Logo */}
                 <div className="sidebar-brand">
+                    <button
+                        type="button"
+                        className="sidebar-close-btn"
+                        onClick={() => setSidebarOpen(false)}
+                        aria-label="ปิดเมนู"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
                     <div className="brand-icon-wrapper">
                         <i className="fas fa-graduation-cap gold-cap"></i>
                     </div>
@@ -111,7 +147,7 @@ const AdminLayout = () => {
                     <div className="nav-label">ข้อมูลวิเคราะห์</div>
                     <div
                         className={getMenuClass('/admin/dashboard')}
-                        onClick={() => navigate('/admin/dashboard')}
+                        onClick={() => goTo('/admin/dashboard')}
                     >
                         <i className="fas fa-th-large me-2"></i> แดชบอร์ด
                     </div>
@@ -120,35 +156,35 @@ const AdminLayout = () => {
                     {/* 🌟 แม่ปรับ Path ตรงนี้ให้ตรงกับ App.jsx เพื่อแก้ปัญหาหน้าจอขาวให้แล้วจ้า */}
                     <div
                         className={getMenuClass('/admin/manage-tcas')}
-                        onClick={() => navigate('/admin/manage-tcas')}
+                        onClick={() => goTo('/admin/manage-tcas')}
                     >
                         <i className="fas fa-bullhorn me-2"></i> จัดการประกาศรับสมัคร
                     </div>
 
                     <div
                         className={getMenuClass('/admin/courses')}
-                        onClick={() => navigate('/admin/courses')}
+                        onClick={() => goTo('/admin/courses')}
                     >
                         <i className="fas fa-graduation-cap me-2"></i> จัดการหลักสูตร
                     </div>
 
                     <div
                         className={getMenuClass('/admin/banners')}
-                        onClick={() => navigate('/admin/banners')}
+                        onClick={() => goTo('/admin/banners')}
                     >
                         <i className="fas fa-images me-2"></i> จัดการรูปภาพหน้าแรก
                     </div>
 
                     <div
                         className={getMenuClass('/admin/course-banners')}
-                        onClick={() => navigate('/admin/course-banners')}
+                        onClick={() => goTo('/admin/course-banners')}
                     >
                         <i className="fas fa-panorama me-2"></i> จัดการรูปภาพหลักสูตร
                     </div>
 
                     <div
                         className={getMenuClass('/admin/documents')}
-                        onClick={() => navigate('/admin/documents')}
+                        onClick={() => goTo('/admin/documents')}
                     >
                         <i className="fas fa-file-archive me-2"></i> คลังไฟล์เอกสาร
                     </div>
@@ -158,7 +194,7 @@ const AdminLayout = () => {
                             <div className="nav-label">บัญชีผู้ใช้</div>
                             <div
                                 className={getMenuClass('/admin/users')}
-                                onClick={() => navigate('/admin/users')}
+                                onClick={() => goTo('/admin/users')}
                             >
                                 <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
                             </div>

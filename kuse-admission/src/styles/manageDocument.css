@@ -117,6 +117,7 @@
 
 .table-kuse {
     width: 100%;
+    min-width: 640px; /* กันคอลัมน์บีบจนตัวหนังสือตกบรรทัดทีละตัวบนจอเล็ก ให้เลื่อนแนวนอนแทน */
     margin-bottom: 0;
     vertical-align: middle;
 }
@@ -218,6 +219,7 @@
 .category-tabs {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
     border-bottom: 2px solid #efefef;
     padding-bottom: 15px;
 }
@@ -339,4 +341,30 @@
 .text-hover-preview:hover {
     color: #800000;
     text-decoration: underline;
+}
+
+/* ==========================================================================
+   📱 RESPONSIVE
+   ========================================================================== */
+@media (max-width: 600px) {
+    .upload-zone-card {
+        padding: 20px 16px;
+    }
+
+    .custom-table-card {
+        padding: 16px;
+    }
+
+    .filter-action-bar {
+        padding: 16px;
+    }
+
+    .tab-item {
+        padding: 7px 14px;
+        font-size: 0.82rem;
+    }
+
+    .modal-custom-content {
+        padding: 20px;
+    }
 }

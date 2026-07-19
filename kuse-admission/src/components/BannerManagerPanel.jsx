@@ -243,7 +243,7 @@ const BannerManagerPanel = ({
                                     />
                                 </div>
                                 <div className="row g-3 mb-4">
-                                    <div className="col-6">
+                                    <div className="col-12 col-sm-6">
                                         <label className="small fw-bold text-muted mb-1">ลำดับการแสดงผล</label>
                                         <input
                                             type="number"
@@ -254,7 +254,7 @@ const BannerManagerPanel = ({
                                             required
                                         />
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col-12 col-sm-6">
                                         <label className="small fw-bold text-muted mb-1">เลือกไฟล์รูปภาพ</label>
                                         <input
                                             type="file"
