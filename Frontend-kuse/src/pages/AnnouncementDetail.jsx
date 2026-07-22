@@ -294,7 +294,11 @@ const AnnouncementDetail = () => {
         {item.notes && (
           <section id="notes" className="ad-section reveal-on-scroll">
             <div className="ad-note-box">
-              <div className="ad-note-title"><i className="fas fa-info-circle me-2"></i>หมายเหตุ</div>
+              <i className="fas fa-thumbtack ad-note-icon-bg"></i>
+              <div className="ad-note-title">
+                <span className="ad-header-icon ad-header-icon-gold"><i className="fas fa-info-circle"></i></span>
+                หมายเหตุ
+              </div>
               <p className="ad-text-block ad-note-content">{item.notes}</p>
             </div>
           </section>
