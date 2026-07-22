@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { API_BASE, ENDPOINTS, unwrap } from '../config/api';
 import HeroCarousel from '../components/HeroCarousel';
 import AnnouncementCard from '../components/AnnouncementCard';
-import AnnouncementSearchSection from '../components/AnnouncementSearchSection';
+import AnnouncementFilterCard from '../components/AnnouncementFilterCard';
+import { useAnnouncementFilters } from '../hooks/useAnnouncementFilters';
 import '../styles/home.css';
 
 const Home = () => {
@@ -44,6 +45,15 @@ const Home = () => {
     [announcements]
   );
 
+  const filters = useAnnouncementFilters(announcements);
+  const { filteredAnnouncements, isFiltering } = filters;
+
+  // ปกติโชว์แค่ 4 รอบล่าสุด แต่ถ้ากำลังค้นหา/กรองอยู่ ให้โชว์ผลลัพธ์ที่ตรงเงื่อนไขทั้งหมดแทน (ไม่จำกัดแค่ 4)
+  const displayedAnnouncements = useMemo(() => {
+    if (!isFiltering) return latestAnnouncements;
+    return [...filteredAnnouncements].sort((a, b) => (b.announcementID || 0) - (a.announcementID || 0));
+  }, [isFiltering, filteredAnnouncements, latestAnnouncements]);
+
   return (
     <>
       {banners.length > 0 && (
@@ -63,16 +73,22 @@ const Home = () => {
           <p>อัปเดตรอบรับสมัครนักศึกษาใหม่ล่าสุดของคณะวิทยาศาสตร์และวิศวกรรมศาสตร์</p>
         </div>
 
+        <AnnouncementFilterCard {...filters} />
+
         {loading && <div className="home-loading">กำลังโหลดข้อมูลประกาศ...</div>}
 
-        {!loading && latestAnnouncements.length === 0 && (
-          <div className="home-empty">ยังไม่มีประกาศรับสมัครในระบบค่ะ</div>
+        {!loading && displayedAnnouncements.length === 0 && (
+          <div className="home-empty">
+            {announcements.length === 0
+              ? 'ยังไม่มีประกาศรับสมัครในระบบค่ะ'
+              : 'ไม่พบข้อมูลที่ค้นหา ลองค้นหาใหม่อีกครั้งนะคะ'}
+          </div>
         )}
 
-        {!loading && latestAnnouncements.length > 0 && (
+        {!loading && displayedAnnouncements.length > 0 && (
           <>
             <div className="row g-4 mb-4">
-              {latestAnnouncements.map((item) => (
+              {displayedAnnouncements.map((item) => (
                 <div className="col-md-6 col-lg-3" key={item.announcementID}>
                   <AnnouncementCard item={item} />
                 </div>
@@ -85,8 +101,6 @@ const Home = () => {
             </div>
           </>
         )}
-
-        <AnnouncementSearchSection announcements={announcements} loading={loading} />
       </div>
     </>
   );
