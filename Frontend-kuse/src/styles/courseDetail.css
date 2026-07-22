@@ -164,6 +164,7 @@ html {
 
 .course-subnav-inner {
   display: flex;
+  justify-content: safe center;
   gap: 6px;
   overflow-x: auto;
   padding: 12px 15px;
@@ -321,6 +322,7 @@ html {
 }
 
 .course-shop-frame {
+  position: relative;
   display: inline-block;
   padding: 10px;
   background: white;
@@ -328,6 +330,8 @@ html {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid #f0f0f0;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  font: inherit;
 }
 
 .course-shop-frame:hover {
@@ -342,7 +346,101 @@ html {
   display: block;
 }
 
+.course-shop-zoom-hint {
+  position: absolute;
+  inset: 10px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-shop-frame:hover .course-shop-zoom-hint {
+  opacity: 1;
+}
+
+/* ===== Lightbox (เสื้อช็อป) ===== */
+.course-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 15px;
+  animation: course-fade-in 0.25s ease;
+}
+
+@keyframes course-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.course-lightbox-box {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.course-lightbox-box img {
+  max-width: 100%;
+  max-height: 75vh;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.course-lightbox-close {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--maroon);
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.course-lightbox-close:hover {
+  background: var(--maroon);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.course-lightbox-download {
+  background: var(--gold);
+  color: #2b1e00;
+  border: none;
+  border-radius: 50px;
+  padding: 11px 30px;
+  font-weight: 700;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  transition: 0.3s;
+}
+
+.course-lightbox-download:hover {
+  background: var(--gold-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
 .course-pdf-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -355,6 +453,27 @@ html {
   transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
   text-decoration: none;
   color: inherit;
+}
+
+.course-pdf-latest-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--gold);
+  color: #2b1e00;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+
+.course-pdf-date {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 16px;
+  margin-top: -8px;
 }
 
 .course-pdf-card:hover {

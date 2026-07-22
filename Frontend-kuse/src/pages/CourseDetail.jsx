@@ -11,11 +11,45 @@ const splitLines = (text) =>
     .map((s) => s.trim())
     .filter(Boolean);
 
+// ชื่อไฟล์ที่อัปโหลดจะอยู่ในรูปแบบ pdfFiles-<timestamp>-<random>.pdf เราดึงเวลาที่แนบมา
+// ในชื่อไฟล์ออกมาบอกวันที่อัปโหลดจริง และเทียบหาไฟล์ที่อัปโหลดล่าสุดให้เอง
+const parsePdfTimestamp = (filename) => {
+  const match = (filename || '').match(/-(\d{10,})-/);
+  return match ? Number(match[1]) : null;
+};
+
+const formatUploadDate = (timestamp) => {
+  if (!timestamp) return null;
+  const d = new Date(timestamp);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('th-TH', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
+// ดาวน์โหลดไฟล์ข้ามโดเมน (frontend / API คนละพอร์ตกัน) ต้องดึงมาเป็น blob ก่อน
+// เพราะ attribute download เฉยๆ ใช้ไม่ได้กับลิงก์ข้ามโดเมน เบราว์เซอร์จะเปิดไฟล์แทนการดาวน์โหลด
+const downloadFile = async (url, filename) => {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    console.error('ดาวน์โหลดไฟล์ไม่สำเร็จ:', err);
+  }
+};
+
 const CourseDetail = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [shopLightboxOpen, setShopLightboxOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,10 +83,17 @@ const CourseDetail = () => {
   const insideItems = useMemo(() => splitLines(course?.insideKuse), [course]);
   const careerPrivateItems = useMemo(() => splitLines(course?.careerPrivate), [course]);
   const careerGovItems = useMemo(() => splitLines(course?.careerGovernment), [course]);
-  const pdfList = useMemo(
-    () => (course?.pdfFiles || '').split(',').map((f) => f.trim()).filter(Boolean),
-    [course]
-  );
+  const pdfList = useMemo(() => {
+    const names = (course?.pdfFiles || '').split(',').map((f) => f.trim()).filter(Boolean);
+    const withMeta = names.map((filename) => {
+      const timestamp = parsePdfTimestamp(filename);
+      return { filename, timestamp, uploadDate: formatUploadDate(timestamp) };
+    });
+    const latestTimestamp = Math.max(0, ...withMeta.map((f) => f.timestamp || 0));
+    return withMeta
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+      .map((f) => ({ ...f, isLatest: withMeta.length > 1 && f.timestamp === latestTimestamp && f.timestamp !== null }));
+  }, [course]);
 
   // เอฟเฟกต์ fade-in ทีละส่วนตอนเลื่อนจอลงมาเจอ (สังเกตด้วย IntersectionObserver)
   useEffect(() => {
@@ -200,9 +241,15 @@ const CourseDetail = () => {
         {shopUrl && (
           <section id="shop" className="course-section reveal-on-scroll text-center">
             <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-shirt me-2"></i>เสื้อช็อปประจำสาขา</h3>
-            <div className="course-shop-frame">
+            <button
+              type="button"
+              className="course-shop-frame"
+              onClick={() => setShopLightboxOpen(true)}
+              title="คลิกเพื่อดูรูปขนาดเต็ม"
+            >
               <img src={shopUrl} alt={`เสื้อช็อปประจำสาขา ${course.curriculumName || ''}`} />
-            </div>
+              <span className="course-shop-zoom-hint"><i className="fas fa-magnifying-glass-plus me-2"></i>ดูรูปขนาดเต็ม</span>
+            </button>
           </section>
         )}
 
@@ -210,7 +257,7 @@ const CourseDetail = () => {
           <section id="docs" className="course-section reveal-on-scroll">
             <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-file-lines me-2"></i>เอกสารหลักสูตร</h3>
             <div className="row g-4 justify-content-center">
-              {pdfList.map((filename, i) => (
+              {pdfList.map(({ filename, uploadDate, isLatest }, i) => (
                 <div className="col-md-4 col-sm-6" key={filename}>
                   <a
                     href={fileUrl(`curriculum/documents/${filename}`)}
@@ -218,8 +265,10 @@ const CourseDetail = () => {
                     rel="noreferrer"
                     className="course-pdf-card"
                   >
+                    {isLatest && <span className="course-pdf-latest-badge">ฉบับล่าสุด</span>}
                     <i className="fas fa-file-pdf"></i>
                     <h5>เอกสารหลักสูตร{pdfList.length > 1 ? ` ฉบับที่ ${i + 1}` : ''}</h5>
+                    {uploadDate && <span className="course-pdf-date">อัปโหลดเมื่อ {uploadDate}</span>}
                     <span className="course-pdf-btn">
                       เปิดเอกสาร <i className="fas fa-arrow-up-right-from-square ms-1"></i>
                     </span>
@@ -230,6 +279,29 @@ const CourseDetail = () => {
           </section>
         )}
       </div>
+
+      {shopLightboxOpen && (
+        <div className="course-lightbox-overlay" onClick={() => setShopLightboxOpen(false)}>
+          <div className="course-lightbox-box" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="course-lightbox-close"
+              onClick={() => setShopLightboxOpen(false)}
+              aria-label="ปิด"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+            <img src={shopUrl} alt={`เสื้อช็อปประจำสาขา ${course.curriculumName || ''}`} />
+            <button
+              type="button"
+              className="course-lightbox-download"
+              onClick={() => downloadFile(shopUrl, `เสื้อช็อป-${course.curriculumName || course.curriculumID}.jpg`)}
+            >
+              <i className="fas fa-download me-2"></i>ดาวน์โหลดรูปนี้
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
