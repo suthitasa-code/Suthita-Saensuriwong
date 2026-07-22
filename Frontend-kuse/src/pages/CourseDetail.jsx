@@ -1,7 +1,237 @@
-const CourseDetail = () => (
-  <div className="container px-4 py-5">
-    <h2>หน้ารายละเอียดหลักสูตร (กำลังจะทำต่อ)</h2>
-  </div>
-);
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { API_BASE, ENDPOINTS, unwrap, fileUrl } from '../config/api';
+import '../styles/courseDetail.css';
+
+// แตกข้อความหลายบรรทัดในฟอร์มแอดมิน (กด Enter คั่นแต่ละหัวข้อ) ให้เป็นรายการ
+// ถ้าแอดมินพิมพ์รวดเดียวไม่ขึ้นบรรทัดใหม่ ก็จะได้รายการเดียว แสดงเป็นย่อหน้าปกติ
+const splitLines = (text) =>
+  (text || '')
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+const CourseDetail = () => {
+  const { id } = useParams();
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+    setCourse(null);
+
+    const load = async () => {
+      try {
+        const res = await fetch(`${API_BASE}${ENDPOINTS.curriculums}/${id}`);
+        const json = await res.json();
+        if (cancelled) return;
+        if (!res.ok || json.success === false) {
+          setNotFound(true);
+        } else {
+          setCourse(unwrap(json));
+        }
+      } catch (err) {
+        console.error('โหลดข้อมูลหลักสูตรไม่สำเร็จ:', err);
+        if (!cancelled) setNotFound(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    load();
+    return () => { cancelled = true; };
+  }, [id]);
+
+  const whatWeLearnItems = useMemo(() => splitLines(course?.whatWeLearn), [course]);
+  const insideItems = useMemo(() => splitLines(course?.insideKuse), [course]);
+  const careerPrivateItems = useMemo(() => splitLines(course?.careerPrivate), [course]);
+  const careerGovItems = useMemo(() => splitLines(course?.careerGovernment), [course]);
+  const pdfList = useMemo(
+    () => (course?.pdfFiles || '').split(',').map((f) => f.trim()).filter(Boolean),
+    [course]
+  );
+
+  // เอฟเฟกต์ fade-in ทีละส่วนตอนเลื่อนจอลงมาเจอ (สังเกตด้วย IntersectionObserver)
+  useEffect(() => {
+    if (!course) return undefined;
+    const els = document.querySelectorAll('.reveal-on-scroll');
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [course]);
+
+  if (loading) {
+    return (
+      <div className="course-detail-loading">
+        <div className="spinner-ring"></div>
+        <p>กำลังโหลดข้อมูลหลักสูตร...</p>
+      </div>
+    );
+  }
+
+  if (notFound || !course) {
+    return (
+      <div className="container px-4 py-5 text-center course-detail-notfound">
+        <i className="fas fa-triangle-exclamation fa-3x mb-3"></i>
+        <h3>ไม่พบข้อมูลหลักสูตรนี้ค่ะ</h3>
+        <Link to="/curriculum" className="btn-back-course mt-3">
+          <i className="fas fa-chevron-left me-2"></i>กลับไปหน้าหลักสูตร
+        </Link>
+      </div>
+    );
+  }
+
+  const coverUrl = course.Images ? fileUrl(`curriculum/images/${course.Images}`) : '';
+  const shopUrl = course.shopPhoto ? fileUrl(`curriculum/images/${course.shopPhoto}`) : '';
+  const hasCareerSection = Boolean(course.jobOpportunities) || careerPrivateItems.length > 0 || careerGovItems.length > 0;
+
+  return (
+    <>
+      <header
+        className="course-hero"
+        style={coverUrl ? { backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.68)), url(${coverUrl})` } : undefined}
+      >
+        <Link to="/curriculum" className="course-back-btn">
+          <i className="fas fa-chevron-left me-2"></i>กลับไปหน้าหลักสูตร
+        </Link>
+        <div className="container">
+          <div className="course-hero-icon">
+            <i className={course.icon || 'fas fa-graduation-cap'}></i>
+          </div>
+          <h1 className="course-hero-title">{course.curriculumName || 'ไม่ระบุชื่อหลักสูตร'}</h1>
+          {course.deptNameTH && <h2 className="course-hero-dept">{course.deptNameTH}</h2>}
+          {course.curriculumNameEN && <p className="course-hero-en">{course.curriculumNameEN}</p>}
+          <div className="course-hero-badges">
+            {course.degreeLevel && <span className="course-badge">{course.degreeLevel}</span>}
+            {course.curriculumType && <span className="course-badge course-badge-gold">{course.curriculumType}</span>}
+          </div>
+        </div>
+      </header>
+
+      <nav className="course-subnav">
+        <div className="container course-subnav-inner">
+          {course.highlights && <a href="#highlights">จุดเด่น</a>}
+          {whatWeLearnItems.length > 0 && <a href="#learn">เราเรียนอะไร</a>}
+          {insideItems.length > 0 && <a href="#inside">INSIDE</a>}
+          {hasCareerSection && <a href="#career">เส้นทางอาชีพ</a>}
+          {shopUrl && <a href="#shop">เสื้อช็อป</a>}
+          {pdfList.length > 0 && <a href="#docs">เอกสารหลักสูตร</a>}
+        </div>
+      </nav>
+
+      <div className="container px-4 section-padding">
+        {course.highlights && (
+          <section id="highlights" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title"><i className="fas fa-star me-2"></i>จุดเด่นของหลักสูตร</h3>
+            <p className="course-highlight-text">{course.highlights}</p>
+          </section>
+        )}
+
+        {whatWeLearnItems.length > 0 && (
+          <section id="learn" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title"><i className="fas fa-book-open me-2"></i>เราเรียนอะไรกันบ้าง?</h3>
+            <div className="row g-3">
+              {whatWeLearnItems.map((item, i) => (
+                <div className="col-md-6" key={item}>
+                  <div className="course-content-box" style={{ transitionDelay: `${i * 60}ms` }}>
+                    <i className="fas fa-circle-check"></i>
+                    <span>{item}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {insideItems.length > 0 && (
+          <section id="inside" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title">
+              <i className="fas fa-magnifying-glass me-2"></i>
+              INSIDE {(course.curriculumName || '').toUpperCase()} ที่ มก.ฉกส.
+            </h3>
+            <div className="course-inside-list">
+              {insideItems.map((item) => (
+                <p key={item}><i className="fas fa-check-circle"></i>{item}</p>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {hasCareerSection && (
+          <section id="career" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title course-sub-title-center">
+              <i className="fas fa-road me-2"></i>เส้นทางอาชีพในอนาคต
+            </h3>
+            {course.jobOpportunities && <p className="course-highlight-text mb-4">{course.jobOpportunities}</p>}
+            <div className="row g-4">
+              {careerPrivateItems.length > 0 && (
+                <div className="col-md-6">
+                  <h4 className="course-career-header"><i className="fas fa-briefcase me-2"></i>สายงานเอกชน</h4>
+                  {careerPrivateItems.map((item) => (
+                    <div className="course-career-card" key={item}>{item}</div>
+                  ))}
+                </div>
+              )}
+              {careerGovItems.length > 0 && (
+                <div className="col-md-6">
+                  <h4 className="course-career-header"><i className="fas fa-landmark me-2"></i>สายงานราชการ/รัฐวิสาหกิจ</h4>
+                  {careerGovItems.map((item) => (
+                    <div className="course-career-card" key={item}>{item}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {shopUrl && (
+          <section id="shop" className="course-section reveal-on-scroll text-center">
+            <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-shirt me-2"></i>เสื้อช็อปประจำสาขา</h3>
+            <div className="course-shop-frame">
+              <img src={shopUrl} alt={`เสื้อช็อปประจำสาขา ${course.curriculumName || ''}`} />
+            </div>
+          </section>
+        )}
+
+        {pdfList.length > 0 && (
+          <section id="docs" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-file-lines me-2"></i>เอกสารหลักสูตร</h3>
+            <div className="row g-4 justify-content-center">
+              {pdfList.map((filename, i) => (
+                <div className="col-md-4 col-sm-6" key={filename}>
+                  <a
+                    href={fileUrl(`curriculum/documents/${filename}`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="course-pdf-card"
+                  >
+                    <i className="fas fa-file-pdf"></i>
+                    <h5>เอกสารหลักสูตร{pdfList.length > 1 ? ` ฉบับที่ ${i + 1}` : ''}</h5>
+                    <span className="course-pdf-btn">
+                      เปิดเอกสาร <i className="fas fa-arrow-up-right-from-square ms-1"></i>
+                    </span>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default CourseDetail;
