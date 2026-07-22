@@ -32,8 +32,8 @@ const statusLabelIcon = {
 };
 
 // รูปที่คลิกได้ทุกรูปในหน้านี้ (โปสเตอร์/กำหนดการ/สาขาที่เปิดรับ) ใช้ปุ่มซูม+ดาวน์โหลดชุดเดียวกัน
-const ClickableImage = ({ src, alt, onZoom, className, style }) => (
-  <button type="button" className={`ad-clickable-img ${className || ''}`} style={style} onClick={onZoom} title="คลิกเพื่อดูรูปขนาดเต็ม">
+const ClickableImage = ({ src, alt, onZoom, className }) => (
+  <button type="button" className={`ad-clickable-img ${className || ''}`} onClick={onZoom} title="คลิกเพื่อดูรูปขนาดเต็ม">
     <img src={src} alt={alt} />
     <span className="ad-zoom-hint"><i className="fas fa-magnifying-glass-plus me-2"></i>ดูรูปขนาดเต็ม</span>
   </button>
@@ -265,7 +265,6 @@ const AnnouncementDetail = () => {
                 <ClickableImage
                   key={name}
                   className="ad-mini-img"
-                  style={{ transitionDelay: `${i * 120}ms` }}
                   src={posterUrl(name)}
                   alt={`กำหนดการรับสมัคร ${i + 1}`}
                   onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `กำหนดการรับสมัคร-${item.title}-${i + 1}.jpg` })}
@@ -277,13 +276,12 @@ const AnnouncementDetail = () => {
 
         {majorList.length > 0 && (
           <section id="majors" className="ad-section reveal-on-scroll">
-            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-table-list"></i></span>สาขาวิชาที่เปิดรับสมัคร</h2>
+            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-gear"></i></span>สาขาวิชาที่เปิดรับสมัคร</h2>
             <div className="ad-mini-gallery">
               {majorList.map((name, i) => (
                 <ClickableImage
                   key={name}
                   className="ad-mini-img"
-                  style={{ transitionDelay: `${i * 120}ms` }}
                   src={posterUrl(name)}
                   alt={`สาขาวิชาที่เปิดรับสมัคร ${i + 1}`}
                   onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `สาขาที่เปิดรับ-${item.title}-${i + 1}.jpg` })}
