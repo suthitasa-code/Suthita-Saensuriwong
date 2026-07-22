@@ -123,7 +123,8 @@ const AnnouncementDetail = () => {
   const posterUrl = (name) => fileUrl(`announcements/${name}`);
 
   return (
-    <>
+    <div className="ad-page">
+      <div className="ad-detail-wrapper">
       <header className="ad-hero">
         <div className="ad-hero-topbar">
           <Link to="/announcement" className="ad-back-link">
@@ -134,10 +135,10 @@ const AnnouncementDetail = () => {
           </span>
         </div>
 
-        <div className="container ad-hero-inner">
+        <div className="ad-hero-inner">
           <h1>{item.title}</h1>
-          {(item.tcasRound || item.academicYear) && (
-            <h5>{[item.tcasRound, item.academicYear && `ปีการศึกษา ${item.academicYear}`].filter(Boolean).join(' · ')}</h5>
+          {(item.subtitle || item.tcasRound || item.academicYear) && (
+            <h5>{item.subtitle || [item.tcasRound, item.academicYear && `ปีการศึกษา ${item.academicYear}`].filter(Boolean).join(' · ')}</h5>
           )}
 
           <div className="ad-info-grid">
@@ -162,7 +163,7 @@ const AnnouncementDetail = () => {
       </header>
 
       <nav className="ad-subnav">
-        <div className="container ad-subnav-inner">
+        <div className="ad-subnav-inner">
           {posterList.length > 0 && <a href="#poster">โปสเตอร์</a>}
           {item.candidateDetail && <a href="#candidate">คุณสมบัติผู้สมัคร</a>}
           {item.conditions && <a href="#conditions">เงื่อนไขการสมัคร</a>}
@@ -173,7 +174,7 @@ const AnnouncementDetail = () => {
         </div>
       </nav>
 
-      <div className="container px-4 section-padding">
+      <div className="ad-content-padding">
         {posterList.length > 0 && (
           <section id="poster" className="ad-section reveal-on-scroll">
             <div className="ad-poster-carousel">
@@ -294,6 +295,7 @@ const AnnouncementDetail = () => {
           </section>
         )}
       </div>
+      </div>
 
       {lightbox && (
         <div className="ad-lightbox-overlay" onClick={() => setLightbox(null)}>
@@ -308,7 +310,7 @@ const AnnouncementDetail = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

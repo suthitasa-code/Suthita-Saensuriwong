@@ -4,12 +4,12 @@ const AnnouncementRepository = {
   // 1. บันทึกประกาศใหม่
   save: async (data) => {
     const query = `
-      INSERT INTO announcement 
-      (title, tcasRound, academicYear, totalQuota, totalScholarships, candidateDetail, conditions, notes, openDate, closeDate, status, posterImg, scheduleImg, majorTableImg, manualPdf, announcementPdf, adminID) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO announcement
+      (title, subtitle, tcasRound, academicYear, totalQuota, totalScholarships, candidateDetail, conditions, notes, openDate, closeDate, status, posterImg, scheduleImg, majorTableImg, manualPdf, announcementPdf, adminID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
-      data.title, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
+      data.title, data.subtitle || null, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
       data.candidateDetail, data.conditions, data.notes, data.openDate, data.closeDate, data.status || '1',
       data.posterImg || null, data.scheduleImg || null, data.majorTableImg || null, data.manualPdf || null, data.announcementPdf || null,
       data.adminID
@@ -33,14 +33,14 @@ const AnnouncementRepository = {
   // 4. อัปเดตข้อมูลประกาศ
   update: async (id, data) => {
     const query = `
-      UPDATE announcement SET 
-        title = ?, tcasRound = ?, academicYear = ?, totalQuota = ?, totalScholarships = ?, 
-        candidateDetail = ?, conditions = ?, notes = ?, openDate = ?, closeDate = ?, 
+      UPDATE announcement SET
+        title = ?, subtitle = ?, tcasRound = ?, academicYear = ?, totalQuota = ?, totalScholarships = ?,
+        candidateDetail = ?, conditions = ?, notes = ?, openDate = ?, closeDate = ?,
         status = ?, posterImg = ?, scheduleImg = ?, majorTableImg = ?, manualPdf = ?, announcementPdf = ?, adminID = ?
       WHERE announcementID = ?
     `;
     const values = [
-      data.title, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
+      data.title, data.subtitle || null, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
       data.candidateDetail, data.conditions, data.notes, data.openDate, data.closeDate,
       data.status, data.posterImg, data.scheduleImg, data.majorTableImg, data.manualPdf, data.announcementPdf, data.adminID,
       id
