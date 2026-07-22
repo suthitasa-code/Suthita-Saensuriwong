@@ -6,8 +6,8 @@ const NAV_ITEMS = [
   { path: '/', label: 'หน้าหลัก' },
   { path: '/announcement', label: 'ประกาศรับสมัคร' },
   { path: '/curriculum', label: 'หลักสูตร' },
-  { path: '/about', label: 'เกี่ยวกับฉัน' },
   { path: '/contact', label: 'ติดต่อเรา' },
+  { path: '/about', label: 'เกี่ยวกับฉัน' },
 ];
 
 const PublicLayout = () => {
