@@ -313,9 +313,9 @@ const Dashboard = () => {
 
       <div className="row g-3 mb-4 d-flex align-items-stretch stat-cards-row">
         <StatCard iconClass="ic-1" icon="fa-copy" number={padNum(announcements.length)} label="ประกาศทั้งหมด" delay={0} />
-        <StatCard iconClass="ic-2" icon="fa-door-open" number={padNum(statusCounts.open)} label="กำลังเปิดรับสมัคร" delay={60} />
+        <StatCard iconClass="ic-2" icon="fa-circle-check" number={padNum(statusCounts.open)} label="กำลังเปิดรับสมัคร" delay={60} />
         <StatCard iconClass="ic-4" icon="fa-clock" number={padNum(statusCounts.waiting)} label="รอเปิดรับสมัคร" delay={120} />
-        <StatCard iconClass="ic-3" icon="fa-door-closed" number={padNum(statusCounts.closed)} label="ปิดการรับสมัครแล้ว" delay={180} />
+        <StatCard iconClass="ic-3" icon="fa-lock" number={padNum(statusCounts.closed)} label="ปิดการรับสมัครแล้ว" delay={180} />
       </div>
 
       {/* ===== แถวที่ 2: กราฟวิเคราะห์ข้อมูล ===== */}

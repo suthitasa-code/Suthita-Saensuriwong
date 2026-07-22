@@ -302,6 +302,7 @@
   border: 1px solid #eee;
   padding: 12px 18px;
   background: #fdfdfd;
+  color: #1a1a1a;
   transition: 0.3s;
   width: 100%;
 }
@@ -311,6 +312,11 @@
   border-color: var(--kuse-gold);
   box-shadow: 0 0 0 3px var(--kuse-gold-glow);
   background: #fff;
+}
+
+.form-control-kuse::placeholder {
+  color: #adb5bd;
+  opacity: 1;
 }
 
 /* ช่องกรอกชื่อหลักสูตร ให้ใหญ่และเด่นกว่าช่องทั่วไปเพราะชื่อหลักสูตรมักยาว */

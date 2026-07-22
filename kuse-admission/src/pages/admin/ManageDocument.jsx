@@ -215,7 +215,7 @@ const ManageDocument = () => {
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="card p-3 mb-3 border-0 shadow-sm" style={{ borderRadius: '15px', backgroundColor: '#fff' }}>
-                        <label className="form-label fw-bold text-dark mb-2">
+                        <label className="form-label fw-bold doc-label-dark mb-2">
                             <i className="fas fa-tags me-2 text-maroon"></i>เลือกประเภทเอกสารที่ต้องการอัปโหลดก่อน
                         </label>
                         <select
@@ -382,7 +382,7 @@ const ManageDocument = () => {
                         </div>
                         <form onSubmit={handleUpdateSubmit}>
                             <div className="mb-3">
-                                <label className="form-label small fw-bold text-muted mb-2">แก้ไขประเภทหมวดหมู่เอกสาร:</label>
+                                <label className="form-label small fw-bold doc-label-dark mb-2">แก้ไขประเภทหมวดหมู่เอกสาร:</label>
                                 <select 
                                     className="form-select form-doc-control-custom"
                                     value={editCategory}
@@ -397,7 +397,7 @@ const ManageDocument = () => {
                             </div>
 
                             <div className="mb-4">
-                                <label className="form-label small fw-bold text-muted mb-2">เลือกไฟล์ใหม่จากเครื่อง (ปล่อยว่างได้ หากต้องการเปลี่ยนแค่ประเภทหมวดหมู่)</label>
+                                <label className="form-label small fw-bold doc-label-dark mb-2">เลือกไฟล์ใหม่จากเครื่อง (ปล่อยว่างได้ หากต้องการเปลี่ยนแค่ประเภทหมวดหมู่)</label>
                                 <input type="file" className="form-control form-doc-control-custom" onChange={(e) => setEditFile(e.target.files[0])} accept=".pdf, .jpg, .jpeg, .png" />
                             </div>
                             

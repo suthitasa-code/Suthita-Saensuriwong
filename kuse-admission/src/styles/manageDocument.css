@@ -199,11 +199,21 @@
     border-radius: 12px;
     padding: 10px 15px;
     border: 1px solid #ced4da;
+    color: #1a1a1a;
 }
 
 .form-doc-control-custom:focus {
     border-color: #800000;
     box-shadow: 0 0 0 0.25rem rgba(128,0,0,0.15);
+}
+
+.form-doc-control-custom::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+
+.doc-label-dark {
+    color: #495057 !important;
 }
 
 /* กล่องตัวกรองและค้นหา */

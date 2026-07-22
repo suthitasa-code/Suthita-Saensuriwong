@@ -222,7 +222,7 @@ const BannerManagerPanel = ({
                         <div className="modal-body-custom">
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
-                                    <label className="small fw-bold text-muted mb-1">หัวข้อหลัก (Title)</label>
+                                    <label className="small fw-bold form-label-dark mb-1">หัวข้อหลัก (Title)</label>
                                     <input
                                         type="text"
                                         className="form-control form-control-custom"
@@ -233,7 +233,7 @@ const BannerManagerPanel = ({
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label className="small fw-bold text-muted mb-1">คำบรรยายย่อย (Subtitle)</label>
+                                    <label className="small fw-bold form-label-dark mb-1">คำบรรยายย่อย (Subtitle)</label>
                                     <input
                                         type="text"
                                         className="form-control form-control-custom"
@@ -244,7 +244,7 @@ const BannerManagerPanel = ({
                                 </div>
                                 <div className="row g-3 mb-4">
                                     <div className="col-12 col-sm-6">
-                                        <label className="small fw-bold text-muted mb-1">ลำดับการแสดงผล</label>
+                                        <label className="small fw-bold form-label-dark mb-1">ลำดับการแสดงผล</label>
                                         <input
                                             type="number"
                                             className="form-control form-control-custom"
@@ -255,7 +255,7 @@ const BannerManagerPanel = ({
                                         />
                                     </div>
                                     <div className="col-12 col-sm-6">
-                                        <label className="small fw-bold text-muted mb-1">เลือกไฟล์รูปภาพ</label>
+                                        <label className="small fw-bold form-label-dark mb-1">เลือกไฟล์รูปภาพ</label>
                                         <input
                                             type="file"
                                             ref={fileInputRef}

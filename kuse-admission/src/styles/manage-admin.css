@@ -195,6 +195,11 @@
     outline: none;
 }
 
+.form-control-kuse::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+
 .form-control-kuse:disabled {
     background-color: #e9ecef;
     color: #6c757d;

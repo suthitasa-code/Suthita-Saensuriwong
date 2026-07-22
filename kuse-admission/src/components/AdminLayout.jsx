@@ -162,17 +162,17 @@ const AdminLayout = () => {
                     </div>
 
                     <div
-                        className={getMenuClass('/admin/courses')}
-                        onClick={() => goTo('/admin/courses')}
-                    >
-                        <i className="fas fa-graduation-cap me-2"></i> จัดการหลักสูตร
-                    </div>
-
-                    <div
                         className={getMenuClass('/admin/banners')}
                         onClick={() => goTo('/admin/banners')}
                     >
                         <i className="fas fa-images me-2"></i> จัดการรูปภาพหน้าแรก
+                    </div>
+
+                    <div
+                        className={getMenuClass('/admin/courses')}
+                        onClick={() => goTo('/admin/courses')}
+                    >
+                        <i className="fas fa-graduation-cap me-2"></i> จัดการหลักสูตร
                     </div>
 
                     <div

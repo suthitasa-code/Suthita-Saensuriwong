@@ -424,7 +424,7 @@ const ManageCourse = () => {
                                             </div>
                                             <input type="file" id="coverInput" hidden accept="image/*" onChange={handleCoverChange} />
 
-                                            <label className="small text-muted mb-2 d-block">เลือกไอคอนสาขา</label>
+                                            <label className="label-kuse-bold mb-2 d-block">เลือกไอคอนสาขา</label>
                                             <div className="icon-selector mb-4">
                                                 {ICON_GROUPS.map((group) => (
                                                     <div key={group.label} className="icon-group">

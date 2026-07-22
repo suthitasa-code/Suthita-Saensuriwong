@@ -592,24 +592,24 @@ export default function ManageTcas() {
                   </div>
                   <div className="form-grid">
                     <div className="form-col-9">
-                      <label className="filter-label fw-bold text-dark">หัวข้อหลัก <span className="text-danger">*</span></label>
+                      <label className="filter-label fw-bold">หัวข้อหลัก <span className="text-danger">*</span></label>
                       <input type="text" className="form-control filter-control" placeholder="เช่น รับสมัครนักศึกษาใหม่ รอบที่ 2"
                         value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required />
                     </div>
                     <div className="form-col-3">
-                      <label className="filter-label fw-bold text-dark">ปีการศึกษา <span className="text-danger">*</span></label>
+                      <label className="filter-label fw-bold">ปีการศึกษา <span className="text-danger">*</span></label>
                       <input type="number" className="form-control filter-control" placeholder="เช่น 2569"
                         value={form.academicYear} onChange={e => setForm(p => ({ ...p, academicYear: e.target.value }))} required />
                     </div>
 
                     <div className="form-col-12">
-                      <label className="filter-label fw-bold text-dark">หัวข้อย่อย</label>
+                      <label className="filter-label fw-bold">หัวข้อย่อย</label>
                       <input type="text" className="form-control filter-control" placeholder="เช่น โควตาภาคตะวันออกเฉียงเหนือ..."
                         value={form.subtitle} onChange={e => setForm(p => ({ ...p, subtitle: e.target.value }))} />
                     </div>
 
                     <div className="form-col-6">
-                      <label className="filter-label fw-bold text-dark">รอบ TCAS <span className="text-danger">*</span></label>
+                      <label className="filter-label fw-bold">รอบ TCAS <span className="text-danger">*</span></label>
                       <select className="form-select filter-control" value={form.tcasRound} onChange={e => setForm(p => ({ ...p, tcasRound: e.target.value }))} required>
                         <option value="">-- เลือกรอบการรับสมัคร --</option>
                         <option value="รอบที่ 1 Portfolio">รอบที่ 1 Portfolio</option>
@@ -619,7 +619,7 @@ export default function ManageTcas() {
                       </select>
                     </div>
                     <div className="form-col-6">
-                      <label className="filter-label fw-bold text-dark">สถานะการแสดงผล</label>
+                      <label className="filter-label fw-bold">สถานะการแสดงผล</label>
                       <select className="form-select filter-control" value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))}>
                         <option value="1">เปิดใช้งาน</option>
                         <option value="0">ปิดใช้งาน</option>
@@ -645,12 +645,12 @@ export default function ManageTcas() {
                         value={form.closeDate} onChange={e => setForm(p => ({ ...p, closeDate: e.target.value }))} required />
                     </div>
                     <div className="form-col-3">
-                      <label className="filter-label fw-bold text-dark">จำนวนรับ (คน)</label>
+                      <label className="filter-label fw-bold">จำนวนรับ (คน)</label>
                       <input type="number" className="form-control filter-control" placeholder="เช่น 540"
                         value={form.totalQuota} onChange={e => setForm(p => ({ ...p, totalQuota: e.target.value }))} />
                     </div>
                     <div className="form-col-3">
-                      <label className="filter-label fw-bold text-dark">ทุนเรียนดี (ทุน)</label>
+                      <label className="filter-label fw-bold">ทุนเรียนดี (ทุน)</label>
                       <input type="number" className="form-control filter-control" placeholder="เช่น 50"
                         value={form.totalScholarships} onChange={e => setForm(p => ({ ...p, totalScholarships: e.target.value }))} />
                     </div>
@@ -720,7 +720,7 @@ export default function ManageTcas() {
                         placeholder="เช่น สมัครผ่านระบบ TCAS..."></textarea>
                     </div>
                     <div className="form-col-12">
-                      <label className="filter-label fw-bold text-dark">หมายเหตุ</label>
+                      <label className="filter-label fw-bold">หมายเหตุ</label>
                       <textarea className="form-control filter-control" rows="3"
                         value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}></textarea>
                     </div>
