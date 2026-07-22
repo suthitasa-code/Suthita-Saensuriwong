@@ -87,7 +87,7 @@ html, body {
   font-size: 0.93rem !important;
   font-family: 'IBM Plex Sans Thai', sans-serif !important;
   background-color: #fafafa !important;
-  color: #1a1a1a !important;
+  color: #000000 !important;
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 .filter-control:focus {

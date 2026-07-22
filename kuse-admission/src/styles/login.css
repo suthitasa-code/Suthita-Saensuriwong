@@ -149,10 +149,11 @@ html, body {
 
 .form-control-custom {
     width: 100%;
-    padding: 18px 45px 14px 50px; 
+    padding: 18px 45px 14px 50px;
     border-radius: 12px;
     border: 2px solid #eee;
     font-size: 1rem;
+    color: #000000;
     transition: 0.3s;
     background: white;
     box-sizing: border-box; /* กัน Padding ดันความกว้างพัง */
