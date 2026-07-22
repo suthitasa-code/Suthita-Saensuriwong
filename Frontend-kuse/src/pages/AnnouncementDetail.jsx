@@ -180,7 +180,7 @@ const AnnouncementDetail = () => {
           {scheduleList.length > 0 && <a href="#schedule">กำหนดการ</a>}
           {majorList.length > 0 && <a href="#majors">สาขาที่เปิดรับ</a>}
           {item.notes && <a href="#notes">หมายเหตุ</a>}
-          {(item.manualPdf || item.announcementPdf) && <a href="#downloads">เอกสารดาวน์โหลด</a>}
+          <a href="#downloads">เอกสารดาวน์โหลด</a>
         </div>
       </nav>
 
@@ -304,22 +304,28 @@ const AnnouncementDetail = () => {
           </section>
         )}
 
-        {(item.manualPdf || item.announcementPdf) && (
-          <section id="downloads" className="ad-section reveal-on-scroll">
-            <div className="ad-download-flex">
-              {item.manualPdf && (
-                <a href={fileUrl(`announcements/${item.manualPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-black">
-                  <i className="fas fa-book-open"></i>คู่มือการสมัคร
-                </a>
-              )}
-              {item.announcementPdf && (
-                <a href={fileUrl(`announcements/${item.announcementPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-gray">
-                  <i className="fas fa-file-arrow-down"></i>ดาวน์โหลดประกาศรับสมัคร
-                </a>
-              )}
-            </div>
-          </section>
-        )}
+        <section id="downloads" className="ad-section reveal-on-scroll">
+          <div className="ad-download-flex">
+            <a
+              href="https://misreg.csc.ku.ac.th/admission/"
+              target="_blank"
+              rel="noreferrer"
+              className="ad-btn-dl ad-btn-dl-primary"
+            >
+              <i className="fas fa-arrow-up-right-from-square"></i>สมัครออนไลน์ผ่านเว็บไซต์
+            </a>
+            {item.manualPdf && (
+              <a href={fileUrl(`announcements/${item.manualPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-black">
+                <i className="fas fa-book-open"></i>คู่มือการสมัคร
+              </a>
+            )}
+            {item.announcementPdf && (
+              <a href={fileUrl(`announcements/${item.announcementPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-gray">
+                <i className="fas fa-file-arrow-down"></i>ดาวน์โหลดประกาศรับสมัคร
+              </a>
+            )}
+          </div>
+        </section>
       </div>
       </div>
 

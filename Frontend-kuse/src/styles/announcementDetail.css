@@ -363,7 +363,7 @@
 .ad-clickable-img.ad-mini-img {
   display: inline-flex;
   width: auto;
-  max-width: 540px;
+  max-width: 620px;
   vertical-align: top;
   background: white;
   padding: 12px;
@@ -380,7 +380,7 @@
 .ad-clickable-img.ad-mini-img img {
   width: auto;
   max-width: 100%;
-  max-height: 460px;
+  max-height: 520px;
   object-fit: contain;
   border-radius: 10px;
 }
@@ -572,10 +572,20 @@
 .ad-btn-dl-black { background: #222; }
 .ad-btn-dl-gray { background: #6c757d; }
 
+.ad-btn-dl-primary {
+  background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-maroon) 100%);
+  border: 2px solid transparent;
+}
+
 .ad-btn-dl:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
   color: white;
+}
+
+.ad-btn-dl-primary:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(176, 141, 87, 0.6), 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== Lightbox ===== */
