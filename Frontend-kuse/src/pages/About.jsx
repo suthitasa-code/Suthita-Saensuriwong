@@ -40,7 +40,7 @@ const About = () => {
     <div className="container px-4 about-page">
       <div className="about-page-header">
         <h1>เกี่ยวกับฉัน</h1>
-        <p>ทีมผู้จัดทำโครงงานเว็บแอปพลิเคชันนี้</p>
+        <p>เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.</p>
       </div>
 
       <div className="about-team-row reveal-on-scroll">
@@ -57,7 +57,7 @@ const About = () => {
       </div>
 
       <section className="about-section reveal-on-scroll">
-        <h2 className="about-section-title">เกี่ยวกับโครงงานนี้</h2>
+        <h2 className="about-section-title"><i className="fas fa-diagram-project"></i>เกี่ยวกับโครงงานนี้</h2>
         <div className="about-plain-card">
           <div className="about-project-name">
             เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.
