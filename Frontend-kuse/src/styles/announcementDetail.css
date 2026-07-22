@@ -151,7 +151,7 @@
   font-size: 2.6rem;
   margin-top: 30px;
   margin-bottom: 10px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.25);
 }
 
 .ad-hero-inner h5 {
@@ -263,7 +263,7 @@
   content: '';
   flex: 1;
   height: 2px;
-  background: #eee;
+  background: linear-gradient(90deg, var(--gold) 0%, #eee 45%, #eee 100%);
 }
 
 .ad-header-icon {
@@ -371,10 +371,20 @@
   padding: 14px;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.4s ease, box-shadow 0.35s ease, opacity 0.6s ease;
 }
 
-.ad-clickable-img.ad-mini-img:hover {
+.reveal-on-scroll .ad-clickable-img.ad-mini-img {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-on-scroll.is-visible .ad-clickable-img.ad-mini-img {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-on-scroll.is-visible .ad-clickable-img.ad-mini-img:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 32px rgba(128, 0, 0, 0.15);
 }
@@ -403,7 +413,14 @@
   position: relative;
   border-radius: 18px;
   overflow: hidden;
+  border: 3px solid rgba(212, 175, 55, 0.35);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ad-poster-frame:hover {
+  border-color: var(--gold);
+  box-shadow: 0 18px 46px rgba(176, 141, 87, 0.25);
 }
 
 .ad-poster-slide {
@@ -572,8 +589,15 @@
   left: 130%;
 }
 
-.ad-btn-dl-black { background: #222; }
-.ad-btn-dl-gray { background: #6c757d; }
+.ad-btn-dl-black {
+  background: linear-gradient(135deg, #3a3a3a 0%, #0d0d0d 100%);
+  border: 2px solid transparent;
+}
+
+.ad-btn-dl-gray {
+  background: linear-gradient(135deg, #8a97a3 0%, #495057 100%);
+  border: 2px solid transparent;
+}
 
 .ad-btn-dl-primary {
   background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-maroon) 100%);
@@ -589,6 +613,16 @@
 .ad-btn-dl-primary:hover {
   border-color: var(--gold);
   box-shadow: 0 0 20px rgba(176, 141, 87, 0.6), 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.ad-btn-dl-black:hover {
+  border-color: #999;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+.ad-btn-dl-gray:hover {
+  border-color: #cfd6db;
+  box-shadow: 0 0 20px rgba(138, 151, 163, 0.5), 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== Lightbox ===== */
