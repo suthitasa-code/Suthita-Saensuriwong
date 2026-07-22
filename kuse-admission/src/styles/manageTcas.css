@@ -347,6 +347,9 @@ html, body {
   padding: 14px 16px;
   text-align: left;
 }
+.tcas-table thead th:first-child {
+  text-align: center;
+}
 .tcas-table tbody tr {
   border-bottom: 1px solid #f5f5f5;
   transition: background 0.2s;
@@ -360,6 +363,9 @@ html, body {
   color: #333;
   vertical-align: middle;
   border: none;
+}
+.tcas-table td:first-child {
+  text-align: left;
 }
 .empty-row {
   text-align: center;
