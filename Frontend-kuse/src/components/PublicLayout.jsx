@@ -4,8 +4,10 @@ import '../styles/layout.css';
 
 const NAV_ITEMS = [
   { path: '/', label: 'หน้าหลัก' },
+  { path: '/about', label: 'เกี่ยวกับฉัน' },
   { path: '/announcement', label: 'ประกาศรับสมัคร' },
   { path: '/curriculum', label: 'หลักสูตร' },
+  { path: '/contact', label: 'ติดต่อเรา' },
 ];
 
 const PublicLayout = () => {

@@ -1,0 +1,135 @@
+.page-header-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.page-header-logo {
+  width: 90px;
+  height: auto;
+}
+
+.page-header-section .title-group {
+  text-align: center;
+}
+
+.page-header-section h1 {
+  color: var(--maroon);
+  font-weight: 700;
+  font-size: 2.8rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-header-section p {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #444;
+  margin: 4px 0 0;
+}
+
+/* ===== การ์ดข้อมูลติดต่อ (ไทย / อังกฤษ) ===== */
+.contact-cards-row {
+  margin-bottom: 60px;
+}
+
+.contact-card {
+  background: white;
+  border-radius: 25px;
+  padding: 35px 30px;
+  height: 100%;
+  border: 2px solid transparent;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(176, 141, 87, 0.3), 0 0 45px rgba(255, 215, 0, 0.15), 0 15px 40px rgba(128, 0, 0, 0.08);
+}
+
+.contact-card-title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--maroon);
+  margin-bottom: 6px;
+}
+
+.contact-card-title-en {
+  font-family: 'Anuphan', sans-serif;
+}
+
+.contact-card-subtitle {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #eee;
+}
+
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.contact-row:last-child {
+  margin-bottom: 0;
+}
+
+.contact-row-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--maroon);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.contact-row-text {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  color: #333;
+  line-height: 1.6;
+  padding-top: 8px;
+}
+
+.contact-row-text.en-text {
+  font-family: 'Anuphan', sans-serif;
+}
+
+@media (max-width: 991px) {
+  .page-header-section h1 {
+    font-size: 2.1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .page-header-section {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .page-header-logo {
+    width: 64px;
+  }
+  .page-header-section h1 {
+    font-size: 1.7rem;
+  }
+  .page-header-section p {
+    font-size: 1rem;
+  }
+  .contact-card {
+    padding: 28px 22px;
+  }
+}

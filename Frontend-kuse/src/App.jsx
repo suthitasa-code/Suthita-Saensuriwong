@@ -5,6 +5,8 @@ import Curriculum from './pages/Curriculum';
 import CourseDetail from './pages/CourseDetail';
 import Announcement from './pages/Announcement';
 import AnnouncementDetail from './pages/AnnouncementDetail';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="curriculum/:id" element={<CourseDetail />} />
         <Route path="announcement" element={<Announcement />} />
         <Route path="announcement/:id" element={<AnnouncementDetail />} />
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<Contact />} />
       </Route>
     </Routes>
   );
