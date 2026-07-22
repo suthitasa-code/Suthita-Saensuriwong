@@ -73,6 +73,26 @@
   padding: 45px 40px 35px;
   border-radius: 20px 20px 0 0;
   border-bottom: 8px solid var(--gold);
+  overflow: hidden;
+}
+
+.ad-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 2px,
+    transparent 2px,
+    transparent 16px
+  );
+  z-index: 0;
+}
+
+.ad-hero-inner {
+  position: relative;
+  z-index: 2;
 }
 
 .ad-hero-topbar {
@@ -113,10 +133,18 @@
   background: rgba(255, 255, 255, 0.92);
 }
 
-.ad-status-badge.status-open { color: #1e8a3a; }
+.ad-status-badge.status-open {
+  color: #1e8a3a;
+  animation: ad-badge-pulse 2.2s ease-in-out infinite;
+}
 .ad-status-badge.status-waiting { color: #a3760a; }
 .ad-status-badge.status-closed { color: #c72a3b; }
 .ad-status-badge.status-none { color: #777; }
+
+@keyframes ad-badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(30, 138, 58, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(30, 138, 58, 0); }
+}
 
 .ad-hero-inner h1 {
   font-weight: 800;
@@ -228,7 +256,7 @@
   margin-bottom: 22px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .ad-section-header::after {
@@ -238,12 +266,51 @@
   background: #eee;
 }
 
+.ad-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--maroon), var(--dark-maroon));
+  color: white;
+  font-size: 1.05rem;
+  box-shadow: 0 5px 14px rgba(128, 0, 0, 0.25);
+}
+
 .ad-text-block {
   font-family: 'IBM Plex Sans Thai', sans-serif;
   font-size: 1.05rem;
   line-height: 1.85;
   color: #000000;
   white-space: pre-line;
+  margin: 0;
+}
+
+/* ===== การ์ดข้อความ (คุณสมบัติผู้สมัคร / เงื่อนไข) ===== */
+.ad-info-card {
+  border-radius: 16px;
+  padding: 28px 30px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid var(--gold);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.ad-info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.ad-info-card-gold {
+  background: linear-gradient(180deg, #fffdf6, #ffffff);
+  border-left-color: var(--gold);
+}
+
+.ad-info-card-maroon {
+  background: linear-gradient(180deg, #fdf7f7, #ffffff);
+  border-left-color: var(--maroon);
 }
 
 /* ===== รูปคลิกได้ (โปสเตอร์ / กำหนดการ / สาขาที่เปิดรับ) ===== */
@@ -285,12 +352,42 @@
   opacity: 1;
 }
 
-.ad-process-img {
-  margin-bottom: 24px;
+/* ===== แกลเลอรีรูปเล็ก (กำหนดการ / สาขาที่เปิดรับ) ===== */
+.ad-mini-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
 }
 
-.ad-process-img:last-child {
-  margin-bottom: 0;
+.ad-clickable-img.ad-mini-img {
+  display: inline-flex;
+  width: auto;
+  max-width: 380px;
+  vertical-align: top;
+  background: white;
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.ad-clickable-img.ad-mini-img:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(128, 0, 0, 0.15);
+}
+
+.ad-clickable-img.ad-mini-img img {
+  width: auto;
+  max-width: 100%;
+  max-height: 340px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.ad-clickable-img.ad-mini-img .ad-zoom-hint {
+  border-radius: 10px;
+  inset: 10px;
 }
 
 /* ===== Poster carousel ===== */
@@ -312,12 +409,12 @@
 
 .ad-poster-slide.active {
   display: block;
-  animation: ad-fade-in 0.4s ease;
+  animation: ad-fade-in 0.6s ease;
 }
 
 @keyframes ad-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .ad-poster-slide .ad-clickable-img img {
@@ -408,6 +505,8 @@
 }
 
 .ad-btn-dl {
+  position: relative;
+  overflow: hidden;
   padding: 16px 34px;
   border-radius: 50px;
   font-weight: 700;
@@ -419,6 +518,22 @@
   transition: 0.35s;
   font-size: 1.02rem;
   color: white;
+}
+
+.ad-btn-dl::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+
+.ad-btn-dl:hover::before {
+  left: 130%;
 }
 
 .ad-btn-dl-black { background: #222; }
@@ -552,9 +667,21 @@
   }
   .ad-section-header {
     font-size: 1.3rem;
+    gap: 10px;
+  }
+  .ad-header-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+  .ad-info-card {
+    padding: 20px 22px;
   }
   .ad-text-block {
     font-size: 0.98rem;
+  }
+  .ad-clickable-img.ad-mini-img {
+    max-width: 100%;
   }
   .ad-section {
     margin-bottom: 32px;

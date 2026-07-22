@@ -45,6 +45,7 @@ const AnnouncementDetail = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [posterIndex, setPosterIndex] = useState(0);
+  const [posterPaused, setPosterPaused] = useState(false);
   const [lightbox, setLightbox] = useState(null); // { url, downloadName } | null
 
   useEffect(() => {
@@ -79,6 +80,15 @@ const AnnouncementDetail = () => {
   const posterList = useMemo(() => parseFileList(item?.posterImg), [item]);
   const scheduleList = useMemo(() => parseFileList(item?.scheduleImg), [item]);
   const majorList = useMemo(() => parseFileList(item?.majorTableImg), [item]);
+
+  // โปสเตอร์เลื่อนเองได้ด้วย แต่หยุดชั่วคราวเวลาเอาเมาส์ไปวางเพื่อกดดูรูป/ดาวน์โหลด
+  useEffect(() => {
+    if (posterList.length <= 1 || posterPaused) return undefined;
+    const timer = setInterval(() => {
+      setPosterIndex((p) => (p + 1) % posterList.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [posterList.length, posterPaused]);
 
   useEffect(() => {
     if (!item) return undefined;
@@ -178,7 +188,11 @@ const AnnouncementDetail = () => {
         {posterList.length > 0 && (
           <section id="poster" className="ad-section reveal-on-scroll">
             <div className="ad-poster-carousel">
-              <div className="ad-poster-frame">
+              <div
+                className="ad-poster-frame"
+                onMouseEnter={() => setPosterPaused(true)}
+                onMouseLeave={() => setPosterPaused(false)}
+              >
                 {posterList.map((name, i) => (
                   <div className={`ad-poster-slide${i === posterIndex ? ' active' : ''}`} key={name}>
                     <ClickableImage
@@ -227,45 +241,53 @@ const AnnouncementDetail = () => {
 
         {item.candidateDetail && (
           <section id="candidate" className="ad-section reveal-on-scroll">
-            <h2 className="ad-section-header"><i className="fas fa-user-graduate me-2"></i>คุณสมบัติผู้สมัคร</h2>
-            <p className="ad-text-block">{item.candidateDetail}</p>
+            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-user-graduate"></i></span>คุณสมบัติผู้สมัคร</h2>
+            <div className="ad-info-card ad-info-card-gold">
+              <p className="ad-text-block">{item.candidateDetail}</p>
+            </div>
           </section>
         )}
 
         {item.conditions && (
           <section id="conditions" className="ad-section reveal-on-scroll">
-            <h2 className="ad-section-header"><i className="fas fa-file-signature me-2"></i>เงื่อนไขการสมัครเข้าศึกษา</h2>
-            <p className="ad-text-block">{item.conditions}</p>
+            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-file-signature"></i></span>เงื่อนไขการสมัครเข้าศึกษา</h2>
+            <div className="ad-info-card ad-info-card-maroon">
+              <p className="ad-text-block">{item.conditions}</p>
+            </div>
           </section>
         )}
 
         {scheduleList.length > 0 && (
           <section id="schedule" className="ad-section reveal-on-scroll">
-            <h2 className="ad-section-header"><i className="fas fa-calendar-days me-2"></i>กำหนดการรับสมัคร</h2>
-            {scheduleList.map((name, i) => (
-              <ClickableImage
-                key={name}
-                className="ad-process-img"
-                src={posterUrl(name)}
-                alt={`กำหนดการรับสมัคร ${i + 1}`}
-                onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `กำหนดการรับสมัคร-${item.title}-${i + 1}.jpg` })}
-              />
-            ))}
+            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-calendar-days"></i></span>กำหนดการรับสมัคร</h2>
+            <div className="ad-mini-gallery">
+              {scheduleList.map((name, i) => (
+                <ClickableImage
+                  key={name}
+                  className="ad-mini-img"
+                  src={posterUrl(name)}
+                  alt={`กำหนดการรับสมัคร ${i + 1}`}
+                  onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `กำหนดการรับสมัคร-${item.title}-${i + 1}.jpg` })}
+                />
+              ))}
+            </div>
           </section>
         )}
 
         {majorList.length > 0 && (
           <section id="majors" className="ad-section reveal-on-scroll">
-            <h2 className="ad-section-header"><i className="fas fa-list-ul me-2"></i>สาขาวิชาที่เปิดรับสมัคร</h2>
-            {majorList.map((name, i) => (
-              <ClickableImage
-                key={name}
-                className="ad-process-img"
-                src={posterUrl(name)}
-                alt={`สาขาวิชาที่เปิดรับสมัคร ${i + 1}`}
-                onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `สาขาที่เปิดรับ-${item.title}-${i + 1}.jpg` })}
-              />
-            ))}
+            <h2 className="ad-section-header"><span className="ad-header-icon"><i className="fas fa-list-ul"></i></span>สาขาวิชาที่เปิดรับสมัคร</h2>
+            <div className="ad-mini-gallery">
+              {majorList.map((name, i) => (
+                <ClickableImage
+                  key={name}
+                  className="ad-mini-img"
+                  src={posterUrl(name)}
+                  alt={`สาขาวิชาที่เปิดรับสมัคร ${i + 1}`}
+                  onZoom={() => setLightbox({ url: posterUrl(name), downloadName: `สาขาที่เปิดรับ-${item.title}-${i + 1}.jpg` })}
+                />
+              ))}
+            </div>
           </section>
         )}
 
