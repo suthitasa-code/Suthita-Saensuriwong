@@ -12,17 +12,10 @@ const splitLines = (text) =>
     .filter(Boolean);
 
 // ชื่อไฟล์ที่อัปโหลดจะอยู่ในรูปแบบ pdfFiles-<timestamp>-<random>.pdf เราดึงเวลาที่แนบมา
-// ในชื่อไฟล์ออกมาบอกวันที่อัปโหลดจริง และเทียบหาไฟล์ที่อัปโหลดล่าสุดให้เอง
+// ในชื่อไฟล์ออกมาเทียบหาไฟล์ที่อัปโหลดล่าสุดให้เอง (ใช้แค่จัดลำดับ/ติดป้าย ไม่โชว์วันที่)
 const parsePdfTimestamp = (filename) => {
   const match = (filename || '').match(/-(\d{10,})-/);
   return match ? Number(match[1]) : null;
-};
-
-const formatUploadDate = (timestamp) => {
-  if (!timestamp) return null;
-  const d = new Date(timestamp);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString('th-TH', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
 // ดาวน์โหลดไฟล์ข้ามโดเมน (frontend / API คนละพอร์ตกัน) ต้องดึงมาเป็น blob ก่อน
@@ -85,10 +78,7 @@ const CourseDetail = () => {
   const careerGovItems = useMemo(() => splitLines(course?.careerGovernment), [course]);
   const pdfList = useMemo(() => {
     const names = (course?.pdfFiles || '').split(',').map((f) => f.trim()).filter(Boolean);
-    const withMeta = names.map((filename) => {
-      const timestamp = parsePdfTimestamp(filename);
-      return { filename, timestamp, uploadDate: formatUploadDate(timestamp) };
-    });
+    const withMeta = names.map((filename) => ({ filename, timestamp: parsePdfTimestamp(filename) }));
     const latestTimestamp = Math.max(0, ...withMeta.map((f) => f.timestamp || 0));
     return withMeta
       .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
@@ -257,7 +247,7 @@ const CourseDetail = () => {
           <section id="docs" className="course-section reveal-on-scroll">
             <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-file-lines me-2"></i>เอกสารหลักสูตร</h3>
             <div className="row g-4 justify-content-center">
-              {pdfList.map(({ filename, uploadDate, isLatest }, i) => (
+              {pdfList.map(({ filename, isLatest }, i) => (
                 <div className="col-md-4 col-sm-6" key={filename}>
                   <a
                     href={fileUrl(`curriculum/documents/${filename}`)}
@@ -268,7 +258,6 @@ const CourseDetail = () => {
                     {isLatest && <span className="course-pdf-latest-badge">ฉบับล่าสุด</span>}
                     <i className="fas fa-file-pdf"></i>
                     <h5>เอกสารหลักสูตร{pdfList.length > 1 ? ` ฉบับที่ ${i + 1}` : ''}</h5>
-                    {uploadDate && <span className="course-pdf-date">อัปโหลดเมื่อ {uploadDate}</span>}
                     <span className="course-pdf-btn">
                       เปิดเอกสาร <i className="fas fa-arrow-up-right-from-square ms-1"></i>
                     </span>
