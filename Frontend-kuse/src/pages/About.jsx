@@ -6,6 +6,7 @@ const TEAM = [
     name: 'น.ส.สุธิตา แสนสุริวงค์',
     role: 'ผู้จัดทำโครงงาน',
     sub: 'นิสิตหลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.) สาขาวิทยาการคอมพิวเตอร์',
+    photo: '/images/สุธิตา.jpg',
   },
   {
     name: 'ผศ. วไลลักษณ์ วงษ์รื่น',
@@ -47,7 +48,7 @@ const About = () => {
         {TEAM.map((person) => (
           <div className="about-person" key={person.name}>
             <div className="about-person-photo">
-              <i className="fas fa-user"></i>
+              {person.photo ? <img src={person.photo} alt={person.name} /> : <i className="fas fa-user"></i>}
             </div>
             <div className="about-person-role">{person.role}</div>
             <div className="about-person-name">{person.name}</div>
