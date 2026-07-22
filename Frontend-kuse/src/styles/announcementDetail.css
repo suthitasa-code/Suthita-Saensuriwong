@@ -352,21 +352,18 @@
   opacity: 1;
 }
 
-/* ===== แกลเลอรีรูปเล็ก (กำหนดการ / สาขาที่เปิดรับ) ===== */
+/* ===== แกลเลอรีรูป (กำหนดการ / สาขาที่เปิดรับ) เรียงต่อกันแนวตั้งทีละรูป ให้ตัวหนังสือในรูปอ่านง่าย ===== */
 .ad-mini-gallery {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 22px;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
 }
 
 .ad-clickable-img.ad-mini-img {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 280px;
-  max-width: 620px;
-  height: 460px;
+  display: block;
+  width: 100%;
+  max-width: 760px;
   background: white;
   padding: 14px;
   border-radius: 16px;
@@ -390,11 +387,9 @@
 }
 
 .ad-clickable-img.ad-mini-img img {
-  width: auto;
+  width: 100%;
   height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  display: block;
   border-radius: 10px;
 }
 
@@ -710,9 +705,6 @@
   .ad-subnav {
     top: 80px;
   }
-  .ad-clickable-img.ad-mini-img {
-    height: 380px;
-  }
 }
 
 @media (max-width: 767px) {
@@ -771,8 +763,6 @@
   }
   .ad-clickable-img.ad-mini-img {
     max-width: 100%;
-    height: 260px;
-    flex-basis: 100%;
   }
   .ad-section {
     margin-bottom: 32px;
