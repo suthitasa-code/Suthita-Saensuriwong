@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { API_BASE, ENDPOINTS, unwrap } from '../config/api';
 import HeroCarousel from '../components/HeroCarousel';
 import AnnouncementCard from '../components/AnnouncementCard';
+import AnnouncementSearchSection from '../components/AnnouncementSearchSection';
 import '../styles/home.css';
 
 const Home = () => {
@@ -84,6 +85,8 @@ const Home = () => {
             </div>
           </>
         )}
+
+        <AnnouncementSearchSection announcements={announcements} loading={loading} />
       </div>
     </>
   );
