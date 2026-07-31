@@ -346,6 +346,7 @@ html, body {
   border: none;
   padding: 14px 16px;
   text-align: left;
+  white-space: nowrap;
 }
 .tcas-table thead th:first-child {
   text-align: center;
