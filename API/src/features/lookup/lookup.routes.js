@@ -10,5 +10,6 @@ router.get("/:category", lookupController.getByCategory);
 // แก้ไข/เพิ่มตัวเลือกได้เฉพาะ Super Admin เท่านั้น (ล็อกอินอยู่ + สิทธิ์ Super Admin)
 router.post("/", verifyToken, requireSuperAdmin, lookupController.createOption);
 router.put("/:id", verifyToken, requireSuperAdmin, lookupController.updateOption);
+router.delete("/:id", verifyToken, requireSuperAdmin, lookupController.deleteOption);
 
 module.exports = router;

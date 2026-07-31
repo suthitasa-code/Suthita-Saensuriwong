@@ -30,4 +30,13 @@ async function updateOption(req, res, next) {
   }
 }
 
-module.exports = { getByCategory, createOption, updateOption };
+async function deleteOption(req, res, next) {
+  try {
+    await lookupService.deleteOption(req.params.id);
+    return success(res, "Option deleted successfully");
+  } catch (error) {
+    return next(error);
+  }
+}
+
+module.exports = { getByCategory, createOption, updateOption, deleteOption };

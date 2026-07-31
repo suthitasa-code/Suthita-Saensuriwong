@@ -107,6 +107,9 @@
 .lookup-action-btn.action-restore {
     background: linear-gradient(135deg, #51cf66, #2b8a3e);
 }
+.lookup-action-btn.action-delete {
+    background: linear-gradient(135deg, #f0685a, #c0392b);
+}
 
 .lookup-modal-custom {
     border-radius: 16px;
@@ -117,6 +120,7 @@
 }
 .lookup-form-label {
     display: block;
+    text-align: left;
     font-weight: 600;
     color: #495057;
     margin-bottom: 6px;
@@ -124,9 +128,38 @@
 }
 .lookup-form-control {
     color: #000000;
+    text-align: left;
 }
 .lookup-form-control::placeholder {
     color: #adb5bd;
+}
+
+.lookup-icon-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.lookup-icon-choice {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #f8f9fa;
+    color: #495057;
+    font-size: 1.05rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.lookup-icon-choice:hover {
+    transform: translateY(-2px);
+    border-color: var(--kuse-maroon);
+}
+.lookup-icon-choice.selected {
+    color: white;
+    border-color: transparent;
 }
 
 .btn-cancel-lookup {

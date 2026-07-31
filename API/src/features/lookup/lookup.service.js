@@ -32,4 +32,18 @@ async function updateOption(id, data) {
   return lookupRepository.getById(optionId);
 }
 
-module.exports = { getByCategory, createOption, updateOption };
+// ลบตัวเลือกออกจากระบบถาวร (คนละอันกับ isActive=0 ที่แค่ซ่อนจาก dropdown แต่ยังอยู่ในระบบ)
+// ปลอดภัยลบได้เพราะ lookup_option ไม่มีตารางไหนอ้างอิงผ่าน foreign key
+// (announcement.tcasRound / curriculum.degreeLevel-curriculumType เก็บเป็นข้อความ ไม่ใช่ id)
+async function deleteOption(id) {
+  const optionId = validateId(id);
+  const existing = await lookupRepository.getById(optionId);
+  if (!existing) {
+    const error = new Error("Option not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  return lookupRepository.remove(optionId);
+}
+
+module.exports = { getByCategory, createOption, updateOption, deleteOption };

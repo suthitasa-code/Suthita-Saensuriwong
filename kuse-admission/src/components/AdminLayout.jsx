@@ -195,20 +195,20 @@ const AdminLayout = () => {
 
                     {isSuperAdmin && (
                         <>
-                            <div className="nav-label">บัญชีผู้ใช้</div>
-                            <div
-                                className={getMenuClass('/admin/users')}
-                                onClick={() => goTo('/admin/users')}
-                            >
-                                <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
-                            </div>
-
                             <div className="nav-label">ตั้งค่าระบบ</div>
                             <div
                                 className={getMenuClass('/admin/lookups')}
                                 onClick={() => goTo('/admin/lookups')}
                             >
                                 <i className="fas fa-sliders-h me-2"></i> จัดการตัวเลือกระบบ
+                            </div>
+
+                            <div className="nav-label">บัญชีผู้ใช้</div>
+                            <div
+                                className={getMenuClass('/admin/users')}
+                                onClick={() => goTo('/admin/users')}
+                            >
+                                <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
                             </div>
                         </>
                     )}
@@ -258,6 +258,14 @@ const AdminLayout = () => {
                                 alt="Avatar"
                             />
                         </div>
+                        <button
+                            type="button"
+                            className="profile-logout-btn"
+                            onClick={handleLogout}
+                            title="ออกจากระบบ"
+                        >
+                            <i className="fas fa-power-off"></i>
+                        </button>
                     </div>
                 </div>
 

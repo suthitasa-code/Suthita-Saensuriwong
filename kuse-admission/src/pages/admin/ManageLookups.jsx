@@ -12,10 +12,26 @@ import '../../styles/manageLookups.css';
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 // แท็บหมวดที่จัดการได้ ต้องตรงกับค่า category ที่ backend รู้จัก (lookup.repository.js -> CATEGORIES)
+// namePlaceholder ตั้งใจให้ต่างกันแต่ละหมวด กันคนพิมพ์ตัวอย่างของหมวดอื่นมาใส่ผิดที่
 const TABS = [
-    { key: 'tcas_round', label: 'รอบ TCAS', icon: 'fas fa-bullhorn', hasIconColor: false },
-    { key: 'degree_level', label: 'ระดับการศึกษา', icon: 'fas fa-user-graduate', hasIconColor: false },
-    { key: 'curriculum_type', label: 'ประเภทหลักสูตร', icon: 'fas fa-graduation-cap', hasIconColor: true },
+    { key: 'tcas_round', label: 'รอบ TCAS', icon: 'fas fa-bullhorn', hasIconColor: false, namePlaceholder: 'เช่น รอบที่ 5 รับตรงพิเศษ' },
+    { key: 'degree_level', label: 'ระดับการศึกษา', icon: 'fas fa-user-graduate', hasIconColor: false, namePlaceholder: 'เช่น ประกาศนียบัตรบัณฑิต' },
+    { key: 'curriculum_type', label: 'ประเภทหลักสูตร', icon: 'fas fa-graduation-cap', hasIconColor: true, namePlaceholder: 'เช่น หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)' },
+];
+
+// ไอคอนให้เลือกสำหรับ "ประเภทหลักสูตร" คัดมาแค่ที่ใช้บ่อยกับหมวดวุฒิ/สาขาระดับกว้างๆ
+// (ไอคอนเฉพาะทางแยกย่อยของแต่ละสาขา เช่น สาขาโยธา/ไฟฟ้า อยู่ในฟอร์ม "จัดการหลักสูตร" อยู่แล้ว คนละจุดกัน)
+const ICON_CHOICES = [
+    'fas fa-hard-hat',
+    'fas fa-flask',
+    'fas fa-user-graduate',
+    'fas fa-graduation-cap',
+    'fas fa-microscope',
+    'fas fa-laptop-code',
+    'fas fa-atom',
+    'fas fa-book',
+    'fas fa-award',
+    'fas fa-building-columns',
 ];
 
 const emptyForm = { name: '', icon: '', accentColor: '#800000', sortOrder: 0 };
@@ -118,6 +134,33 @@ const ManageLookups = () => {
         }
     };
 
+    // ลบตัวเลือกออกจากระบบถาวร (คนละอันกับปุ่มเปิด/ปิดใช้งาน)
+    const handleDelete = (option) => {
+        Swal.fire({
+            title: 'ยืนยันการลบตัวเลือกนี้?',
+            text: `"${option.name}" จะถูกลบออกจากระบบถาวร ประกาศ/หลักสูตรเก่าที่เคยใช้ชื่อนี้จะไม่หายไป แค่จะไม่มีในตัวเลือกให้เลือกอีก`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ลบเลย',
+            cancelButtonText: 'ยกเลิก',
+            confirmButtonColor: '#c0392b',
+            cancelButtonColor: '#6c757d',
+        }).then(async (result) => {
+            if (!result.isConfirmed) return;
+            try {
+                const token = localStorage.getItem('token');
+                await axios.delete(`${API_BASE}/api/lookups/${option.optionID}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1200, showConfirmButton: false });
+                fetchOptions(activeTab);
+            } catch (error) {
+                const errorMsg = error.response?.data?.message || 'ลบไม่สำเร็จ';
+                Swal.fire({ icon: 'error', title: 'ลบไม่สำเร็จ', text: errorMsg, confirmButtonColor: '#800000' });
+            }
+        });
+    };
+
     if (!isSuperAdmin) {
         return (
             <div className="lookup-no-access">
@@ -201,6 +244,13 @@ const ManageLookups = () => {
                                                     >
                                                         <i className={`fas ${Number(option.isActive) === 1 ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                                     </button>
+                                                    <button
+                                                        className="lookup-action-btn action-delete"
+                                                        onClick={() => handleDelete(option)}
+                                                        title="ลบถาวร"
+                                                    >
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -232,7 +282,7 @@ const ManageLookups = () => {
                                             required
                                             value={form.name}
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                            placeholder="เช่น รอบที่ 5 รับตรงพิเศษ"
+                                            placeholder={activeTabMeta.namePlaceholder}
                                         />
                                     </div>
                                     <div className="mb-3">
@@ -245,27 +295,34 @@ const ManageLookups = () => {
                                         />
                                     </div>
                                     {activeTabMeta.hasIconColor && (
-                                        <div className="row g-3 mb-3">
-                                            <div className="col-7">
-                                                <label className="lookup-form-label">ไอคอน (Font Awesome class)</label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control lookup-form-control"
-                                                    value={form.icon}
-                                                    onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                                                    placeholder="เช่น fas fa-flask"
-                                                />
+                                        <>
+                                            <div className="mb-3">
+                                                <label className="lookup-form-label">ไอคอน</label>
+                                                <div className="lookup-icon-picker">
+                                                    {ICON_CHOICES.map((iconClass) => (
+                                                        <button
+                                                            type="button"
+                                                            key={iconClass}
+                                                            className={`lookup-icon-choice${form.icon === iconClass ? ' selected' : ''}`}
+                                                            style={{ background: form.icon === iconClass ? form.accentColor : undefined }}
+                                                            onClick={() => setForm({ ...form, icon: iconClass })}
+                                                            title={iconClass}
+                                                        >
+                                                            <i className={iconClass}></i>
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <div className="col-5">
+                                            <div className="mb-3">
                                                 <label className="lookup-form-label">สีประจำ</label>
                                                 <input
                                                     type="color"
-                                                    className="form-control form-control-color w-100"
+                                                    className="form-control form-control-color"
                                                     value={form.accentColor}
                                                     onChange={(e) => setForm({ ...form, accentColor: e.target.value })}
                                                 />
                                             </div>
-                                        </div>
+                                        </>
                                     )}
                                     <div className="d-flex justify-content-end gap-2 mt-4">
                                         <button type="button" className="btn btn-cancel-lookup" onClick={() => setShowModal(false)}>ยกเลิก</button>

@@ -44,4 +44,9 @@ async function update(id, data) {
   return result.affectedRows;
 }
 
-module.exports = { CATEGORIES, getByCategory, getById, create, update };
+async function remove(id) {
+  const [result] = await pool.query("DELETE FROM lookup_option WHERE optionID = ?", [id]);
+  return result.affectedRows;
+}
+
+module.exports = { CATEGORIES, getByCategory, getById, create, update, remove };
