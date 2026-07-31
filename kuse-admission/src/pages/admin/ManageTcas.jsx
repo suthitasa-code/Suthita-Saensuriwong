@@ -213,6 +213,7 @@ const PdfUploadField = ({ label, icon, iconColor, inputId, files, setFiles, fiel
 export default function ManageTcas() {
   // ----- ตัวแปรเก็บข้อมูลหลักของหน้านี้ -----
   const [announcements, setAnnouncements] = useState([]);
+  const [roundOptions, setRoundOptions] = useState([]); // รายชื่อรอบ TCAS ดึงจากหน้า "จัดการตัวเลือกระบบ" ไม่ต้องแก้โค้ดเวลามีรอบใหม่
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -243,16 +244,22 @@ export default function ManageTcas() {
     }
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  // ----- ดึงรายชื่อรอบ TCAS ที่เปิดใช้งานอยู่ (จัดการได้ที่หน้า "จัดการตัวเลือกระบบ") -----
+  const fetchRoundOptions = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/lookups/tcas_round?active=1`);
+      const json = await res.json();
+      if (json.success) setRoundOptions(json.data);
+    } catch {
+      // เงียบไว้พอ ถ้าโหลดไม่ได้ dropdown จะว่างแค่นั้น ไม่ทำให้ทั้งหน้าใช้งานไม่ได้
+    }
+  };
+
+  useEffect(() => { fetchAll(); fetchRoundOptions(); }, []);
 
   // ----- ส่วนค้นหา + กรองข้อมูล -----
   // กรองจาก announcements ที่โหลดมาแล้ว (ไม่ได้ยิง API ใหม่ทุกครั้งที่พิมพ์ค้นหา
   // เพราะข้อมูลทั้งหมดโหลดมาไว้แล้วตั้งแต่แรก กรองในเครื่องได้เลย เร็วกว่า)
-  const getRoundNumber = (tcasRound) => {
-    const m = (tcasRound || '').match(/รอบที่\s*(\d+)/);
-    return m ? m[1] : '';
-  };
-
   const filtered = announcements.filter(item => {
     const label = getLabelStatus(item);
     const haystack = [item.title, item.subtitle, item.tcasRound, item.academicYear, item.candidateDetail]
@@ -261,7 +268,7 @@ export default function ManageTcas() {
       .toLowerCase();
     const matchSearch = haystack.includes(search.trim().toLowerCase());
     const matchYear = yearFilter === 'all' || String(item.academicYear) === yearFilter;
-    const matchType = typeFilter === 'all' || getRoundNumber(item.tcasRound) === typeFilter;
+    const matchType = typeFilter === 'all' || item.tcasRound === typeFilter;
     const matchStatus =
       statusFilter === 'all' ||
       (statusFilter === 'open' && label === 'กำลังเปิดรับ') ||
@@ -453,10 +460,7 @@ export default function ManageTcas() {
             <label className="filter-label">รอบการรับสมัคร</label>
             <select className="form-select filter-control" value={typeFilter} onChange={e => { setTypeFilter(e.target.value); setCurrentPage(1); }}>
               <option value="all">ทั้งหมด</option>
-              <option value="1">รอบที่ 1 Portfolio</option>
-              <option value="2">รอบที่ 2 Quota</option>
-              <option value="3">รอบที่ 3 Admission</option>
-              <option value="4">รอบที่ 4 รับอิสระ</option>
+              {roundOptions.map(r => <option key={r.optionID} value={r.name}>{r.name}</option>)}
             </select>
           </div>
           <div className="filter-field field-status">
@@ -612,10 +616,7 @@ export default function ManageTcas() {
                       <label className="filter-label fw-bold">รอบ TCAS <span className="text-danger">*</span></label>
                       <select className="form-select filter-control" value={form.tcasRound} onChange={e => setForm(p => ({ ...p, tcasRound: e.target.value }))} required>
                         <option value="">-- เลือกรอบการรับสมัคร --</option>
-                        <option value="รอบที่ 1 Portfolio">รอบที่ 1 Portfolio</option>
-                        <option value="รอบที่ 2 Quota">รอบที่ 2 Quota</option>
-                        <option value="รอบที่ 3 Admission">รอบที่ 3 Admission</option>
-                        <option value="รอบที่ 4 รับอิสระ">รอบที่ 4 รับอิสระ</option>
+                        {roundOptions.map(r => <option key={r.optionID} value={r.name}>{r.name}</option>)}
                       </select>
                     </div>
                     <div className="form-col-6">

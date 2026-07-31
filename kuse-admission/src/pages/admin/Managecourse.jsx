@@ -38,21 +38,10 @@ const ICON_GROUPS = [
     },
 ];
 
-const DEGREE_LEVELS = ['ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก'];
+// ระดับการศึกษา และ ประเภทหลักสูตร (วศ.บ. / วท.บ. / วศ.ม. ฯลฯ) ไม่ได้ตายตัวในโค้ดแล้ว
+// ดึงจาก /api/lookups แทน เพื่อให้ Super Admin เพิ่ม/แก้ไขได้เองที่หน้า "จัดการตัวเลือกระบบ"
+// โดยไม่ต้องแก้โค้ดแล้ว deploy ใหม่ทุกครั้งที่มีระดับ/ประเภทใหม่เพิ่มมา
 
-// ตัวเลือกประเภทหลักสูตร (วศ.บ. / วท.บ. / วศ.ม. ฯลฯ)
-const CURRICULUM_TYPES = [
-    'หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)',
-    'หลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.)',
-    'วิศวกรรมศาสตรมหาบัณฑิต (วศ.ม.)',
-];
-
-// ไอคอน + สีประจำแต่ละประเภทหลักสูตร ใช้แยกกลุ่มการ์ดในหน้ารายการให้ดูออกง่าย
-const CURRICULUM_TYPE_META = {
-    'หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)': { icon: 'fas fa-hard-hat', accent: '#800000' },
-    'หลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.)': { icon: 'fas fa-flask', accent: '#0891b2' },
-    'วิศวกรรมศาสตรมหาบัณฑิต (วศ.ม.)': { icon: 'fas fa-user-graduate', accent: '#7c3aed' },
-};
 const OTHER_TYPE_LABEL = 'อื่นๆ / ยังไม่ระบุประเภทหลักสูตร';
 const OTHER_TYPE_META = { icon: 'fas fa-layer-group', accent: '#6c757d' };
 
@@ -62,8 +51,8 @@ const emptyForm = {
     curriculumNameEN: '',
     deptNameTH: '',
     deptNameEN: '',
-    degreeLevel: 'ปริญญาตรี',
-    curriculumType: CURRICULUM_TYPES[0],
+    degreeLevel: '',
+    curriculumType: '',
     highlights: '',
     whatWeLearn: '',
     insideKuse: '',
@@ -89,6 +78,8 @@ const ManageCourse = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [degreeLevelOptions, setDegreeLevelOptions] = useState([]); // จาก /api/lookups/degree_level
+    const [curriculumTypeOptions, setCurriculumTypeOptions] = useState([]); // จาก /api/lookups/curriculum_type (มีไอคอน+สีติดมาด้วย)
 
     const [showModal, setShowModal] = useState(false);
     const [editingId, setEditingId] = useState(null); // null = โหมดเพิ่มใหม่
@@ -121,8 +112,25 @@ const ManageCourse = () => {
         }
     };
 
+    // ดึงตัวเลือกระดับการศึกษา + ประเภทหลักสูตร มาเติม dropdown (จัดการได้ที่หน้า "จัดการตัวเลือกระบบ")
+    const fetchLookups = async () => {
+        try {
+            const [degreeRes, typeRes] = await Promise.all([
+                fetch(`${API_BASE}/api/lookups/degree_level?active=1`),
+                fetch(`${API_BASE}/api/lookups/curriculum_type?active=1`),
+            ]);
+            const degreeJson = await degreeRes.json();
+            const typeJson = await typeRes.json();
+            if (degreeJson.success) setDegreeLevelOptions(degreeJson.data);
+            if (typeJson.success) setCurriculumTypeOptions(typeJson.data);
+        } catch {
+            // เงียบไว้พอ ถ้าโหลดไม่ได้ dropdown จะว่างแค่นั้น ไม่ทำให้ทั้งหน้าใช้งานไม่ได้
+        }
+    };
+
     useEffect(() => {
         fetchCourses();
+        fetchLookups();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -138,7 +146,11 @@ const ManageCourse = () => {
 
     const openAddModal = () => {
         setEditingId(null);
-        setForm(emptyForm);
+        setForm({
+            ...emptyForm,
+            degreeLevel: degreeLevelOptions[0]?.name || '',
+            curriculumType: curriculumTypeOptions[0]?.name || '',
+        });
         resetFileState();
         setShowModal(true);
     };
@@ -151,8 +163,8 @@ const ManageCourse = () => {
             curriculumNameEN: course.curriculumNameEN || '',
             deptNameTH: course.deptNameTH || '',
             deptNameEN: course.deptNameEN || '',
-            degreeLevel: course.degreeLevel || 'ปริญญาตรี',
-            curriculumType: course.curriculumType || CURRICULUM_TYPES[0],
+            degreeLevel: course.degreeLevel || degreeLevelOptions[0]?.name || '',
+            curriculumType: course.curriculumType || curriculumTypeOptions[0]?.name || '',
             highlights: course.highlights || '',
             whatWeLearn: course.whatWeLearn || '',
             insideKuse: course.insideKuse || '',
@@ -283,17 +295,18 @@ const ManageCourse = () => {
         }
     };
 
-    // ===================== จัดกลุ่มหลักสูตรตามประเภท (วศ.บ. / วท.บ. / วศ.ม.) =====================
+    // ===================== จัดกลุ่มหลักสูตรตามประเภท (วศ.บ. / วท.บ. / วศ.ม. ฯลฯ) =====================
+    const curriculumTypeNames = curriculumTypeOptions.map((t) => t.name);
     const groupedCourses = [
-        ...CURRICULUM_TYPES.map((type) => ({
-            type,
-            meta: CURRICULUM_TYPE_META[type],
-            items: courses.filter((c) => c.curriculumType === type),
+        ...curriculumTypeOptions.map((t) => ({
+            type: t.name,
+            meta: { icon: t.icon || OTHER_TYPE_META.icon, accent: t.accentColor || OTHER_TYPE_META.accent },
+            items: courses.filter((c) => c.curriculumType === t.name),
         })),
         {
             type: OTHER_TYPE_LABEL,
             meta: OTHER_TYPE_META,
-            items: courses.filter((c) => !CURRICULUM_TYPES.includes(c.curriculumType)),
+            items: courses.filter((c) => !curriculumTypeNames.includes(c.curriculumType)),
         },
     ].filter((group) => group.items.length > 0);
 
@@ -500,13 +513,13 @@ const ManageCourse = () => {
                                                         <div className="col-md-4">
                                                             <label className="label-kuse-bold">ระดับการศึกษา</label>
                                                             <select name="degreeLevel" className="form-control-kuse mb-2" value={form.degreeLevel} onChange={handleChange}>
-                                                                {DEGREE_LEVELS.map((lvl) => <option key={lvl} value={lvl}>{lvl}</option>)}
+                                                                {degreeLevelOptions.map((lvl) => <option key={lvl.optionID} value={lvl.name}>{lvl.name}</option>)}
                                                             </select>
                                                         </div>
                                                         <div className="col-md-4">
                                                             <label className="label-kuse-bold">หลักสูตร</label>
                                                             <select name="curriculumType" className="form-control-kuse mb-2" value={form.curriculumType} onChange={handleChange}>
-                                                                {CURRICULUM_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                                                                {curriculumTypeOptions.map((type) => <option key={type.optionID} value={type.name}>{type.name}</option>)}
                                                             </select>
                                                         </div>
                                                         <div className="col-12">

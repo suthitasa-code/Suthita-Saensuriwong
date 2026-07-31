@@ -32,6 +32,10 @@ const PAGE_HEADERS = {
         title: 'บัญชีรายชื่อผู้ดูแลระบบทั้งหมด',
         subtitle: '',
     },
+    '/admin/lookups': {
+        title: 'จัดการตัวเลือกระบบ',
+        subtitle: 'จัดการรายชื่อรอบ TCAS, ระดับการศึกษา และประเภทหลักสูตรที่ใช้ในฟอร์มต่างๆ',
+    },
 };
 
 const AdminLayout = () => {
@@ -197,6 +201,14 @@ const AdminLayout = () => {
                                 onClick={() => goTo('/admin/users')}
                             >
                                 <i className="fas fa-user-shield me-2"></i> ผู้ดูแลระบบ
+                            </div>
+
+                            <div className="nav-label">ตั้งค่าระบบ</div>
+                            <div
+                                className={getMenuClass('/admin/lookups')}
+                                onClick={() => goTo('/admin/lookups')}
+                            >
+                                <i className="fas fa-sliders-h me-2"></i> จัดการตัวเลือกระบบ
                             </div>
                         </>
                     )}

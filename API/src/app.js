@@ -5,7 +5,8 @@ const adminRoutes = require("./features/admin/admin.routes");
 const carouselbannerRoutes = require("./features/carouselbanner/carouselbanner.routes"); 
 const curriculumRoutes = require("./features/curriculum/curriculum.routes"); 
 const documentRoutes = require("./features/document/document.routes"); 
-const announcementRoutes = require("./features/announcement/announcement.routes"); 
+const announcementRoutes = require("./features/announcement/announcement.routes");
+const lookupRoutes = require("./features/lookup/lookup.routes");
 
 const { testConnection } = require("./config/db");
 const { success } = require("./config/utils/response"); 
@@ -48,7 +49,8 @@ app.use("/api/admins", adminRoutes);
 app.use("/api/carouselbanner", carouselbannerRoutes); 
 app.use("/api/curriculum", curriculumRoutes); 
 app.use("/api/document", documentRoutes); 
-app.use("/api/announcement", announcementRoutes); 
+app.use("/api/announcement", announcementRoutes);
+app.use("/api/lookups", lookupRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
