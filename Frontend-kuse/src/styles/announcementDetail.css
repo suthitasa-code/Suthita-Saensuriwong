@@ -187,31 +187,33 @@
   color: var(--gold-bright);
 }
 
-/* ปุ่มสมัครออนไลน์เด่นๆ ในกริดข้อมูลบนสุด แยกจากช่องข้อมูลธรรมดา เลยให้พื้นหลังทึบ+เรืองแสงเบาๆ ดึงสายตา */
-.ad-info-item-cta {
+/* ป้ายสมัครออนไลน์ขนาดพอดี วางต่อท้ายตัวเลขทุนเรียนดีในบรรทัดเดียวกัน ไม่ใช่กล่องแยกที่ใหญ่เทอะทะ */
+.ad-info-value-with-cta {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ad-inline-apply-badge {
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
   background: linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, #8a6d3b);
-  border-radius: 14px;
-  padding: 10px 18px;
+  color: #3a2a00;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
   animation: adCtaGlow 2.2s ease-in-out infinite;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
 }
-.ad-info-item-cta:hover {
-  transform: translateY(-4px);
-}
-.ad-info-item-cta .ad-info-label,
-.ad-info-item-cta .ad-info-value {
+.ad-inline-apply-badge:hover {
+  transform: translateY(-2px);
   color: #3a2a00;
 }
-.ad-info-item-cta .ad-info-label {
-  opacity: 0.85;
-}
 @keyframes adCtaGlow {
-  0%, 100% { box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4); }
-  50% { box-shadow: 0 6px 26px rgba(212, 175, 55, 0.75); }
+  0%, 100% { box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4); }
+  50% { box-shadow: 0 3px 16px rgba(212, 175, 55, 0.75); }
 }
 
 /* ===== Sub-nav ===== */

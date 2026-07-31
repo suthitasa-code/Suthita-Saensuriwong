@@ -165,18 +165,19 @@ const AnnouncementDetail = () => {
             {item.totalScholarships != null && item.totalScholarships !== '' && (
               <div className="ad-info-item">
                 <span className="ad-info-label"><i className="fas fa-graduation-cap me-2"></i>ทุนเรียนดี</span>
-                <span className="ad-info-value">{item.totalScholarships} ทุน</span>
+                <span className="ad-info-value ad-info-value-with-cta">
+                  {item.totalScholarships} ทุน
+                  <a
+                    href="https://misreg.csc.ku.ac.th/admission/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ad-inline-apply-badge"
+                  >
+                    <i className="fas fa-arrow-up-right-from-square me-1"></i>สมัครออนไลน์
+                  </a>
+                </span>
               </div>
             )}
-            <a
-              href="https://misreg.csc.ku.ac.th/admission/"
-              target="_blank"
-              rel="noreferrer"
-              className="ad-info-item ad-info-item-cta"
-            >
-              <span className="ad-info-label"><i className="fas fa-arrow-up-right-from-square me-2"></i>สมัครออนไลน์</span>
-              <span className="ad-info-value">คลิกสมัครที่นี่</span>
-            </a>
           </div>
         </div>
       </header>
