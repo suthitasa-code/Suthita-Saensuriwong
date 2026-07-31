@@ -99,8 +99,10 @@ const ManageAdmin = () => {
             name: admin.name,
             lastname: admin.lastname,
             email: admin.email,
-            password: admin.password || '', // แสดงรหัสผ่านปัจจุบันให้ Super Admin เห็น
-            confirmPassword: admin.password || '',
+            // รหัสผ่านที่เก็บใน DB ตอนนี้เป็น hash แล้ว เอามาโชว์ไม่ได้ (ถอดกลับเป็นรหัสจริงไม่ได้)
+            // ปล่อยว่างไว้ ถ้า Super Admin อยากเปลี่ยนค่อยเปิดสวิตช์แล้วพิมพ์รหัสใหม่เอง
+            password: '',
+            confirmPassword: '',
             role: admin.role,
             status: admin.status
         });

@@ -61,11 +61,24 @@ async function checkAdminProfile(req, res, next) {
   }
 }
 
+// จุดล็อกอินจริง แทนที่ signInWithEmailAndPassword ของ Firebase เดิม
+// รับอีเมล+รหัสผ่านจากฟอร์ม แล้วส่งต่อให้ service เช็ค ถ้าผ่านจะได้ token กลับมาเก็บไว้ใช้ยิง API อื่นต่อ
+async function login(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const result = await adminService.loginAdmin(email, password);
+    return success(res, "Login successful", result);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getAllAdmins,
   getAdminById,
   createAdmin,
   updateAdmin,
   deleteAdmin,
-  checkAdminProfile
+  checkAdminProfile,
+  login
 };

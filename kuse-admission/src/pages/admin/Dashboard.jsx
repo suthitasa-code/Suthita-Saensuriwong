@@ -105,9 +105,14 @@ const Dashboard = () => {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     const keys = Object.keys(ENDPOINTS);
+    // /api/admins ต้องใช้ token แนบไปด้วย (ตั้งแต่เปลี่ยนมาใช้ JWT ของเราเองแทน Firebase)
+    // ไม่งั้นโดน middleware verifyToken เตะกลับมาเป็น 401 แล้วการ์ด "ผู้ดูแลระบบ" จะโหลดไม่ขึ้น
+    const token = localStorage.getItem('token');
     const results = await Promise.allSettled(
       keys.map(async (key) => {
-        const res = await fetch(`${API_BASE}${ENDPOINTS[key]}`);
+        const res = await fetch(`${API_BASE}${ENDPOINTS[key]}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         if (!res.ok) throw new Error(key);
         const json = await res.json();
         return unwrap(json);

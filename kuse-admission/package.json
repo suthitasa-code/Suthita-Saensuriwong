@@ -13,7 +13,6 @@
     "apexcharts": "^5.16.0",
     "axios": "^1.18.1",
     "bootstrap": "^5.3.8",
-    "firebase": "^12.12.1",
     "react": "^19.2.5",
     "react-apexcharts": "^2.1.1",
     "react-dom": "^19.2.5",

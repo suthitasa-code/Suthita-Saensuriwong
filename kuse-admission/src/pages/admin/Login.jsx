@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import '../../styles/login.css'; 
-import { auth } from '../../firebase'; 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import '../../styles/login.css';
 import { useNavigate } from 'react-router-dom'; // 👑 นำเข้า useNavigate เพื่อใช้เปลี่ยนหน้าแทน window.location.href
 import axios from 'axios'; // 👑 นำเข้า axios เพื่อยิงหาหลังบ้าน
 
@@ -26,16 +24,6 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        if (!auth) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Firebase Error',
-                text: 'ไม่พบการตั้งค่า Firebase',
-                customClass: { popup: 'kuse-swal-popup', title: 'kuse-swal-title' }
-            });
-            return;
-        }
-
         Swal.fire({
             title: 'กำลังตรวจสอบข้อมูลของท่าน...',
             customClass: { popup: 'kuse-swal-popup', title: 'kuse-swal-title' },
@@ -44,31 +32,23 @@ const Login = () => {
         });
 
         try {
-            // 1. ตรวจสอบอีเมลและรหัสผ่านกับ Firebase Auth ด่านแรก
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // 👑 ดึงรหัส Token ความปลอดภัยจาก Firebase เก็บเอาไว้ใช้งาน
-            const firebaseToken = user.accessToken;
-
-            // 2. ยิงข้อมูลอีเมลไปหา MySQL หลังบ้าน เพื่อสืบค้นตัวตนและสิทธิ์ (Role)
-            // หมายเหตุ: ใช้พาร์ท /api/admins/check-profile ตามที่ทดสอบผ่านใน Postman ล่าสุดจ้า
-            const response = await axios.post('http://localhost:5000/api/admins/check-profile', {
-                email: user.email
+            // 👑 ยิงอีเมล+รหัสผ่านไปให้ backend เช็คเองทั้งหมด (ไม่ผ่าน Firebase แล้ว)
+            // backend จะเทียบรหัสผ่านกับ hash ที่เก็บไว้ใน MySQL แล้วออก token (JWT) กลับมาให้ถ้าถูกต้อง
+            const response = await axios.post('http://localhost:5000/api/admins/login', {
+                email,
+                password
             });
 
-            // 3. เมื่อดึงข้อมูลจากหลังบ้านสำเร็จ
             if (response.data.success) {
-                const adminData = response.data.data; // ดึงวัตถุข้อมูลแอดมิน { adminID, name, lastname, role }
+                const { token, admin: adminData } = response.data.data; // { token, admin: { adminID, name, lastname, role, ... } }
 
-                // 4. เปิดใช้งานการบันทึกข้อมูลลง localStorage เพื่อเอาไปใช้แจกจ่ายสิทธิ์จริงในระบบ
-                localStorage.setItem('token', firebaseToken); 
+                // เก็บ token + ข้อมูลแอดมินไว้ใช้งานต่อทั้งระบบ (ยิง API อื่นก็แนบ token ตัวนี้ไปด้วยทุกครั้ง)
+                localStorage.setItem('token', token);
                 localStorage.setItem('admin_id', adminData.adminID);
                 localStorage.setItem('admin_name', adminData.name);
                 localStorage.setItem('admin_lastname', adminData.lastname);
-                localStorage.setItem('admin_role', adminData.role); // 👑 เก็บค่าสิทธิ์จริงจาก DB เช่น 'Super Admin' หรือ 'Admin'
+                localStorage.setItem('admin_role', adminData.role); // เก็บค่าสิทธิ์จริงจาก DB เช่น 'Super Admin' หรือ 'Admin'
 
-                // 5. ขึ้นแจ้งเตือนแสดงความยินดีพร้อมบอกตำแหน่งสิทธิ์จริง
                 Swal.fire({
                     icon: 'success',
                     title: 'เข้าสู่ระบบสำเร็จ',
@@ -82,14 +62,13 @@ const Login = () => {
                     timerProgressBar: true,
                     backdrop: `rgba(0,0,0,0.4)`
                 }).then(() => {
-                    // 6. วาร์ปกระโดดข้ามไปหน้าแดชบอร์ดหลังบ้านอย่างปลอดภัย
-                    navigate('/admin/dashboard'); 
+                    navigate('/admin/dashboard');
                 });
             }
         } catch (error) {
             console.error("Login Error Details:", error);
-            
-            // ถอดข้อความ Error ที่ส่งมาจากใจหลังบ้าน (เช่น อีเมลไม่มีสิทธิ์ หรือโดนบล็อก) มาแสดงผล
+
+            // ถอดข้อความ error ที่ backend ส่งมา (เช่น "อีเมลหรือรหัสผ่านไม่ถูกต้อง") มาแสดงผล
             const errorMessage = error.response?.data?.message || 'อีเมลหรือรหัสผ่านของท่านไม่ถูกต้อง';
 
             Swal.fire({
