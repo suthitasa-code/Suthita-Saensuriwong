@@ -9,31 +9,36 @@
     --neon-glow: 0 0 15px rgba(212, 175, 55, 0.6);
 }
 
-/* ล็อคหน้าจอให้นิ่งสนิท ห้ามเลื่อนเด็ดขาด */
 html, body {
-    height: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
 }
 
+/* หน้าจอแรกนิ่งพอดีจอ แต่เลื่อนลงมาดูเครดิตท้ายหน้าได้ */
 .login-page-wrapper {
     font-family: 'Kanit', sans-serif;
     margin: 0;
-    height: 100vh !important;
-    width: 100vw !important;
-    display: flex;
+    width: 100vw;
     background-color: #f4f4f4;
-    overflow: hidden !important;
-    position: fixed !important;
-    top: 0;
-    left: 0;
 }
 
 .login-container {
     display: flex;
     width: 100vw;
     height: 100vh;
+}
+
+/* เครดิตท้ายหน้า ไม่โชว์ให้เห็นตั้งแต่แรก ต้องเลื่อนลงมาดูเอง */
+.login-credit-footer {
+    text-align: center;
+    padding: 36px 20px 50px;
+    color: #999;
+    font-size: 0.8rem;
+    line-height: 1.9;
+}
+
+.login-credit-footer p {
+    margin: 0;
 }
 
 /* ฝั่งซ้าย: แบรนด์และรูปภาพ */
@@ -293,19 +298,6 @@ html, body {
    📱 RESPONSIVE — เรียงซ้อนแนวตั้งบนแท็บเล็ต/มือถือ แทนแบ่งซ้ายขวา
    ========================================================================== */
 @media (max-width: 900px) {
-    /* หน้าจอเล็กเนื้อหาอาจสูงกว่าจอ ต้องปลดล็อกให้เลื่อนได้ ไม่งั้นเนื้อหาส่วนล่างหายไปเลย */
-    html, body {
-        overflow-y: auto !important;
-        height: auto !important;
-    }
-
-    .login-page-wrapper {
-        position: relative !important;
-        height: auto !important;
-        min-height: 100vh;
-        overflow-y: auto !important;
-    }
-
     .login-container {
         flex-direction: column;
         width: 100%;
