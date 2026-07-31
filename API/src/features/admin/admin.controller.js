@@ -84,6 +84,16 @@ async function revealPassword(req, res, next) {
   }
 }
 
+// เหมือน revealPassword แต่ดูรหัสผ่านของทุกบัญชีพร้อมกันทีเดียว (ปุ่ม "ดูรหัสผ่านทั้งหมด")
+async function revealAllPasswords(req, res, next) {
+  try {
+    const admins = await adminService.revealAllPasswords();
+    return success(res, "All passwords revealed successfully", admins);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getAllAdmins,
   getAdminById,
@@ -92,5 +102,6 @@ module.exports = {
   deleteAdmin,
   checkAdminProfile,
   login,
-  revealPassword
+  revealPassword,
+  revealAllPasswords
 };

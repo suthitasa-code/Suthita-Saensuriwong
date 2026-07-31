@@ -96,6 +96,19 @@ async function revealAdminPassword(id) {
   return decryptPassword(admin.password);
 }
 
+// เหมือน revealAdminPassword แต่ถอดรหัสให้ดูทีเดียวทั้งบัญชี ใช้กับปุ่ม "ดูรหัสผ่านทั้งหมด"
+async function revealAllPasswords() {
+  const admins = await adminRepository.getAllAdmins();
+  return admins.map((admin) => ({
+    adminID: admin.adminID,
+    name: admin.name,
+    lastname: admin.lastname,
+    email: admin.email,
+    role: admin.role,
+    password: decryptPassword(admin.password)
+  }));
+}
+
 // ตรวจสอบอีเมล+รหัสผ่านตอนล็อกอิน แล้วออกบัตรผ่าน (JWT token) ให้ถ้าถูกต้อง
 // นี่คือจุดที่แทนที่ Firebase Auth เดิม เช็คเองทั้งหมดฝั่ง backend โดยไม่พึ่งบริการภายนอก
 async function loginAdmin(email, password) {
@@ -147,5 +160,6 @@ module.exports = {
   updateAdmin,
   deleteAdmin,
   loginAdmin,
-  revealAdminPassword
+  revealAdminPassword,
+  revealAllPasswords
 };

@@ -8,6 +8,10 @@ const router = express.Router();
 router.post("/login", adminController.login);
 router.post("/check-profile", adminController.checkAdminProfile);
 
+// ต้องอยู่เหนือ "/:id" เสมอ ไม่งั้น Express จะเข้าใจผิดว่า "passwords" คือค่า :id
+// ดูรหัสผ่านจริงของทุกบัญชีพร้อมกัน -> Super Admin เท่านั้น
+router.get("/passwords", verifyToken, requireSuperAdmin, adminController.revealAllPasswords);
+
 // ตั้งแต่บรรทัดนี้ลงไป ต้องแนบ token ที่ได้จาก /login มาด้วยเสมอ ไม่งั้นโดนเตะออกด้วย 401
 router.get("/", verifyToken, adminController.getAllAdmins);
 router.get("/:id", verifyToken, adminController.getAdminById);

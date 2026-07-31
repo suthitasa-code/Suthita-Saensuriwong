@@ -181,6 +181,54 @@ const ManageAdmin = () => {
         }
     };
 
+    // เอาไว้กันตัวอักษรพิเศษในชื่อ/อีเมล ไปทำโครงสร้าง HTML ของตารางพัง (escape ก่อนแปะลง innerHTML เสมอ)
+    const escapeHtml = (str) => String(str ?? '').replace(/[&<>"']/g, (ch) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+    ));
+
+    // ----- Super Admin กดดูรหัสผ่านของทุกบัญชีพร้อมกันทีเดียว -----
+    const handleViewAllPasswords = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/api/admins/passwords', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const list = response.data.data;
+
+            const rowsHtml = list.map((a) => `
+                <tr>
+                    <td style="padding:8px;text-align:left;border-bottom:1px solid #eee;">${escapeHtml(a.name)} ${escapeHtml(a.lastname)}</td>
+                    <td style="padding:8px;text-align:left;border-bottom:1px solid #eee;color:#666;">${escapeHtml(a.email)}</td>
+                    <td style="padding:8px;text-align:left;border-bottom:1px solid #eee;font-weight:700;">${escapeHtml(a.password)}</td>
+                </tr>
+            `).join('');
+
+            Swal.fire({
+                icon: 'info',
+                title: 'รหัสผ่านปัจจุบันของทุกบัญชี',
+                html: `
+                    <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+                        <thead>
+                            <tr>
+                                <th style="padding:8px;text-align:left;border-bottom:2px solid #800000;">ชื่อ-นามสกุล</th>
+                                <th style="padding:8px;text-align:left;border-bottom:2px solid #800000;">อีเมล</th>
+                                <th style="padding:8px;text-align:left;border-bottom:2px solid #800000;">รหัสผ่าน</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                `,
+                width: 650,
+                confirmButtonText: 'ปิด',
+                confirmButtonColor: '#800000',
+                customClass: { popup: 'kuse-swal-popup', title: 'kuse-swal-title' }
+            });
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || 'ไม่สามารถดูรหัสผ่านได้';
+            Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: errorMsg, confirmButtonColor: '#800000' });
+        }
+    };
+
     // ----- ระงับสิทธิ์ชั่วคราว -----
     // ใช้ PUT ตั้ง status = 0 (คนละอันกับปุ่ม "ลบ" ที่ลบข้อมูลออกจากฐานข้อมูลจริง)
     // ข้อมูลของแอดมินคนนี้ยังอยู่ครบ แค่ล็อกอินเข้าระบบไม่ได้ชั่วคราว คืนสิทธิ์ทีหลังได้
@@ -363,9 +411,14 @@ const ManageAdmin = () => {
                         </p>
                     </div>
                     {isSuperAdmin && (
-                        <button className="btn btn-add-admin d-flex align-items-center gap-2" onClick={handleOpenAddModal}>
-                            <i className="fas fa-plus-circle"></i> เพิ่มผู้ดูแลระบบใหม่
-                        </button>
+                        <div className="d-flex gap-2">
+                            <button className="btn btn-view-all-pass d-flex align-items-center gap-2" onClick={handleViewAllPasswords}>
+                                <i className="fas fa-eye"></i> ดูรหัสผ่านทั้งหมด
+                            </button>
+                            <button className="btn btn-add-admin d-flex align-items-center gap-2" onClick={handleOpenAddModal}>
+                                <i className="fas fa-plus-circle"></i> เพิ่มผู้ดูแลระบบใหม่
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>

@@ -297,6 +297,22 @@
     box-shadow: 0 10px 22px rgba(128, 0, 0, 0.35);
 }
 
+.btn-view-all-pass {
+    background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(49, 151, 149, 0.25);
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease;
+}
+.btn-view-all-pass:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(49, 151, 149, 0.35);
+}
+
 .badge-role {
     display: inline-flex;
     align-items: center;
