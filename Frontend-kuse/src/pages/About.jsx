@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import '../styles/about.css';
 
-const TEAM = [
-  {
-    name: 'น.ส.สุธิตา แสนสุริวงค์',
-    role: 'ผู้จัดทำโครงงาน',
-    sub: 'นิสิตหลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.) สาขาวิทยาการคอมพิวเตอร์',
-    photo: '/images/สุธิตา.jpg',
-  },
+const STUDENT = {
+  name: 'น.ส.สุธิตา แสนสุริวงค์',
+  role: 'ผู้จัดทำโครงงาน',
+  sub: 'นิสิตหลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.) สาขาวิทยาการคอมพิวเตอร์',
+  photo: '/images/สุธิตา.jpg',
+};
+
+const ADVISORS = [
   {
     name: 'ผศ. วไลลักษณ์ วงษ์รื่น',
     role: 'อาจารย์ที่ปรึกษาหลัก',
@@ -44,15 +45,20 @@ const About = () => {
         <p>เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.</p>
       </div>
 
-      <div className="about-team-row reveal-on-scroll">
-        {TEAM.map((person) => (
-          <div className="about-person" key={person.name}>
-            <div className="about-person-photo">
-              {person.photo ? <img src={person.photo} alt={person.name} /> : <i className="fas fa-user"></i>}
-            </div>
+      <div className="about-student reveal-on-scroll">
+        <div className="about-person-photo about-person-photo-lg">
+          <img src={STUDENT.photo} alt={STUDENT.name} />
+        </div>
+        <div className="about-person-role">{STUDENT.role}</div>
+        <div className="about-person-name">{STUDENT.name}</div>
+        <div className="about-person-sub">{STUDENT.sub}</div>
+      </div>
+
+      <div className="about-advisors-row reveal-on-scroll">
+        {ADVISORS.map((person) => (
+          <div className="about-advisor" key={person.name}>
             <div className="about-person-role">{person.role}</div>
             <div className="about-person-name">{person.name}</div>
-            {person.sub && <div className="about-person-sub">{person.sub}</div>}
           </div>
         ))}
       </div>
