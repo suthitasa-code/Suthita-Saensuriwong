@@ -168,6 +168,15 @@ const AnnouncementDetail = () => {
                 <span className="ad-info-value">{item.totalScholarships} ทุน</span>
               </div>
             )}
+            <a
+              href="https://misreg.csc.ku.ac.th/admission/"
+              target="_blank"
+              rel="noreferrer"
+              className="ad-info-item ad-info-item-cta"
+            >
+              <span className="ad-info-label"><i className="fas fa-arrow-up-right-from-square me-2"></i>สมัครออนไลน์</span>
+              <span className="ad-info-value">คลิกสมัครที่นี่</span>
+            </a>
           </div>
         </div>
       </header>
