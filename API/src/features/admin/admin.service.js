@@ -1,16 +1,13 @@
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const adminRepository = require("./admin.repository");
+const { encryptPassword, decryptPassword } = require("../../config/utils/passwordCrypto");
 const {
   validateAdmin,
   validateId
 } = require("./admin.validation");
 
-// จำนวนรอบที่ใช้สับข้อมูลรหัสผ่าน ยิ่งเยอะยิ่งปลอดภัยแต่ยิ่งช้า 10 คือค่ามาตรฐานที่นิยมใช้กัน
-const SALT_ROUNDS = 10;
-
 // เอาข้อมูล admin ที่ดึงจาก DB มาตัดฟิลด์ password ทิ้งก่อนส่งกลับไปหน้าบ้าน
-// กันไม่ให้ hash รหัสผ่านหลุดออกไปโดยไม่จำเป็น (แม้จะถอดกลับเป็นรหัสจริงไม่ได้ก็ตาม)
+// กันไม่ให้รหัสผ่านที่เข้ารหัสไว้หลุดออกไปโดยไม่จำเป็น (ต้องเรียกผ่านช่องทาง "ดูรหัสผ่าน" โดยเฉพาะเท่านั้นถึงจะเห็นได้)
 function omitPassword(admin) {
   const { password, ...rest } = admin;
   return rest;
@@ -66,8 +63,8 @@ async function getAdminByEmail(email) {
 async function createAdmin(adminData) {
   const validData = validateAdmin(adminData, false); // false = โหมดสร้างใหม่
 
-  // ห้ามเก็บรหัสผ่านตัวจริงลง DB เด็ดขาด สับ (hash) ให้เป็นรหัสที่ถอดกลับไม่ได้ก่อนเสมอ
-  validData.password = await bcrypt.hash(validData.password, SALT_ROUNDS);
+  // เข้ารหัสผ่านแบบถอดกลับได้ก่อนเก็บลง DB เสมอ (ไม่เก็บเป็นตัวหนังสือธรรมดา)
+  validData.password = encryptPassword(validData.password);
 
   const newAdminId = await adminRepository.createAdmin(validData);
   return getAdminById(newAdminId);
@@ -76,20 +73,27 @@ async function createAdmin(adminData) {
 // อัปเดตข้อมูล Admin
 async function updateAdmin(id, adminData) {
   const adminId = validateId(id);
-  const currentAdmin = await getAdminRecordById(adminId); // ใช้เวอร์ชันดิบ เพราะต้องได้ password hash เดิมมาด้วย
+  const currentAdmin = await getAdminRecordById(adminId); // ใช้เวอร์ชันดิบ เพราะต้องได้ค่ารหัสผ่านที่เข้ารหัสไว้เดิมมาด้วย
 
   const validData = validateAdmin(adminData, true); // true = โหมดแก้ไขข้อมูล
 
   if (validData.password) {
-    // มีการตั้งรหัสผ่านใหม่เข้ามา -> สับรหัสใหม่ก่อนเก็บ
-    validData.password = await bcrypt.hash(validData.password, SALT_ROUNDS);
+    // มีการตั้งรหัสผ่านใหม่เข้ามา -> เข้ารหัสใหม่ก่อนเก็บ
+    validData.password = encryptPassword(validData.password);
   } else {
-    // ไม่ได้ส่งรหัสผ่านใหม่มา -> ใช้ hash เดิมจาก DB ต่อไป ไม่แตะต้อง
+    // ไม่ได้ส่งรหัสผ่านใหม่มา -> ใช้ค่าที่เข้ารหัสไว้เดิมจาก DB ต่อไป ไม่แตะต้อง
     validData.password = currentAdmin.password;
   }
 
   await adminRepository.updateAdmin(adminId, validData);
   return getAdminById(adminId);
+}
+
+// ถอดรหัสผ่านตัวจริงออกมาให้ดู ใช้เฉพาะตอน Super Admin กดปุ่ม "ดูรหัสผ่าน" ในเมนูผู้ดูแลระบบเท่านั้น
+// การเช็คสิทธิ์ว่าต้องเป็น Super Admin จริงๆ ถึงเรียกจุดนี้ได้ ทำอยู่ที่ requireSuperAdmin middleware ก่อนถึง service ชั้นนี้แล้ว
+async function revealAdminPassword(id) {
+  const admin = await getAdminRecordById(id);
+  return decryptPassword(admin.password);
 }
 
 // ตรวจสอบอีเมล+รหัสผ่านตอนล็อกอิน แล้วออกบัตรผ่าน (JWT token) ให้ถ้าถูกต้อง
@@ -112,10 +116,9 @@ async function loginAdmin(email, password) {
     throw wrongCredentialError;
   }
 
-  // bcrypt.compare เอารหัสผ่านที่พิมพ์เข้ามาไป hash ด้วยวิธีเดียวกัน แล้วเทียบกับ hash ที่เก็บไว้
-  // (ไม่มีการถอด hash กลับเป็นรหัสผ่านจริงเด็ดขาด เทียบได้ทางเดียว)
-  const isPasswordMatch = await bcrypt.compare(password, admin.password);
-  if (!isPasswordMatch) {
+  // ถอดรหัสผ่านที่เก็บไว้ออกมา แล้วเทียบกับรหัสผ่านที่พิมพ์เข้ามาตรงๆ
+  const decryptedPassword = decryptPassword(admin.password);
+  if (decryptedPassword !== password) {
     throw wrongCredentialError;
   }
 
@@ -143,5 +146,6 @@ module.exports = {
   createAdmin,
   updateAdmin,
   deleteAdmin,
-  loginAdmin
+  loginAdmin,
+  revealAdminPassword
 };

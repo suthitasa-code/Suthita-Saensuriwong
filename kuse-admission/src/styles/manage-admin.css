@@ -388,6 +388,10 @@
     cursor: not-allowed;
 }
 
+.action-view-pass {
+    background: linear-gradient(135deg, #4fd1c5, #319795);
+    box-shadow: 0 4px 10px rgba(49, 151, 149, 0.3);
+}
 .action-edit {
     background: linear-gradient(135deg, #6a8ef5, #3f5fd9);
     box-shadow: 0 4px 10px rgba(63, 95, 217, 0.3);

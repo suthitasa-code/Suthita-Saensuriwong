@@ -158,6 +158,29 @@ const ManageAdmin = () => {
         }
     };
 
+    // ----- Super Admin กดดูรหัสผ่านปัจจุบันของแอดมินคนไหนก็ได้ -----
+    // ยิงไป endpoint เฉพาะ /password ที่ backend เช็คสิทธิ์ Super Admin ซ้ำอีกชั้นเสมอ (ต่อให้แก้หน้าเว็บก็ข้ามไม่ได้)
+    const handleViewPassword = async (admin) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`http://localhost:5000/api/admins/${admin.adminID}/password`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const password = response.data.data.password;
+            Swal.fire({
+                icon: 'info',
+                title: `รหัสผ่านของ ${admin.name} ${admin.lastname}`,
+                text: password,
+                confirmButtonText: 'ปิด',
+                confirmButtonColor: '#800000',
+                customClass: { popup: 'kuse-swal-popup', title: 'kuse-swal-title' }
+            });
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || 'ไม่สามารถดูรหัสผ่านได้';
+            Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: errorMsg, confirmButtonColor: '#800000' });
+        }
+    };
+
     // ----- ระงับสิทธิ์ชั่วคราว -----
     // ใช้ PUT ตั้ง status = 0 (คนละอันกับปุ่ม "ลบ" ที่ลบข้อมูลออกจากฐานข้อมูลจริง)
     // ข้อมูลของแอดมินคนนี้ยังอยู่ครบ แค่ล็อกอินเข้าระบบไม่ได้ชั่วคราว คืนสิทธิ์ทีหลังได้
@@ -395,6 +418,11 @@ const ManageAdmin = () => {
                                             </td>
                                             <td className="text-center">
                                                 <div className="d-flex justify-content-center gap-2">
+                                                    {isSuperAdmin && (
+                                                        <button className="admin-action-btn action-view-pass" onClick={() => handleViewPassword(admin)} title="ดูรหัสผ่านปัจจุบัน">
+                                                            <i className="fas fa-eye"></i>
+                                                        </button>
+                                                    )}
                                                     <button className="admin-action-btn action-edit" onClick={() => handleOpenEditModal(admin)} title="แก้ไขข้อมูล">
                                                         <i className="fas fa-edit"></i>
                                                     </button>

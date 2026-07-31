@@ -73,6 +73,17 @@ async function login(req, res, next) {
   }
 }
 
+// Super Admin กดปุ่ม "ดูรหัสผ่าน" ของแอดมินคนไหนก็ได้ในเมนูผู้ดูแลระบบ -> ยิงมาจุดนี้
+// สิทธิ์ Super Admin เท่านั้นถูกเช็คไว้แล้วที่ requireSuperAdmin middleware ก่อนจะมาถึงตรงนี้
+async function revealPassword(req, res, next) {
+  try {
+    const password = await adminService.revealAdminPassword(req.params.id);
+    return success(res, "Password revealed successfully", { password });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getAllAdmins,
   getAdminById,
@@ -80,5 +91,6 @@ module.exports = {
   updateAdmin,
   deleteAdmin,
   checkAdminProfile,
-  login
+  login,
+  revealPassword
 };

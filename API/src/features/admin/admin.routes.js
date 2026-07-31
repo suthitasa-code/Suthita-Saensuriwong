@@ -1,6 +1,6 @@
 const express = require("express");
 const adminController = require("./admin.controller");
-const { verifyToken } = require("../../middlewares/auth");
+const { verifyToken, requireSuperAdmin } = require("../../middlewares/auth");
 
 const router = express.Router();
 
@@ -14,5 +14,8 @@ router.get("/:id", verifyToken, adminController.getAdminById);
 router.post("/", verifyToken, adminController.createAdmin);
 router.put("/:id", verifyToken, adminController.updateAdmin);
 router.delete("/:id", verifyToken, adminController.deleteAdmin);
+
+// ดูรหัสผ่านจริงของแอดมินคนไหนก็ได้ -> ต้องล็อกอินอยู่ (verifyToken) และต้องเป็น Super Admin เท่านั้น (requireSuperAdmin)
+router.get("/:id/password", verifyToken, requireSuperAdmin, adminController.revealPassword);
 
 module.exports = router;

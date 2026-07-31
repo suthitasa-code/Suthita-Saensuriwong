@@ -26,4 +26,16 @@ function verifyToken(req, res, next) {
   }
 }
 
-module.exports = { verifyToken };
+// ด่านเสริม ใช้ต่อจาก verifyToken เท่านั้น (ต้องรู้ req.admin.role ก่อน ถึงจะเช็คได้ว่าเป็น Super Admin จริงไหม)
+// ใช้กับ endpoint ที่อ่อนไหวเป็นพิเศษ เช่น "ดูรหัสผ่านของแอดมินคนอื่น" ที่ Admin ธรรมดาไม่ควรเรียกได้
+// ต่อให้แก้ frontend ซ่อน/โชว์ปุ่มยังไง คนร้ายก็ยิง API ตรงๆ ผ่านด่านนี้ไม่ได้ถ้าไม่ใช่ Super Admin จริง
+function requireSuperAdmin(req, res, next) {
+  if (req.admin?.role !== "Super Admin") {
+    const error = new Error("เฉพาะ Super Admin เท่านั้นที่มีสิทธิ์ทำรายการนี้");
+    error.statusCode = 403;
+    return next(error);
+  }
+  next();
+}
+
+module.exports = { verifyToken, requireSuperAdmin };
