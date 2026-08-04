@@ -11,6 +11,14 @@ const formatDate = (d) => d
   ? new Date(d).toLocaleDateString('th-TH', { day: '2-digit', month: 'long', year: 'numeric' })
   : '-';
 
+// ใช้กับ createdAt/updatedAt ที่เป็น datetime เต็ม (โชว์ทั้งวันที่และเวลา)
+const formatDateTime = (d) => d
+  ? new Date(d).toLocaleString('th-TH', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  : '-';
+
+// รวมชื่อ-นามสกุลแอดมิน ถ้าไม่มีข้อมูล (เช่น บัญชีถูกลบไปแล้ว) ให้ขึ้น "ไม่ทราบชื่อ"
+const fullAdminName = (name, lastname) => (name ? `${name} ${lastname || ''}`.trim() : 'ไม่ทราบชื่อ');
+
 // แถวข้อมูล label ซ้าย + value ขวา ใช้ซ้ำหลายจุดในหน้านี้
 const DetailRow = ({ label, value }) => (
   <div className="view-detail-row">
@@ -125,6 +133,26 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
                 <span className="view-empty">- ไม่มีไฟล์แนบ -</span>
               )}
             </div>
+          </div>
+
+          {/* หมวด 4: ข้อมูลการสร้าง/แก้ไข (ใครสร้าง เมื่อไหร่ / ใครแก้ไขล่าสุด เมื่อไหร่) */}
+          <div className="tcas-form-section">
+            <div className="tcas-form-section-title">
+              <span className="tcas-step-num">4</span>ข้อมูลการสร้าง/แก้ไข
+            </div>
+            <div className="view-detail-grid">
+              <DetailRow label="สร้างโดย" value={fullAdminName(item.creatorName, item.creatorLastname)} />
+              <DetailRow label="วันที่สร้าง" value={formatDateTime(item.createdAt)} />
+              {item.updatedAt && (
+                <>
+                  <DetailRow label="แก้ไขล่าสุดโดย" value={fullAdminName(item.updaterName, item.updaterLastname)} />
+                  <DetailRow label="เวลาแก้ไขล่าสุด" value={formatDateTime(item.updatedAt)} />
+                </>
+              )}
+            </div>
+            {!item.updatedAt && (
+              <small className="view-empty d-block mt-2">ยังไม่เคยมีการแก้ไขประกาศนี้</small>
+            )}
           </div>
 
           {/* ปุ่มปิด / ไปแก้ไข */}
