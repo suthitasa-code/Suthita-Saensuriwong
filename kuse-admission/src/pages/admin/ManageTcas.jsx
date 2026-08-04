@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/manageTcas.css';
+import AnnouncementViewModal from '../../components/AnnouncementViewModal';
+import { API_BASE, UPLOAD_URL, getLabelStatus, statusBadge, openImageLightbox } from '../../utils/tcasHelpers';
 
 // ================================================================
 // หน้านี้คือ "จัดการประกาศรับสมัคร" ใช้เพิ่ม/แก้ไข/ลบประกาศ TCAS
 // แต่ละรอบ แล้วดึงมาโชว์เป็นตาราง มีช่องค้นหา+กรองข้อมูลด้วย
+// (ตัว modal "ดูรายละเอียด" แบบอ่านอย่างเดียวแยกไปไว้ที่
+// components/AnnouncementViewModal.jsx กันไฟล์นี้ยาวเกินไป)
 // ================================================================
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const UPLOAD_URL = `${API_BASE}/uploads/announcements`;
 
 const ADMIN_ID = localStorage.getItem('admin_id') || 1;
 
@@ -26,39 +27,6 @@ const emptyForm = {
   totalQuota: '',
   totalScholarships: '',
   status: '1',
-};
-
-// เช็คว่าประกาศแต่ละอันตอนนี้ "เปิดรับ / รอเปิด / ปิดแล้ว" โดยเทียบวันที่ปัจจุบันกับ
-// วันเปิด-ปิดรับสมัครที่แอดมินกรอกไว้ (ไม่ได้ให้แอดมินมากดปิดเอง ระบบคำนวณให้อัตโนมัติ)
-const getLabelStatus = (item) => {
-  if (item.labelStatus) return item.labelStatus;
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const start = new Date(item.openDate); start.setHours(0, 0, 0, 0);
-  const end = new Date(item.closeDate); end.setHours(0, 0, 0, 0);
-  if (isNaN(start) || isNaN(end)) return 'ไม่ระบุวันรับสมัคร';
-  if (today < start) return 'รอเปิดรับ';
-  if (today <= end) return 'กำลังเปิดรับ';
-  return 'ปิดรับแล้ว';
-};
-
-const statusBadge = (label) => {
-  if (label === 'กำลังเปิดรับ') return 'badge-open';
-  if (label === 'รอเปิดรับ') return 'badge-wait';
-  if (label === 'ปิดรับแล้ว') return 'badge-closed';
-  return 'badge-none';
-};
-
-// เปิดรูปแบบเต็มขนาดให้ดูว่าไฟล์ที่เลือก/อัปโหลดไปคือรูปอะไร
-const openImageLightbox = (url, label) => {
-  Swal.fire({
-    imageUrl: url,
-    imageAlt: label || 'ตัวอย่างรูปภาพ',
-    title: label || '',
-    showConfirmButton: false,
-    showCloseButton: true,
-    background: 'transparent',
-    customClass: { popup: 'kuse-lightbox-popup', title: 'kuse-lightbox-title' },
-  });
 };
 
 // Image preview component
@@ -216,6 +184,7 @@ export default function ManageTcas() {
   const [roundOptions, setRoundOptions] = useState([]); // รายชื่อรอบ TCAS ดึงจากหน้า "จัดการตัวเลือกระบบ" ไม่ต้องแก้โค้ดเวลามีรอบใหม่
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewItem, setViewItem] = useState(null); // ประกาศที่กำลังเปิดดูแบบอ่านอย่างเดียว (null = ไม่ได้เปิด)
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [files, setFiles] = useState({});
@@ -279,6 +248,11 @@ export default function ManageTcas() {
 
   const totalPages = Math.ceil(filtered.length / rowsPerPage);
   const paginated = filtered.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+
+  // ----- เปิด modal "ดูรายละเอียด" แบบอ่านอย่างเดียว -----
+  // ข้อมูลในตาราง (announcements) มีครบทุกฟิลด์อยู่แล้ว (backend ใช้ SELECT *)
+  // เลยไม่ต้องยิง fetch ซ้ำ ใช้ item ที่มีอยู่ในมือได้เลย เปิดโมดัลได้ทันที
+  const openView = (item) => setViewItem(item);
 
   const openAdd = () => {
     setEditId(null);
@@ -540,12 +514,17 @@ export default function ManageTcas() {
                         <span className={`status-badge ${statusBadge(label)}`}>{label}</span>
                       </td>
                       <td className="text-center">
-                        <button className="tcas-btn-action tcas-btn-edit" onClick={() => openEdit(item.announcementID)}>
-                          <i className="fas fa-edit me-1"></i>แก้ไข
-                        </button>
-                        <button className="tcas-btn-action tcas-btn-del" onClick={() => handleDelete(item.announcementID, item.title)}>
-                          <i className="fas fa-trash-alt me-1"></i>ลบ
-                        </button>
+                        <div className="tcas-actions-row">
+                          <button className="tcas-icon-btn icon-view" onClick={() => openView(item)} title="ดูรายละเอียด">
+                            <i className="fas fa-eye"></i>
+                          </button>
+                          <button className="tcas-icon-btn icon-edit" onClick={() => openEdit(item.announcementID)} title="แก้ไข">
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button className="tcas-icon-btn icon-del" onClick={() => handleDelete(item.announcementID, item.title)} title="ลบ">
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -743,6 +722,19 @@ export default function ManageTcas() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ========== VIEW MODAL (ดูรายละเอียด อ่านอย่างเดียว) ========== */}
+      {viewItem && (
+        <AnnouncementViewModal
+          item={viewItem}
+          onClose={() => setViewItem(null)}
+          onEdit={() => {
+            const id = viewItem.announcementID;
+            setViewItem(null);
+            openEdit(id);
+          }}
+        />
       )}
     </div>
   );
