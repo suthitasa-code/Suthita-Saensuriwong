@@ -86,10 +86,23 @@
 
 /* ===== Footer ===== */
 .site-footer {
-    background-color: var(--footer-bg);
+    background: linear-gradient(160deg, var(--maroon) 0%, var(--dark-maroon) 45%, #200000 100%);
     color: white;
     padding: 60px 0 40px;
     margin-top: 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* แถบไล่สีทองบางๆ ด้านบนฟุตเตอร์ ให้เข้าชุดกับลายเซ็นไล่สีทอง-แดงที่ใช้ทั่วทั้งเว็บ */
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
 }
 
 .footer-title-gold {

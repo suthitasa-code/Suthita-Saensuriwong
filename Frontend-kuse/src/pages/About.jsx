@@ -41,7 +41,7 @@ const About = () => {
   return (
     <div className="container px-4 about-page">
       <div className="about-page-header">
-        <h1>เกี่ยวกับฉัน</h1>
+        <h1>เกี่ยวกับ</h1>
         <p>เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.</p>
       </div>
 
