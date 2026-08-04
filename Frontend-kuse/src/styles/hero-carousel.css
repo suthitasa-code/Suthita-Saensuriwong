@@ -122,7 +122,7 @@
 }
 
 .btn-kuse-red {
-    background: linear-gradient(135deg, #a30000 0%, var(--maroon) 45%, var(--dark-maroon) 100%);
+    background: linear-gradient(135deg, #8b0000 0%, var(--maroon) 40%, #300000 100%);
     background-size: 200% 200%;
     background-position: 0% 50%;
     color: white;
@@ -137,7 +137,7 @@
 }
 
 .btn-kuse-dark {
-    background: linear-gradient(135deg, #4a4a4a 0%, #1c1c1c 55%, #000 100%);
+    background: linear-gradient(135deg, #2a2a2a 0%, #0d0d0d 55%, #000 100%);
     background-size: 200% 200%;
     background-position: 0% 50%;
     color: white;
