@@ -68,57 +68,56 @@
   margin-bottom: 22px;
 }
 
+/* กริด 2 คอลัมน์ (ข้อมูลพื้นฐาน / ข้อมูลการสร้าง-แก้ไข) — ข้อมูลสั้น ไม่ต้องมีเส้นคั่น
+   ปล่อยให้ระยะห่าง (gap) ทำหน้าที่แยกแต่ละช่องแทน ดูโปร่ง ไม่เทอะทะ */
 .course-view-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  row-gap: 22px;
+  column-gap: 36px;
 }
 @media (max-width: 640px) {
   .course-view-grid { grid-template-columns: 1fr; }
 }
 
-/* ใช้กับข้อความยาว (จุดเด่น/อาชีพ) เรียงเต็มความกว้างทีละบล็อก อ่านง่ายกว่าบีบ 2 คอลัมน์ */
+/* ใช้กับข้อความยาว (จุดเด่น/อาชีพ) เรียงเต็มความกว้างทีละบล็อก คั่นด้วยเส้นบางๆ
+   (single column เท่านั้นที่คั่นด้วยเส้นได้สวย เพราะรู้แน่ชัดว่าอันไหนเป็นอันสุดท้าย) */
 .course-view-block-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+}
+.course-view-block-list > .course-view-row {
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
+}
+.course-view-block-list > .course-view-row:first-child { padding-top: 4px; }
+.course-view-block-list > .course-view-row:last-child {
+  padding-bottom: 4px;
+  border-bottom: none;
 }
 
-/* แต่ละหัวข้อเป็นการ์ดย่อยของตัวเอง มีเส้นขอบซ้ายสีทองคั่นชัดเจน กันตัวหนังสือดูติดกันเป็นพืด */
-.course-view-row {
-  background: #faf8f3;
-  border: 1px solid #f1ebd9;
-  border-left: 3px solid var(--kuse-gold);
-  border-radius: 12px;
-  padding: 14px 18px;
-}
+/* เรียบๆ ไม่มีกรอบ/พื้นหลัง ใช้ typography + สีอ่อนคั่นแทนกล่องหนาๆ */
 .course-view-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
+  gap: 7px;
+  font-size: 0.72rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--kuse-maroon);
-  margin-bottom: 8px;
-  letter-spacing: 0.2px;
+  opacity: 0.8;
+  margin-bottom: 7px;
 }
 .course-view-label-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(212, 175, 55, 0.18);
-  color: var(--kuse-maroon);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  flex-shrink: 0;
+  color: var(--kuse-gold);
+  font-size: 0.8rem;
 }
 .course-view-value {
-  font-size: 0.93rem;
-  color: #333;
+  font-size: 0.95rem;
+  color: #2b2b2b;
   white-space: pre-line;
-  line-height: 1.85;
+  line-height: 1.8;
 }
 .course-view-empty {
   color: #adb5bd;
