@@ -4,24 +4,29 @@
    manage-admin.css อยู่แล้ว (import แยกไว้เฉพาะคลาสที่เพิ่มใหม่)
    ดีไซน์เรียบ ไม่มีกรอบหนาต่อฟิลด์ (บทเรียนจากหน้าหลักสูตร: กรอบเยอะ = เทอะทะ) */
 
+/* แถบโปรไฟล์ด้านบน — พื้นหลังไล่เฉดทองอ่อนๆ ให้ดูเป็นการ์ดโปรไฟล์จริงจัง
+   แทนที่จะเป็นแค่เส้นคั่นเฉยๆ (เพิ่มความสวยงามตามที่ขอ) */
 .admin-view-profile {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding-bottom: 18px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid #eee;
+  gap: 18px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fdf8ee 0%, #fff7ea 100%);
+  border: 1px solid rgba(212, 175, 55, 0.22);
 }
 .admin-view-avatar {
-  width: 56px;
-  height: 56px;
-  font-size: 1.4rem;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  border: 3px solid #fff;
 }
 .admin-view-name {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .admin-view-badges {
   display: flex;
@@ -62,19 +67,24 @@
   line-height: 1.6;
 }
 
-.admin-view-pass-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
-  color: #fff;
+/* ชิปเล็กๆ แทนปุ่มบล็อกเต็มความกว้างเดิม (ใหญ่เกินไป) ให้น้ำหนักสายตาเท่าๆ กับ
+   ข้อมูลแถวอื่น ไม่แย่งความสนใจไปจากรายละเอียดหลัก */
+.admin-view-pass-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(49, 151, 149, 0.1);
+  color: #24817d;
   border: none;
-  padding: 11px 0;
-  border-radius: 12px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
   font-weight: 600;
-  box-shadow: 0 6px 14px rgba(49, 151, 149, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.admin-view-pass-btn:hover {
+.admin-view-pass-chip:hover {
+  background: linear-gradient(135deg, #4fd1c5, #319795);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(49, 151, 149, 0.35);
+  box-shadow: 0 8px 16px rgba(49, 151, 149, 0.3);
 }

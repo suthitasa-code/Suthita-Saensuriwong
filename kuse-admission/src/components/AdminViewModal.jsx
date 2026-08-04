@@ -68,13 +68,18 @@ export default function AdminViewModal({ admin, onClose, onEdit, onViewPassword 
               <AdminDetailRow icon="fas fa-envelope" label="อีเมลแอดมิน" value={admin.email} />
               <AdminDetailRow icon="fas fa-user-tag" label="ระดับสิทธิ์" value={getRoleLabel(admin.role)} />
               <AdminDetailRow icon="fas fa-calendar-plus" label="วันที่สร้างบัญชี" value={formatDateTime(admin.createdAt)} />
+              {onViewPassword && (
+                <AdminDetailRow
+                  icon="fas fa-key"
+                  label="รหัสผ่านปัจจุบัน"
+                  value={(
+                    <button type="button" className="admin-view-pass-chip" onClick={onViewPassword}>
+                      <i className="fas fa-eye"></i>คลิกเพื่อดูรหัสผ่าน
+                    </button>
+                  )}
+                />
+              )}
             </div>
-
-            {onViewPassword && (
-              <button type="button" className="btn admin-view-pass-btn mt-3" onClick={onViewPassword}>
-                <i className="fas fa-key me-2"></i>ดูรหัสผ่านปัจจุบัน
-              </button>
-            )}
           </div>
 
           <div className="modal-footer border-0 d-flex justify-content-end gap-2 p-3">
