@@ -19,22 +19,29 @@ const formatDateTime = (d) => d
 // รวมชื่อ-นามสกุลแอดมิน ถ้าไม่มีข้อมูล (เช่น บัญชีถูกลบไปแล้ว) ให้ขึ้น "ไม่ทราบชื่อ"
 const fullAdminName = (name, lastname) => (name ? `${name} ${lastname || ''}`.trim() : 'ไม่ทราบชื่อ');
 
-// แถวข้อมูล label ซ้าย + value ขวา ใช้ซ้ำหลายจุดในหน้านี้
-const DetailRow = ({ label, value }) => (
+// แถวข้อมูล มีไอคอนวงกลมนำหน้า label กันดูรกและติดกันเกินไป (แพทเทิร์นเดียวกับ
+// CourseViewModal.jsx / AdminViewModal.jsx)
+const DetailRow = ({ icon, label, value }) => (
   <div className="view-detail-row">
-    <div className="view-detail-label">{label}</div>
+    <div className="view-detail-label">
+      {icon && <i className={`${icon} view-detail-label-icon`}></i>}
+      {label}
+    </div>
     <div className="view-detail-value">{value || <span className="view-empty">- ไม่ระบุ -</span>}</div>
   </div>
 );
 
 // การ์ดแสดงรูปภาพที่แนบมากับประกาศ (คลิกเพื่อดูขนาดเต็ม)
-const ImageGroup = ({ label, value }) => {
+const ImageGroup = ({ icon, label, value }) => {
   if (!value) return null;
   const names = value.split(',').filter(Boolean);
   if (names.length === 0) return null;
   return (
     <div className="view-file-group">
-      <div className="view-file-group-label">{label}</div>
+      <div className="view-file-group-label">
+        {icon && <i className={`${icon} view-detail-label-icon`}></i>}
+        {label}
+      </div>
       <div className="view-file-thumbs">
         {names.map((n, i) => (
           <img
@@ -97,23 +104,25 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
               <span className="tcas-step-num">1</span>ข้อมูลหลักของประกาศ
             </div>
             <div className="view-detail-grid">
-              <DetailRow label="รอบ TCAS" value={item.tcasRound} />
-              <DetailRow label="ปีการศึกษา" value={item.academicYear} />
-              <DetailRow label="วันที่เริ่มสมัคร" value={formatDate(item.openDate)} />
-              <DetailRow label="วันที่สิ้นสุดสมัคร" value={formatDate(item.closeDate)} />
-              <DetailRow label="จำนวนรับ (คน)" value={item.totalQuota} />
-              <DetailRow label="ทุนเรียนดี (ทุน)" value={item.totalScholarships} />
+              <DetailRow icon="fas fa-bullhorn" label="รอบ TCAS" value={item.tcasRound} />
+              <DetailRow icon="fas fa-calendar-days" label="ปีการศึกษา" value={item.academicYear} />
+              <DetailRow icon="fas fa-calendar-check" label="วันที่เริ่มสมัคร" value={formatDate(item.openDate)} />
+              <DetailRow icon="fas fa-flag-checkered" label="วันที่สิ้นสุดสมัคร" value={formatDate(item.closeDate)} />
+              <DetailRow icon="fas fa-users" label="จำนวนรับ (คน)" value={item.totalQuota} />
+              <DetailRow icon="fas fa-award" label="ทุนเรียนดี (ทุน)" value={item.totalScholarships} />
             </div>
           </div>
 
-          {/* หมวด 2: รายละเอียดเพิ่มเติม */}
+          {/* หมวด 2: รายละเอียดเพิ่มเติม (ข้อความยาว ให้เต็มความกว้างทีละบล็อก คั่นด้วยเส้นบางๆ) */}
           <div className="tcas-form-section">
             <div className="tcas-form-section-title">
               <span className="tcas-step-num">2</span>รายละเอียดเพิ่มเติม
             </div>
-            <DetailRow label="คุณสมบัติผู้สมัคร" value={item.candidateDetail} />
-            <DetailRow label="เงื่อนไขการสมัคร" value={item.conditions} />
-            <DetailRow label="หมายเหตุ" value={item.notes} />
+            <div className="view-block-list">
+              <DetailRow icon="fas fa-user-check" label="คุณสมบัติผู้สมัคร" value={item.candidateDetail} />
+              <DetailRow icon="fas fa-list-check" label="เงื่อนไขการสมัคร" value={item.conditions} />
+              <DetailRow icon="fas fa-note-sticky" label="หมายเหตุ" value={item.notes} />
+            </div>
           </div>
 
           {/* หมวด 3: ไฟล์แนบ */}
@@ -122,9 +131,9 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
               <span className="tcas-step-num">3</span>ไฟล์แนบประกอบประกาศ
             </div>
             <div className="view-file-groups">
-              <ImageGroup label="กำหนดการรับสมัคร" value={item.scheduleImg} />
-              <ImageGroup label="สาขาวิชาที่เปิดรับ" value={item.majorTableImg} />
-              <ImageGroup label="โปสเตอร์ประชาสัมพันธ์" value={item.posterImg} />
+              <ImageGroup icon="fas fa-calendar-alt" label="กำหนดการรับสมัคร" value={item.scheduleImg} />
+              <ImageGroup icon="fas fa-list-ul" label="สาขาวิชาที่เปิดรับ" value={item.majorTableImg} />
+              <ImageGroup icon="fas fa-image" label="โปสเตอร์ประชาสัมพันธ์" value={item.posterImg} />
             </div>
             <div className="view-pdf-row">
               <PdfChip label="ประกาศรับสมัคร (PDF)" value={item.announcementPdf} />
@@ -141,12 +150,12 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
               <span className="tcas-step-num">4</span>ข้อมูลการสร้าง/แก้ไข
             </div>
             <div className="view-detail-grid">
-              <DetailRow label="สร้างโดย" value={fullAdminName(item.creatorName, item.creatorLastname)} />
-              <DetailRow label="วันที่สร้าง" value={formatDateTime(item.createdAt)} />
+              <DetailRow icon="fas fa-user-plus" label="สร้างโดย" value={fullAdminName(item.creatorName, item.creatorLastname)} />
+              <DetailRow icon="fas fa-calendar-plus" label="วันที่สร้าง" value={formatDateTime(item.createdAt)} />
               {item.updatedAt && (
                 <>
-                  <DetailRow label="แก้ไขล่าสุดโดย" value={fullAdminName(item.updaterName, item.updaterLastname)} />
-                  <DetailRow label="เวลาแก้ไขล่าสุด" value={formatDateTime(item.updatedAt)} />
+                  <DetailRow icon="fas fa-user-pen" label="แก้ไขล่าสุดโดย" value={fullAdminName(item.updaterName, item.updaterLastname)} />
+                  <DetailRow icon="fas fa-clock-rotate-left" label="เวลาแก้ไขล่าสุด" value={formatDateTime(item.updatedAt)} />
                 </>
               )}
             </div>

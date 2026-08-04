@@ -19,32 +19,64 @@
   font-size: 0.95rem;
 }
 
+/* กริด 2 คอลัมน์ (ข้อมูลหลัก / ข้อมูลการสร้าง-แก้ไข) — ข้อมูลสั้น ไม่ต้องมีเส้นคั่น
+   ปล่อยให้ระยะห่าง (gap) ทำหน้าที่แยกแต่ละช่องแทน ดูโปร่ง ไม่เทอะทะ */
 .view-detail-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px 32px;
+  row-gap: 22px;
+  column-gap: 36px;
 }
 @media (max-width: 640px) {
   .view-detail-grid { grid-template-columns: 1fr; }
 }
 
-.view-detail-row {
-  margin-bottom: 14px;
+/* ใช้กับข้อความยาว (คุณสมบัติ/เงื่อนไข/หมายเหตุ) เรียงเต็มความกว้างทีละบล็อก
+   คั่นด้วยเส้นบางๆ กันดูติดกันเป็นพืด (จุดที่เคยโดนแจ้งว่าแน่นเกินไป) */
+.view-block-list {
+  display: flex;
+  flex-direction: column;
 }
-.view-detail-grid .view-detail-row {
+.view-block-list > .view-detail-row {
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
   margin-bottom: 0;
 }
+.view-block-list > .view-detail-row:first-child { padding-top: 4px; }
+.view-block-list > .view-detail-row:last-child {
+  padding-bottom: 4px;
+  border-bottom: none;
+}
+
 .view-detail-label {
-  font-size: 0.8rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--kuse-maroon);
-  margin-bottom: 4px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+.view-detail-label-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(128, 0, 0, 0.12));
+  color: var(--kuse-maroon);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  flex-shrink: 0;
 }
 .view-detail-value {
-  font-size: 0.92rem;
-  color: #333;
+  font-size: 0.95rem;
+  color: #2b2b2b;
   white-space: pre-line;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 .view-empty {
   color: #adb5bd;
@@ -58,10 +90,16 @@
   margin-bottom: 16px;
 }
 .view-file-group-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--kuse-maroon);
+  opacity: 0.85;
+  margin-bottom: 10px;
 }
 .view-file-thumbs {
   display: flex;
