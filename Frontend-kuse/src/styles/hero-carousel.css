@@ -122,12 +122,14 @@
 }
 
 .btn-kuse-red {
-    background: var(--maroon);
+    background: linear-gradient(135deg, #a30000 0%, var(--maroon) 45%, var(--dark-maroon) 100%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
     color: white;
 }
 
 .btn-kuse-red:hover {
-    background: var(--dark-maroon);
+    background-position: 100% 50%;
     transform: translateY(-3px);
     color: white;
     border-color: var(--gold);
@@ -135,12 +137,14 @@
 }
 
 .btn-kuse-dark {
-    background: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(135deg, #4a4a4a 0%, #1c1c1c 55%, #000 100%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
     color: white;
 }
 
 .btn-kuse-dark:hover {
-    background: #000;
+    background-position: 100% 50%;
     transform: translateY(-3px);
     color: white;
     border-color: var(--gold);
