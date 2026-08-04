@@ -404,7 +404,7 @@
     cursor: not-allowed;
 }
 
-.action-view-pass {
+.action-view-detail {
     background: linear-gradient(135deg, #4fd1c5, #319795);
     box-shadow: 0 4px 10px rgba(49, 151, 149, 0.3);
 }

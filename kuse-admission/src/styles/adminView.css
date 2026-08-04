@@ -1,0 +1,80 @@
+/* ===== adminView.css =====
+   สไตล์เฉพาะของ modal "ดูรายละเอียดผู้ดูแลระบบ" (โหมดอ่านอย่างเดียว)
+   ใช้ .style-modal-custom / .badge-role / .admin-status-badge ร่วมกับ
+   manage-admin.css อยู่แล้ว (import แยกไว้เฉพาะคลาสที่เพิ่มใหม่)
+   ดีไซน์เรียบ ไม่มีกรอบหนาต่อฟิลด์ (บทเรียนจากหน้าหลักสูตร: กรอบเยอะ = เทอะทะ) */
+
+.admin-view-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #eee;
+}
+.admin-view-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+}
+.admin-view-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.admin-view-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-view-block-list {
+  display: flex;
+  flex-direction: column;
+}
+.admin-view-row {
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+.admin-view-row:first-child { padding-top: 0; }
+.admin-view-row:last-child { padding-bottom: 0; border-bottom: none; }
+
+.admin-view-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--kuse-maroon);
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+.admin-view-label-icon {
+  color: var(--kuse-gold);
+  font-size: 0.8rem;
+}
+.admin-view-value {
+  font-size: 0.95rem;
+  color: #2b2b2b;
+  line-height: 1.6;
+}
+
+.admin-view-pass-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
+  color: #fff;
+  border: none;
+  padding: 11px 0;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 6px 14px rgba(49, 151, 149, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.admin-view-pass-btn:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(49, 151, 149, 0.35);
+}

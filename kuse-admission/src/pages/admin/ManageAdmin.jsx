@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import Chart from 'react-apexcharts';
 import '../../styles/manage-admin.css';
 import axios from 'axios';
+import AdminViewModal from '../../components/AdminViewModal';
 
 // ================================================================
 // หน้านี้คือ "จัดการบัญชีผู้ดูแลระบบ" เฉพาะ Super Admin เท่านั้นที่เข้าได้
@@ -19,6 +20,7 @@ const ManageAdmin = () => {
     const [loading, setLoading] = useState(true);
 
     const [showModal, setShowModal] = useState(false);
+    const [viewAdmin, setViewAdmin] = useState(null); // แอดมินที่กำลังเปิดดูรายละเอียดแบบอ่านอย่างเดียว (null = ไม่ได้เปิด)
     const [isEditMode, setIsEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
@@ -472,7 +474,7 @@ const ManageAdmin = () => {
                                             <td className="text-center">
                                                 <div className="d-flex justify-content-center gap-2">
                                                     {isSuperAdmin && (
-                                                        <button className="admin-action-btn action-view-pass" onClick={() => handleViewPassword(admin)} title="ดูรหัสผ่านปัจจุบัน">
+                                                        <button className="admin-action-btn action-view-detail" onClick={() => setViewAdmin(admin)} title="ดูรายละเอียด">
                                                             <i className="fas fa-eye"></i>
                                                         </button>
                                                     )}
@@ -642,6 +644,20 @@ const ManageAdmin = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* ========== VIEW MODAL (ดูรายละเอียด อ่านอย่างเดียว) ========== */}
+            {viewAdmin && (
+                <AdminViewModal
+                    admin={viewAdmin}
+                    onClose={() => setViewAdmin(null)}
+                    onEdit={() => {
+                        const admin = viewAdmin;
+                        setViewAdmin(null);
+                        handleOpenEditModal(admin);
+                    }}
+                    onViewPassword={isSuperAdmin ? () => handleViewPassword(viewAdmin) : null}
+                />
             )}
         </div>
     );
