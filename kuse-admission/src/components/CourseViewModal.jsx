@@ -15,10 +15,13 @@ const formatDateTime = (d) => d
 // รวมชื่อ-นามสกุลแอดมิน ถ้าไม่มีข้อมูล (เช่น บัญชีถูกลบไปแล้ว) ให้ขึ้น "ไม่ทราบชื่อ"
 const fullAdminName = (name, lastname) => (name ? `${name} ${lastname || ''}`.trim() : 'ไม่ทราบชื่อ');
 
-// แถวข้อมูล label ซ้าย + value ขวา ใช้ซ้ำหลายจุดในหน้านี้
-const CourseDetailRow = ({ label, value }) => (
+// แถวข้อมูล การ์ดย่อยแยกแต่ละหัวข้อชัดเจน (มีไอคอนหน้า label กันดูรกและติดกันเกินไป)
+const CourseDetailRow = ({ label, icon, value }) => (
   <div className="course-view-row">
-    <div className="course-view-label">{label}</div>
+    <div className="course-view-label">
+      {icon && <i className={`${icon} course-view-label-icon`}></i>}
+      {label}
+    </div>
     <div className="course-view-value">{value || <span className="course-view-empty">- ไม่ระบุ -</span>}</div>
   </div>
 );
@@ -65,32 +68,33 @@ export default function CourseViewModal({ course, onClose, onEdit }) {
           </div>
 
           {/* ----- รายละเอียดเรียงเต็มความกว้าง ทีละหัวข้อ ----- */}
-          <div className="card border-0 shadow-sm p-3 gold-card bg-white mb-3">
+          <div className="card border-0 shadow-sm p-4 gold-card bg-white course-view-section">
             <h6 className="fw-bold mb-3 section-step-title"><span className="section-step-num">1</span>ข้อมูลพื้นฐาน</h6>
             <div className="course-view-grid">
-              <CourseDetailRow label="รหัสหลักสูตร" value={course.curriculumID} />
-              <CourseDetailRow label="ระดับการศึกษา" value={course.degreeLevel} />
-              <CourseDetailRow label="ประเภทหลักสูตร" value={course.curriculumType} />
-              <CourseDetailRow label="ชื่อหลักสูตร (ไทย)" value={course.curriculumName} />
-              <CourseDetailRow label="ชื่อหลักสูตร (อังกฤษ)" value={course.curriculumNameEN} />
-              <CourseDetailRow label="ภาควิชา (ไทย)" value={course.deptNameTH} />
-              <CourseDetailRow label="ภาควิชา (อังกฤษ)" value={course.deptNameEN} />
+              <CourseDetailRow icon="fas fa-hashtag" label="รหัสหลักสูตร" value={course.curriculumID} />
+              <CourseDetailRow icon="fas fa-user-graduate" label="ระดับการศึกษา" value={course.degreeLevel} />
+              <CourseDetailRow icon="fas fa-graduation-cap" label="ประเภทหลักสูตร" value={course.curriculumType} />
+              <CourseDetailRow icon="fas fa-book" label="ชื่อหลักสูตร (ไทย)" value={course.curriculumName} />
+              <CourseDetailRow icon="fas fa-globe" label="ชื่อหลักสูตร (อังกฤษ)" value={course.curriculumNameEN} />
+              <CourseDetailRow icon="fas fa-building-columns" label="ภาควิชา (ไทย)" value={course.deptNameTH} />
+              <CourseDetailRow icon="fas fa-building-columns" label="ภาควิชา (อังกฤษ)" value={course.deptNameEN} />
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm p-3 gold-card bg-white mb-3">
+          {/* จุดเด่น/อาชีพ เป็นข้อความยาว ให้เต็มความกว้างทีละบล็อก อ่านง่ายกว่าบีบ 2 คอลัมน์ */}
+          <div className="card border-0 shadow-sm p-4 gold-card bg-white course-view-section">
             <h6 className="fw-bold mb-3 section-step-title"><span className="section-step-num">2</span>จุดเด่นและอาชีพ</h6>
-            <div className="course-view-grid">
-              <CourseDetailRow label="จุดเด่นของหลักสูตร" value={course.highlights} />
-              <CourseDetailRow label="เราเรียนอะไร..." value={course.whatWeLearn} />
-              <CourseDetailRow label="INSIDE ของสาขา มก. ฉกส." value={course.insideKuse} />
-              <CourseDetailRow label="โอกาสในการทำงาน" value={course.jobOpportunities} />
-              <CourseDetailRow label="เส้นทางอาชีพ: สายงานเอกชน" value={course.careerPrivate} />
-              <CourseDetailRow label="เส้นทางอาชีพ: สายงานราชการ/รัฐวิสาหกิจ" value={course.careerGovernment} />
+            <div className="course-view-block-list">
+              <CourseDetailRow icon="fas fa-star" label="จุดเด่นของหลักสูตร" value={course.highlights} />
+              <CourseDetailRow icon="fas fa-book-open" label="เราเรียนอะไร..." value={course.whatWeLearn} />
+              <CourseDetailRow icon="fas fa-eye" label="INSIDE ของสาขา มก. ฉกส." value={course.insideKuse} />
+              <CourseDetailRow icon="fas fa-briefcase" label="โอกาสในการทำงาน" value={course.jobOpportunities} />
+              <CourseDetailRow icon="fas fa-building" label="เส้นทางอาชีพ: สายงานเอกชน" value={course.careerPrivate} />
+              <CourseDetailRow icon="fas fa-landmark" label="เส้นทางอาชีพ: สายงานราชการ/รัฐวิสาหกิจ" value={course.careerGovernment} />
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm p-3 gold-card bg-white mb-3">
+          <div className="card border-0 shadow-sm p-4 gold-card bg-white course-view-section">
             <h6 className="fw-bold mb-3 section-step-title"><span className="section-step-num">3</span>ไฟล์ข้อมูลหลักสูตร</h6>
             {pdfNames.length > 0 ? (
               <div className="course-view-pdf-row">
@@ -105,15 +109,15 @@ export default function CourseViewModal({ course, onClose, onEdit }) {
             )}
           </div>
 
-          <div className="card border-0 shadow-sm p-3 gold-card bg-white">
+          <div className="card border-0 shadow-sm p-4 gold-card bg-white">
             <h6 className="fw-bold mb-3 section-step-title"><span className="section-step-num">4</span>ข้อมูลการสร้าง/แก้ไข</h6>
             <div className="course-view-grid">
-              <CourseDetailRow label="สร้างโดย" value={fullAdminName(course.creatorName, course.creatorLastname)} />
-              <CourseDetailRow label="วันที่สร้าง" value={formatDateTime(course.createdAt)} />
+              <CourseDetailRow icon="fas fa-user-plus" label="สร้างโดย" value={fullAdminName(course.creatorName, course.creatorLastname)} />
+              <CourseDetailRow icon="fas fa-calendar-plus" label="วันที่สร้าง" value={formatDateTime(course.createdAt)} />
               {course.updatedAt && (
                 <>
-                  <CourseDetailRow label="แก้ไขล่าสุดโดย" value={fullAdminName(course.updaterName, course.updaterLastname)} />
-                  <CourseDetailRow label="เวลาแก้ไขล่าสุด" value={formatDateTime(course.updatedAt)} />
+                  <CourseDetailRow icon="fas fa-user-pen" label="แก้ไขล่าสุดโดย" value={fullAdminName(course.updaterName, course.updaterLastname)} />
+                  <CourseDetailRow icon="fas fa-clock-rotate-left" label="เวลาแก้ไขล่าสุด" value={formatDateTime(course.updatedAt)} />
                 </>
               )}
             </div>
