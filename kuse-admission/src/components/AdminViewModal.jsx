@@ -43,42 +43,45 @@ export default function AdminViewModal({ admin, onClose, onEdit, onViewPassword 
           </div>
 
           <div className="modal-body p-4 bg-modal-light">
-            {/* ----- แถบโปรไฟล์ด้านบน ----- */}
-            <div className="admin-view-profile">
-              <div className={`admin-avatar admin-view-avatar ${isSuper ? 'avatar-super' : 'avatar-admin'}`}>
-                {admin.name?.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <div className="admin-view-name">{admin.name} {admin.lastname}</div>
-                <div className="admin-view-badges">
-                  <span className={`badge-role ${isSuper ? 'bg-super' : 'bg-admin'}`}>
-                    <i className={`fas ${isSuper ? 'fa-crown' : 'fa-user-shield'} me-1`}></i>{admin.role}
-                  </span>
-                  {isActive ? (
-                    <span className="admin-status-badge status-ok"><i className="fas fa-check-circle me-1"></i>ปกติ</span>
-                  ) : (
-                    <span className="admin-status-badge status-suspend"><i className="fas fa-ban me-1"></i>ถูกระงับสิทธิ์</span>
-                  )}
+            {/* ----- การ์ดหลัก มีแถบไล่สีทอง-แดงด้านบน (ลายเซ็นของระบบ เหมือนการ์ดอื่นๆ ทั้งแอป) ----- */}
+            <div className="admin-view-card">
+              {/* ----- แถบโปรไฟล์ด้านบน ----- */}
+              <div className="admin-view-profile">
+                <div className={`admin-avatar admin-view-avatar ${isSuper ? 'avatar-super' : 'avatar-admin'}`}>
+                  {admin.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="admin-view-name">{admin.name} {admin.lastname}</div>
+                  <div className="admin-view-badges">
+                    <span className={`badge-role ${isSuper ? 'bg-super' : 'bg-admin'}`}>
+                      <i className={`fas ${isSuper ? 'fa-crown' : 'fa-user-shield'} me-1`}></i>{admin.role}
+                    </span>
+                    {isActive ? (
+                      <span className="admin-status-badge status-ok"><i className="fas fa-check-circle me-1"></i>ปกติ</span>
+                    ) : (
+                      <span className="admin-status-badge status-suspend"><i className="fas fa-ban me-1"></i>ถูกระงับสิทธิ์</span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* ----- รายละเอียดบัญชี ----- */}
-            <div className="admin-view-block-list">
-              <AdminDetailRow icon="fas fa-envelope" label="อีเมลแอดมิน" value={admin.email} />
-              <AdminDetailRow icon="fas fa-user-tag" label="ระดับสิทธิ์" value={getRoleLabel(admin.role)} />
-              <AdminDetailRow icon="fas fa-calendar-plus" label="วันที่สร้างบัญชี" value={formatDateTime(admin.createdAt)} />
-              {onViewPassword && (
-                <AdminDetailRow
-                  icon="fas fa-key"
-                  label="รหัสผ่านปัจจุบัน"
-                  value={(
-                    <button type="button" className="admin-view-pass-chip" onClick={onViewPassword}>
-                      <i className="fas fa-eye"></i>คลิกเพื่อดูรหัสผ่าน
-                    </button>
-                  )}
-                />
-              )}
+              {/* ----- รายละเอียดบัญชี ----- */}
+              <div className="admin-view-block-list">
+                <AdminDetailRow icon="fas fa-envelope" label="อีเมลแอดมิน" value={admin.email} />
+                <AdminDetailRow icon="fas fa-user-tag" label="ระดับสิทธิ์" value={getRoleLabel(admin.role)} />
+                <AdminDetailRow icon="fas fa-calendar-plus" label="วันที่สร้างบัญชี" value={formatDateTime(admin.createdAt)} />
+                {onViewPassword && (
+                  <AdminDetailRow
+                    icon="fas fa-key"
+                    label="รหัสผ่านปัจจุบัน"
+                    value={(
+                      <button type="button" className="admin-view-pass-chip" onClick={onViewPassword}>
+                        <i className="fas fa-eye"></i>คลิกเพื่อดูรหัสผ่าน
+                      </button>
+                    )}
+                  />
+                )}
+              </div>
             </div>
           </div>
 

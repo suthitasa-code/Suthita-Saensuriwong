@@ -2,7 +2,24 @@
    สไตล์เฉพาะของ modal "ดูรายละเอียดผู้ดูแลระบบ" (โหมดอ่านอย่างเดียว)
    ใช้ .style-modal-custom / .badge-role / .admin-status-badge ร่วมกับ
    manage-admin.css อยู่แล้ว (import แยกไว้เฉพาะคลาสที่เพิ่มใหม่)
-   ดีไซน์เรียบ ไม่มีกรอบหนาต่อฟิลด์ (บทเรียนจากหน้าหลักสูตร: กรอบเยอะ = เทอะทะ) */
+   เพิ่มแถบไล่สีทอง-แดงด้านบนการ์ด (ลายเซ็นของระบบ ใช้ทั่วทั้งแอป) ให้เข้าชุดกับหน้าอื่น */
+
+.admin-view-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+.admin-view-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--kuse-gold), var(--kuse-maroon));
+}
 
 /* แถบโปรไฟล์ด้านบน — พื้นหลังไล่เฉดทองอ่อนๆ ให้ดูเป็นการ์ดโปรไฟล์จริงจัง
    แทนที่จะเป็นแค่เส้นคั่นเฉยๆ (เพิ่มความสวยงามตามที่ขอ) */
@@ -10,9 +27,9 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 20px 22px;
+  padding: 18px 20px;
   margin-bottom: 20px;
-  border-radius: 18px;
+  border-radius: 16px;
   background: linear-gradient(135deg, #fdf8ee 0%, #fff7ea 100%);
   border: 1px solid rgba(212, 175, 55, 0.22);
 }
@@ -48,18 +65,26 @@
 .admin-view-label {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--kuse-maroon);
-  opacity: 0.8;
-  margin-bottom: 6px;
+  opacity: 0.85;
+  margin-bottom: 8px;
 }
 .admin-view-label-icon {
-  color: var(--kuse-gold);
-  font-size: 0.8rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(128, 0, 0, 0.12));
+  color: var(--kuse-maroon);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  flex-shrink: 0;
 }
 .admin-view-value {
   font-size: 0.95rem;
