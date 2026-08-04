@@ -88,6 +88,10 @@
     transparent 16px
   );
   z-index: 0;
+  /* ลายพื้นหลังนี้เป็นแค่ตกแต่ง ห้ามให้ดักคลิก/แตะ — ถ้าไม่ใส่ตรงนี้ พอ .ad-hero-topbar
+     เปลี่ยนเป็น position: static ตอนจอมือถือ (ด้านล่าง) ปุ่มย้อนกลับจะกดไม่ติด เพราะ
+     เลเยอร์นี้ (positioned, z-index: 0) จะวาดทับ content ที่ static อยู่เสมอตามกฎ stacking order */
+  pointer-events: none;
 }
 
 .ad-hero-inner {

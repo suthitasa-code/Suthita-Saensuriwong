@@ -99,6 +99,14 @@
     background: #ffffff;
 }
 
+/* แถวปุ่ม CTA (ดูประกาศรับสมัคร / ดูข้อมูลหลักสูตร) ให้อยู่ซ้าย-ขวาเสมอ
+   ใช้ gap แทน margin-left เดิมของ .btn-kuse-dark กันซ้อนกันตอนบีบเล็ก */
+.hero-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
 /* ปุ่ม CTA แบบไล่แสงทอง */
 .btn-kuse {
     position: relative;
@@ -129,7 +137,6 @@
 .btn-kuse-dark {
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    margin-left: 15px;
 }
 
 .btn-kuse-dark:hover {
@@ -173,5 +180,20 @@
     }
     .hero-arrow-next {
         right: 10px;
+    }
+
+    /* บังคับให้ปุ่ม "ดูประกาศรับสมัคร" / "ดูข้อมูลหลักสูตร" อยู่แถวเดียวกันซ้าย-ขวา
+       เหมือนหน้าเดสก์ท็อป แทนที่จะตกบรรทัดไปซ้อนกันแนวตั้ง */
+    .hero-cta-row {
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+    .btn-kuse {
+        padding: 8px 13px;
+        font-size: 0.74rem;
+        white-space: nowrap;
+    }
+    .btn-kuse i {
+        margin-left: 5px;
     }
 }

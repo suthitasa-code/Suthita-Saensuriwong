@@ -46,7 +46,7 @@ const HeroCarousel = ({ banners, intervalMs = 5000, children }) => {
             <div className="container">
               <h1 className="hero-title">{banner.title}</h1>
               {banner.subtitle && <p className="hero-subtitle">{banner.subtitle}</p>}
-              {i === index && children && <div className="mt-4">{children}</div>}
+              {i === index && children && <div className="hero-cta-row mt-4">{children}</div>}
             </div>
           </div>
         </div>
