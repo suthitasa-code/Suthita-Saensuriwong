@@ -20,11 +20,19 @@ const curriculumService = {
   updateCurriculum: async (id, body, files) => {
     const updateData = {};
 
+    // adminID ที่ frontend ส่งมาตอนแก้ไข คือคนที่ "กำลังแก้ไขอยู่ตอนนี้" ไม่ใช่คนสร้าง
+    // เลยไม่เขียนทับคอลัมน์ adminID (คนสร้างเดิม) อีกต่อไป แต่ไปลง updatedBy/updatedAt แทน
+    // เพื่อให้ยังรู้เสมอว่าใครเป็นคนสร้างหลักสูตรนี้ตอนแรก
     Object.keys(body).forEach(key => {
+      if (key === "adminID") return;
       if (body[key] !== undefined && body[key] !== "") {
         updateData[key] = body[key];
       }
     });
+    if (body.adminID) {
+      updateData.updatedBy = body.adminID;
+      updateData.updatedAt = new Date();
+    }
 
     // วนลูปเช็คถ้าแอดมินมีการอัปโหลดไฟล์ใหม่เข้ามาเพิ่ม
     if (files) {

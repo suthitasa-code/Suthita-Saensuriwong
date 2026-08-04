@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/managecourse.css';
+import CourseViewModal from '../../components/CourseViewModal';
+import { API_BASE, API_URL, fileUrl, degreeSlug } from '../../utils/courseHelpers';
 
 // ===================== CONFIG =====================
-// ปรับให้ตรงกับที่ใช้ในไฟล์อื่น ๆ ของโปรเจกต์ (เช่น ManageTcas.jsx)
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-const API_URL = `${API_BASE}/api/curriculum`;
-const UPLOAD_URL = `${API_BASE}/uploads`;
+// (ตัว modal "ดูรายละเอียด" แบบอ่านอย่างเดียวแยกไปไว้ที่
+// components/CourseViewModal.jsx กันไฟล์นี้ยาวเกินไป)
 const ADMIN_ID = localStorage.getItem('admin_id') || '';
 
 // ตัวเลือกไอคอนสาขา (เก็บเป็นชื่อคลาส Font Awesome ลงคอลัมน์ icon)
@@ -62,18 +62,6 @@ const emptyForm = {
     icon: 'fas fa-graduation-cap',
 };
 
-// สร้าง URL เต็มของไฟล์ที่อัปโหลดแล้ว (รูป/PDF) จากชื่อไฟล์ที่เก็บใน DB
-const fileUrl = (filename, type) =>
-    filename ? `${UPLOAD_URL}/curriculum/${type}/${filename}` : '';
-
-// แปลงระดับการศึกษาเป็นคลาส CSS เพื่อให้ป้ายระดับแต่ละแบบมีโทนสีต่างกัน
-const degreeSlug = (level) => {
-    if (level === 'ปริญญาตรี') return 'bachelor';
-    if (level === 'ปริญญาโท') return 'master';
-    if (level === 'ปริญญาเอก') return 'doctor';
-    return 'other';
-};
-
 const ManageCourse = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -82,6 +70,7 @@ const ManageCourse = () => {
     const [curriculumTypeOptions, setCurriculumTypeOptions] = useState([]); // จาก /api/lookups/curriculum_type (มีไอคอน+สีติดมาด้วย)
 
     const [showModal, setShowModal] = useState(false);
+    const [viewCourse, setViewCourse] = useState(null); // หลักสูตรที่กำลังเปิดดูแบบอ่านอย่างเดียว (null = ไม่ได้เปิด)
     const [editingId, setEditingId] = useState(null); // null = โหมดเพิ่มใหม่
     const [form, setForm] = useState(emptyForm);
 
@@ -184,6 +173,10 @@ const ManageCourse = () => {
         setShowModal(false);
         resetFileState();
     };
+
+    // ----- เปิด modal "ดูรายละเอียด" แบบอ่านอย่างเดียว -----
+    // ข้อมูลใน courses (จาก fetchCourses) มีครบทุกฟิลด์อยู่แล้ว ใช้ต่อได้เลยไม่ต้องยิง fetch ซ้ำ
+    const openViewModal = (course) => setViewCourse(course);
 
     // ===================== ฟอร์ม =====================
     const handleChange = (e) => {
@@ -337,6 +330,9 @@ const ManageCourse = () => {
                     {course.deptNameEN || course.deptNameTH || 'ไม่ระบุภาควิชา'}
                 </div>
                 <div className="course-card-actions">
+                    <button className="btn-course-view" onClick={() => openViewModal(course)}>
+                        <i className="fas fa-eye"></i> ดูรายละเอียด
+                    </button>
                     <button className="btn-course-edit" onClick={() => openEditModal(course)}>
                         <i className="fas fa-pen"></i> แก้ไข
                     </button>
@@ -658,6 +654,19 @@ const ManageCourse = () => {
                         </form>
                     </div>
                 </div>
+            )}
+
+            {/* ========== VIEW MODAL (ดูรายละเอียด อ่านอย่างเดียว) ========== */}
+            {viewCourse && (
+                <CourseViewModal
+                    course={viewCourse}
+                    onClose={() => setViewCourse(null)}
+                    onEdit={() => {
+                        const course = viewCourse;
+                        setViewCourse(null);
+                        openEditModal(course);
+                    }}
+                />
             )}
         </>
     );

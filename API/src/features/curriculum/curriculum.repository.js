@@ -1,13 +1,30 @@
 const { pool } = require("../../config/db");
 
 const curriculumRepository = {
+  // JOIN ตาราง admin 2 รอบ (คนละ alias) เพื่อดึงชื่อ "คนสร้าง" (adminID) กับ
+  // "คนแก้ไขล่าสุด" (updatedBy) มาแสดงพร้อมกันในคำสั่งเดียว (แพทเทิร์นเดียวกับ announcement.repository.js)
   findAll: async () => {
-    const [rows] = await pool.query("SELECT * FROM curriculum");
+    const [rows] = await pool.query(`
+      SELECT c.*,
+        cr.name AS creatorName, cr.lastname AS creatorLastname,
+        up.name AS updaterName, up.lastname AS updaterLastname
+      FROM curriculum c
+      LEFT JOIN admin cr ON c.adminID = cr.adminID
+      LEFT JOIN admin up ON c.updatedBy = up.adminID
+    `);
     return rows;
   },
 
   findById: async (id) => {
-    const [rows] = await pool.query("SELECT * FROM curriculum WHERE curriculumID = ?", [id]);
+    const [rows] = await pool.query(`
+      SELECT c.*,
+        cr.name AS creatorName, cr.lastname AS creatorLastname,
+        up.name AS updaterName, up.lastname AS updaterLastname
+      FROM curriculum c
+      LEFT JOIN admin cr ON c.adminID = cr.adminID
+      LEFT JOIN admin up ON c.updatedBy = up.adminID
+      WHERE c.curriculumID = ?
+    `, [id]);
     return rows[0] || null;
   },
 
