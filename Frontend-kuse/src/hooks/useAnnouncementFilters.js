@@ -19,10 +19,16 @@ export const useAnnouncementFilters = (announcements) => {
     [announcements]
   );
 
-  const roundOptions = useMemo(
-    () => [...new Set(announcements.map((a) => a.tcasRound).filter(Boolean))],
-    [announcements]
-  );
+  // เรียงตามเลขรอบที่แฝงอยู่ในชื่อ (เช่น "รอบที่ 1 Portfolio" -> 1) ไม่ใช่เรียงตามตัวอักษร
+  // กันเคสที่ฐานข้อมูลคืนลำดับ 3,1,4,2 มา ให้ dropdown โชว์ 1 -> 2 -> 3 -> 4 เสมอ
+  const roundOptions = useMemo(() => {
+    const extractRoundNumber = (s) => {
+      const match = (s || '').match(/\d+/);
+      return match ? Number(match[0]) : Infinity;
+    };
+    return [...new Set(announcements.map((a) => a.tcasRound).filter(Boolean))]
+      .sort((a, b) => extractRoundNumber(a) - extractRoundNumber(b) || a.localeCompare(b, 'th'));
+  }, [announcements]);
 
   const isFiltering = Boolean(searchQuery) || yearFilter !== 'all' || roundFilter !== 'all' || statusFilter !== 'all';
 

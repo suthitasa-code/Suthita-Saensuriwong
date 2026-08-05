@@ -1,5 +1,35 @@
 import '../styles/contact.css';
 
+const SOCIAL_LINKS = [
+  {
+    key: 'facebook',
+    icon: 'fab fa-facebook-f',
+    name: 'Facebook',
+    handle: 'คณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.',
+    desc: 'อัปเดตข่าวสาร ประกาศรับสมัคร และกิจกรรมล่าสุดของคณะแบบไว ๆ',
+    url: 'https://www.facebook.com/share/19Adbow8nC/',
+    gradient: 'linear-gradient(135deg, #1877f2 0%, #0a54c4 100%)',
+  },
+  {
+    key: 'instagram',
+    icon: 'fab fa-instagram',
+    name: 'Instagram',
+    handle: '@admission_kuse',
+    desc: 'ภาพบรรยากาศ กิจกรรม และเรื่องราวดี ๆ ของนิสิตในรั้วมหาวิทยาลัย',
+    url: 'https://www.instagram.com/admission_kuse/',
+    gradient: 'linear-gradient(135deg, #f9ce34 0%, #ee2a7b 55%, #6228d7 100%)',
+  },
+  {
+    key: 'tiktok',
+    icon: 'fab fa-tiktok',
+    name: 'TikTok',
+    handle: '@admission_kuse',
+    desc: 'คลิปสั้น เข้าใจง่าย ทันทุกความเคลื่อนไหวเรื่องการรับสมัคร',
+    url: 'https://www.tiktok.com/@admission_kuse',
+    gradient: 'linear-gradient(135deg, #25f4ee 0%, #1c1c1c 55%, #fe2c55 100%)',
+  },
+];
+
 const Contact = () => (
   <div className="container px-4">
     <div className="page-header-section">
@@ -58,6 +88,34 @@ const Contact = () => (
             <div className="contact-row-text en-text">Fax: 042-725-034</div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div className="social-follow-section">
+      <div className="social-follow-title">
+        <h2>ติดตามเราได้ทุกช่องทาง</h2>
+        <p>ไม่พลาดทุกข่าวสาร ประกาศรับสมัคร และกิจกรรมของคณะ</p>
+      </div>
+      <div className="row g-4">
+        {SOCIAL_LINKS.map((s) => (
+          <div className="col-md-4" key={s.key}>
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noreferrer"
+              className="social-follow-card"
+              style={{ '--card-gradient': s.gradient }}
+            >
+              <span className="social-follow-icon"><i className={s.icon}></i></span>
+              <div className="social-follow-name">{s.name}</div>
+              <div className="social-follow-handle">{s.handle}</div>
+              <p className="social-follow-desc">{s.desc}</p>
+              <span className="social-follow-cta">
+                ติดตามเลย <i className="fas fa-arrow-up-right-from-square ms-1"></i>
+              </span>
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   </div>
