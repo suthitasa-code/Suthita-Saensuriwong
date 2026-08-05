@@ -246,21 +246,24 @@ const CourseDetail = () => {
         {pdfList.length > 0 && (
           <section id="docs" className="course-section reveal-on-scroll">
             <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-file-lines me-2"></i>เอกสารหลักสูตร</h3>
-            <div className="row g-4 justify-content-center">
+            <div className="row g-3 justify-content-center">
               {pdfList.map(({ filename, isLatest }, i) => (
-                <div className="col-md-4 col-sm-6" key={filename}>
+                <div className="col-md-6" key={filename}>
                   <a
                     href={fileUrl(`curriculum/documents/${filename}`)}
                     target="_blank"
                     rel="noreferrer"
                     className="course-pdf-card"
                   >
-                    {isLatest && <span className="course-pdf-latest-badge">ฉบับล่าสุด</span>}
-                    <i className="fas fa-file-pdf"></i>
-                    <h5>เอกสารหลักสูตร{pdfList.length > 1 ? ` ฉบับที่ ${i + 1}` : ''}</h5>
-                    <span className="course-pdf-btn">
-                      เปิดเอกสาร <i className="fas fa-arrow-up-right-from-square ms-1"></i>
+                    <span className="course-pdf-icon"><i className="fas fa-file-pdf"></i></span>
+                    <span className="course-pdf-info">
+                      <span className="course-pdf-name">
+                        เอกสารหลักสูตร{pdfList.length > 1 ? ` ฉบับที่ ${i + 1}` : ''}
+                        {isLatest && <span className="course-pdf-latest-badge">ฉบับล่าสุด</span>}
+                      </span>
+                      <span className="course-pdf-hint">คลิกเพื่อเปิดเอกสาร PDF</span>
                     </span>
+                    <span className="course-pdf-arrow"><i className="fas fa-arrow-up-right-from-square"></i></span>
                   </a>
                 </div>
               ))}

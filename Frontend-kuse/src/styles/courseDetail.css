@@ -439,69 +439,122 @@ html {
   box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
 }
 
+/* การ์ดเอกสารหลักสูตร: เล็กลง ทรงแนวนอน สูงเท่ากันทุกใบ ใช้ได้กับทุกหลักสูตร (คอมโพเนนต์เดียวกันหมด) */
 .course-pdf-card {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  background: white;
-  border-radius: 20px;
-  padding: 35px 20px;
-  text-align: center;
-  border: 2px solid transparent;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  gap: 16px;
+  height: 86px;
+  background: linear-gradient(160deg, #ffffff 0%, #fffaf3 100%);
+  border-radius: 18px;
+  padding: 0 22px;
+  border: 1px solid #f0ece3;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
   color: inherit;
 }
 
-.course-pdf-latest-badge {
+.course-pdf-card::before {
+  content: '';
   position: absolute;
-  top: 14px;
-  right: 14px;
-  background: var(--gold);
-  color: #2b1e00;
-  font-family: 'IBM Plex Sans Thai', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 50px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--gold), var(--maroon));
 }
 
 .course-pdf-card:hover {
-  transform: translateY(-10px);
-  border-color: var(--maroon);
+  transform: translateY(-5px);
+  border-color: rgba(176, 141, 87, 0.45);
   color: inherit;
-  box-shadow: 0 0 20px rgba(192, 0, 31, 0.25), 0 15px 35px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 34px rgba(128, 0, 0, 0.14), 0 0 0 1px rgba(176, 141, 87, 0.12);
 }
 
-.course-pdf-card i.fa-file-pdf {
-  font-size: 3.2rem;
+.course-pdf-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffdad6, #ff9f95);
+  box-shadow: 0 6px 14px rgba(192, 57, 43, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.35s ease;
+}
+
+.course-pdf-card:hover .course-pdf-icon {
+  transform: scale(1.08) rotate(-6deg);
+}
+
+.course-pdf-icon i {
   color: #c0392b;
-  margin-bottom: 14px;
+  font-size: 1.3rem;
 }
 
-.course-pdf-card h5 {
-  font-family: 'IBM Plex Sans Thai', sans-serif;
+.course-pdf-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.course-pdf-name {
   font-weight: 700;
-  color: #000000;
-  margin-bottom: 16px;
+  color: #222;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.course-pdf-btn {
-  background: var(--maroon);
-  color: white;
-  border-radius: 50px;
-  padding: 9px 26px;
-  font-size: 0.9rem;
-  font-weight: 600;
+.course-pdf-hint {
   font-family: 'IBM Plex Sans Thai', sans-serif;
-  transition: 0.3s;
+  font-size: 0.78rem;
+  color: #909090;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.course-pdf-card:hover .course-pdf-btn {
-  background: var(--dark-maroon);
-  box-shadow: 0 0 14px rgba(176, 141, 87, 0.5);
+.course-pdf-latest-badge {
+  background: linear-gradient(135deg, var(--gold), #8a6a2f);
+  color: white;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  flex-shrink: 0;
+}
+
+.course-pdf-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f4f2ee;
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.course-pdf-card:hover .course-pdf-arrow {
+  background: linear-gradient(135deg, var(--gold), var(--maroon));
+  color: white;
+  transform: translate(2px, -2px);
 }
 
 /* ===== Responsive ===== */
@@ -563,5 +616,28 @@ html {
   }
   .course-section {
     margin-bottom: 40px;
+  }
+  .course-pdf-card {
+    height: 76px;
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .course-pdf-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .course-pdf-icon i {
+    font-size: 1.1rem;
+  }
+  .course-pdf-name {
+    font-size: 0.88rem;
+  }
+  .course-pdf-hint {
+    font-size: 0.72rem;
+  }
+  .course-pdf-arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 0.72rem;
   }
 }
