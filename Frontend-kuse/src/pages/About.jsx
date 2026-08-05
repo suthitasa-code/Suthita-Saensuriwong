@@ -1,21 +1,28 @@
 import { useEffect } from 'react';
 import '../styles/about.css';
 
-const STUDENT = {
-  name: 'น.ส.สุธิตา แสนสุริวงค์',
-  role: 'ผู้จัดทำโครงงาน',
-  sub: 'นิสิตหลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.) สาขาวิทยาการคอมพิวเตอร์',
-  photo: '/images/สุธิตา.jpg',
-};
-
-const ADVISORS = [
+// ทีมโครงงานทั้งหมด 3 คน จัดเรียงในแถวเดียวกัน สไตล์รูปวงแหวนแบบเดียวกันทุกคน
+// (มีสุธิตาคนเดียวที่มีรูปจริง อาจารย์อีก 2 ท่านใช้ไอคอนแทนแต่ทรงเดียวกัน)
+const TEAM = [
   {
-    name: 'ผศ. วไลลักษณ์ วงษ์รื่น',
-    role: 'อาจารย์ที่ปรึกษาหลัก',
+    key: 'student',
+    role: 'ผู้จัดทำโครงงาน',
+    name: 'น.ส.สุธิตา แสนสุริวงค์',
+    photo: '/images/สุธิตา.jpg',
+    tags: [
+      { icon: 'fas fa-graduation-cap', label: 'นิสิตหลักสูตรวิทยาศาสตรบัณฑิต (วท.บ.)', variant: 'degree' },
+      { icon: 'fas fa-laptop-code', label: 'สาขาวิทยาการคอมพิวเตอร์', variant: 'major' },
+    ],
   },
   {
-    name: 'ผศ.ดร. ศศิธร สุชัยยะ',
+    key: 'advisor-main',
+    role: 'อาจารย์ที่ปรึกษาหลัก',
+    name: 'ผศ. วไลลักษณ์ วงษ์รื่น',
+  },
+  {
+    key: 'advisor-co',
     role: 'อาจารย์ที่ปรึกษาร่วม',
+    name: 'ผศ.ดร. ศศิธร สุชัยยะ',
   },
 ];
 
@@ -45,22 +52,33 @@ const About = () => {
         <p>เว็บแอปพลิเคชันให้ข้อมูลการรับเข้าศึกษาในคณะวิทยาศาสตร์และวิศวกรรมศาสตร์ มก.ฉกส.</p>
       </div>
 
-      <div className="about-student reveal-on-scroll">
-        <div className="about-person-photo about-person-photo-lg">
-          <img src={STUDENT.photo} alt={STUDENT.name} />
+      <div className="about-team-section reveal-on-scroll">
+        <div className="about-team-row">
+          {TEAM.map((person) => (
+            <div className="about-team-card" key={person.key}>
+              <div className="about-photo-ring">
+                <div className="about-photo-ring-inner">
+                  <div className="about-person-photo">
+                    {person.photo
+                      ? <img src={person.photo} alt={person.name} />
+                      : <i className="fas fa-user-tie"></i>}
+                  </div>
+                </div>
+              </div>
+              <div className="about-person-role">{person.role}</div>
+              <div className="about-person-name">{person.name}</div>
+              {person.tags && (
+                <div className="about-student-tags">
+                  {person.tags.map((tag) => (
+                    <span className={`about-tag about-tag-${tag.variant}`} key={tag.label}>
+                      <i className={tag.icon}></i>{tag.label}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-        <div className="about-person-role">{STUDENT.role}</div>
-        <div className="about-person-name">{STUDENT.name}</div>
-        <div className="about-person-sub">{STUDENT.sub}</div>
-      </div>
-
-      <div className="about-advisors-row reveal-on-scroll">
-        {ADVISORS.map((person) => (
-          <div className="about-advisor" key={person.name}>
-            <div className="about-person-role">{person.role}</div>
-            <div className="about-person-name">{person.name}</div>
-          </div>
-        ))}
       </div>
 
       <section className="about-section reveal-on-scroll">
@@ -79,6 +97,7 @@ const About = () => {
 
       <section className="about-section reveal-on-scroll">
         <div className="about-plain-card about-thanks-card">
+          <i className="fas fa-quote-left about-thanks-quote-icon"></i>
           <p className="about-text-block">
             ขอขอบพระคุณอาจารย์ที่ปรึกษาโครงงานทั้งสองท่าน ที่ให้คำแนะนำและช่วยเหลือด้วยดีมาโดยตลอด
             จนโครงงานนี้สำเร็จลุล่วงไปได้ด้วยดี
