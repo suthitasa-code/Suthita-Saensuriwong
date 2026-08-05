@@ -210,7 +210,9 @@ const CourseDetail = () => {
             <div className="row g-4">
               {careerPrivateItems.length > 0 && (
                 <div className="col-md-6">
-                  <h4 className="course-career-header"><i className="fas fa-briefcase me-2"></i>สายงานเอกชน</h4>
+                  <h4 className="course-career-header course-career-header-private">
+                    <i className="fas fa-briefcase"></i>สายงานเอกชน
+                  </h4>
                   {careerPrivateItems.map((item) => (
                     <div className="course-career-card" key={item}>{item}</div>
                   ))}
@@ -218,7 +220,9 @@ const CourseDetail = () => {
               )}
               {careerGovItems.length > 0 && (
                 <div className="col-md-6">
-                  <h4 className="course-career-header"><i className="fas fa-landmark me-2"></i>สายงานราชการ/รัฐวิสาหกิจ</h4>
+                  <h4 className="course-career-header course-career-header-gov">
+                    <i className="fas fa-landmark"></i>สายงานราชการ/รัฐวิสาหกิจ
+                  </h4>
                   {careerGovItems.map((item) => (
                     <div className="course-career-card" key={item}>{item}</div>
                   ))}
