@@ -129,7 +129,7 @@ const CourseDetail = () => {
   const coverUrl = course.Images ? fileUrl(`curriculum/images/${course.Images}`) : '';
   const shopUrl = course.shopPhoto ? fileUrl(`curriculum/images/${course.shopPhoto}`) : '';
   const hasCareerSection = Boolean(course.jobOpportunities) || careerPrivateItems.length > 0 || careerGovItems.length > 0;
-  const socialLinks = CURRICULUM_SOCIAL_LINKS[course.deptNameTH] || [];
+  const socialLinks = CURRICULUM_SOCIAL_LINKS[course.curriculumID] || [];
 
   return (
     <>
@@ -280,7 +280,7 @@ const CourseDetail = () => {
 
         {socialLinks.length > 0 && (
           <section id="follow" className="course-section reveal-on-scroll">
-            <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-heart me-2"></i>ติดตามข่าวสารหลักสูตร</h3>
+            <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-heart me-2"></i>ติดตามข่าวสารหลักสูตรได้ที่นี่</h3>
             <div className="course-social-grid">
               {socialLinks.map((s) => (
                 <a
@@ -292,10 +292,7 @@ const CourseDetail = () => {
                   style={{ '--card-gradient': s.gradient }}
                 >
                   <span className="course-social-icon"><i className={s.icon}></i></span>
-                  <span className="course-social-info">
-                    <span className="course-social-label">{s.label}</span>
-                    <span className="course-social-hint">คลิกเพื่อติดตามช่องทางนี้</span>
-                  </span>
+                  <span className="course-social-label">{s.label}</span>
                   <span className="course-social-arrow"><i className="fas fa-arrow-up-right-from-square"></i></span>
                 </a>
               ))}
