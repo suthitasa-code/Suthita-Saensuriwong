@@ -109,7 +109,7 @@ const PublicLayout = () => {
                 rel="noreferrer"
               >
                 <i className="fas fa-arrow-up-right-from-square"></i>
-                เว็บไซต์คณะ
+                เว็บไซต์คณะวิทยาศาสตร์และวิศวกรรมศาสตร์
               </a>
             </div>
             <div className="col-lg-2 col-md-4">
