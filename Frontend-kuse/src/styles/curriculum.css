@@ -164,21 +164,37 @@
 }
 
 @media (max-width: 767px) {
+    /* การ์ดเล็กลงกว่าเดิม และคง line-clamp ไว้ (ไม่ปลด unset เหมือนก่อน)
+       เพื่อให้ทุกใบสูงเท่ากันเสมอ ไม่ว่าข้อความจะยาวสั้นแค่ไหน */
     .course-card {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        padding: 18px;
+        gap: 12px;
+    }
+    .course-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 1.35rem;
     }
     .course-info {
         align-items: center;
     }
-    .course-info h3,
+    .course-info h3 {
+        font-size: 1.05rem;
+        min-height: 2.4em;
+        margin-bottom: 6px;
+    }
     .course-info p {
-        min-height: 0;
-        -webkit-line-clamp: unset;
+        font-size: 0.82rem;
+        min-height: 3.6em;
+        margin-bottom: 12px;
     }
     .btn-view-detail {
         align-self: center;
+        font-size: 0.78rem;
+        padding: 6px 16px;
     }
     .section-title-main h2 {
         font-size: 1.8rem;
