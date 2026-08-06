@@ -18,6 +18,18 @@ const CURRICULUM_SOCIAL_LINKS = {
       icon: 'fab fa-facebook-f',
       gradient: 'linear-gradient(135deg, #1877f2 0%, #0a54c4 100%)',
     },
+    {
+      label: 'TikTok วิศวกรรมอุตสาหการ',
+      url: 'https://www.tiktok.com/@ie_ku_csc',
+      icon: 'fab fa-tiktok',
+      gradient: 'linear-gradient(135deg, #25f4ee 0%, #1c1c1c 55%, #fe2c55 100%)',
+    },
+    {
+      label: 'Instagram วิศวกรรมอุตสาหการ',
+      url: 'https://www.instagram.com/ie_ku_csc/',
+      icon: 'fab fa-instagram',
+      gradient: 'linear-gradient(135deg, #f9ce34 0%, #ee2a7b 55%, #6228d7 100%)',
+    },
   ],
   CS: [
     {
@@ -31,6 +43,12 @@ const CURRICULUM_SOCIAL_LINKS = {
       url: 'https://sites.google.com/ku.th/kucis/',
       icon: 'fas fa-globe',
       gradient: 'linear-gradient(135deg, var(--gold-bright) 0%, var(--maroon) 100%)',
+    },
+    {
+      label: 'TikTok วิทยาการคอมพิวเตอร์',
+      url: 'https://www.tiktok.com/@ciskucsc',
+      icon: 'fab fa-tiktok',
+      gradient: 'linear-gradient(135deg, #25f4ee 0%, #1c1c1c 55%, #fe2c55 100%)',
     },
   ],
   CEE: [
@@ -69,6 +87,14 @@ const CURRICULUM_SOCIAL_LINKS = {
       url: 'https://www.facebook.com/share/1DyACSP8b5/?mibextid=wwXIfr',
       icon: 'fab fa-facebook-f',
       gradient: 'linear-gradient(135deg, #1877f2 0%, #0a54c4 100%)',
+    },
+  ],
+  GE: [
+    {
+      label: 'Instagram เคมีประยุกต์',
+      url: 'https://www.instagram.com/appliedchemistrykucsc/',
+      icon: 'fab fa-instagram',
+      gradient: 'linear-gradient(135deg, #f9ce34 0%, #ee2a7b 55%, #6228d7 100%)',
     },
   ],
 };

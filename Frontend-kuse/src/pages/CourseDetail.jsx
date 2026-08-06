@@ -129,7 +129,8 @@ const CourseDetail = () => {
   const coverUrl = course.Images ? fileUrl(`curriculum/images/${course.Images}`) : '';
   const shopUrl = course.shopPhoto ? fileUrl(`curriculum/images/${course.shopPhoto}`) : '';
   const hasCareerSection = Boolean(course.jobOpportunities) || careerPrivateItems.length > 0 || careerGovItems.length > 0;
-  const socialLinks = CURRICULUM_SOCIAL_LINKS[course.curriculumID] || [];
+  // curriculumID บางแถวในฐานข้อมูลมีช่องว่างนำหน้าติดมา (เช่น " IE") ต้อง trim ก่อนค้นหา ไม่งั้นจะหาลิงก์ไม่เจอ
+  const socialLinks = CURRICULUM_SOCIAL_LINKS[(course.curriculumID || '').trim()] || [];
 
   return (
     <>
