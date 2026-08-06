@@ -3,16 +3,17 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import '../styles/layout.css';
 
 const NAV_ITEMS = [
-  { path: '/', label: 'หน้าหลัก' },
-  { path: '/announcement', label: 'ประกาศรับสมัคร' },
-  { path: '/curriculum', label: 'หลักสูตร' },
-  { path: '/contact', label: 'ติดต่อเรา' },
-  { path: '/about', label: 'เกี่ยวกับ' },
+  { path: '/', label: 'หน้าหลัก', icon: 'fa-house' },
+  { path: '/announcement', label: 'ประกาศรับสมัคร', icon: 'fa-bullhorn' },
+  { path: '/curriculum', label: 'หลักสูตร', icon: 'fa-graduation-cap' },
+  { path: '/contact', label: 'ติดต่อเรา', icon: 'fa-phone' },
+  { path: '/about', label: 'เกี่ยวกับ', icon: 'fa-circle-info' },
 ];
 
 const PublicLayout = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // หน้ารายละเอียด (เช่น /curriculum/CS หรือ /announcement/12) ให้เมนู "หลักสูตร"/"ประกาศรับสมัคร" ยัง active อยู่ด้วย
   const isActive = (path) =>
@@ -23,9 +24,17 @@ const PublicLayout = () => {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  // เลื่อนจอลงเกินนิดหน่อยแล้วให้นาวบาร์หดเล็กลง + เงาเข้มขึ้น ดูมีมิติตอนสกอลล์
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg">
+      <nav className={`navbar navbar-expand-lg${scrolled ? ' navbar-scrolled' : ''}`}>
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src="/images/KUSE_Logo_2021.png" alt="KUSE Logo" />
@@ -56,7 +65,8 @@ const PublicLayout = () => {
                   className={`nav-link${isActive(item.path) ? ' active' : ''}`}
                   to={item.path}
                 >
-                  {item.label}
+                  <i className={`fas ${item.icon} nav-link-icon`}></i>
+                  <span>{item.label}</span>
                 </Link>
               </li>
             ))}
