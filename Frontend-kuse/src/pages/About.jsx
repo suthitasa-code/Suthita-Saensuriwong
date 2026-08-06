@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import '../styles/about.css';
 
-// ทีมโครงงานทั้งหมด 3 คน จัดเรียงในแถวเดียวกัน สไตล์รูปวงแหวนแบบเดียวกันทุกคน
-// (มีสุธิตาคนเดียวที่มีรูปจริง อาจารย์อีก 2 ท่านใช้ไอคอนแทนแต่ทรงเดียวกัน)
+// ทีมโครงงานทั้งหมด 3 คน จัดทรงพีระมิด: นักศึกษา (คนแรกใน array) อยู่บนกึ่งกลาง
+// อาจารย์ที่ปรึกษาหลัก/ร่วม (คนที่ 2-3) อยู่แถวล่างซ้าย-ขวา — ดูการจัดตำแหน่งจริงที่ about.css
 const TEAM = [
   {
     key: 'student',
@@ -18,11 +18,21 @@ const TEAM = [
     key: 'advisor-main',
     role: 'อาจารย์ที่ปรึกษาหลัก',
     name: 'ผศ. วไลลักษณ์ วงษ์รื่น',
+    photo: '/images/ที่ปรึกษาหลัก.jpg',
+    tags: [
+      { icon: 'fas fa-chalkboard-user', label: 'บุคลากรภาควิชาวิทยาการคอมพิวเตอร์และสารสนเทศ', variant: 'degree', wrap: true },
+      { icon: 'fas fa-globe', label: 'Computer and Information Science', variant: 'major' },
+    ],
   },
   {
     key: 'advisor-co',
     role: 'อาจารย์ที่ปรึกษาร่วม',
     name: 'ผศ.ดร. ศศิธร สุชัยยะ',
+    photo: '/images/ที่ปรึกษาร่วม.jpg',
+    tags: [
+      { icon: 'fas fa-chalkboard-user', label: 'บุคลากรภาควิชาวิทยาการคอมพิวเตอร์และสารสนเทศ', variant: 'degree', wrap: true },
+      { icon: 'fas fa-globe', label: 'Computer and Information Science', variant: 'major' },
+    ],
   },
 ];
 
@@ -68,9 +78,12 @@ const About = () => {
               <div className="about-person-role">{person.role}</div>
               <div className="about-person-name">{person.name}</div>
               {person.tags && (
-                <div className="about-student-tags">
+                <div className="about-person-tags">
                   {person.tags.map((tag) => (
-                    <span className={`about-tag about-tag-${tag.variant}`} key={tag.label}>
+                    <span
+                      className={`about-tag about-tag-${tag.variant}${tag.wrap ? ' about-tag-wrap' : ''}`}
+                      key={tag.label}
+                    >
                       <i className={tag.icon}></i>{tag.label}
                     </span>
                   ))}

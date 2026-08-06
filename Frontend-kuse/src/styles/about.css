@@ -40,30 +40,18 @@
   padding: 0 20px;
 }
 
-/* แสงฟุ้งนวลๆ ด้านหลังทั้งแถว แทนกรอบสี่เหลี่ยมเดิม */
-.about-team-section::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(720px, 90%);
-  height: 260px;
-  background: radial-gradient(ellipse, rgba(176, 141, 87, 0.22) 0%, rgba(128, 0, 0, 0.06) 55%, transparent 75%);
-  filter: blur(12px);
-  z-index: 0;
-  pointer-events: none;
-}
-
+/* ทรงพีระมิด: นักศึกษา (การ์ดที่ 1) กึ่งกลางแถวบน, อาจารย์ 2 ท่าน (การ์ดที่ 2-3) แถวล่างซ้าย-ขวา */
 .about-team-row {
   position: relative;
   z-index: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 300px));
+  grid-template-areas:
+    'student student'
+    'advisor1 advisor2';
   justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 30px 44px;
-  max-width: 1000px;
+  gap: 40px 44px;
+  max-width: 780px;
   margin: 0 auto;
 }
 
@@ -72,13 +60,24 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  flex: 0 1 260px;
   transition: transform 0.3s ease;
 }
 
-/* การ์ดนักศึกษามีป้ายหลักสูตร/สาขาต่อท้าย ต้องเผื่อความกว้างให้ข้อความไม่ตัดบรรทัด */
-.about-team-card:first-child {
-  flex-basis: 340px;
+.about-team-card:nth-child(1) {
+  grid-area: student;
+  justify-self: center;
+  width: 340px;
+  max-width: 100%;
+}
+
+.about-team-card:nth-child(2) {
+  grid-area: advisor1;
+  justify-self: end;
+}
+
+.about-team-card:nth-child(3) {
+  grid-area: advisor2;
+  justify-self: start;
 }
 
 .about-team-card:hover {
@@ -152,8 +151,8 @@
   margin-bottom: 18px;
 }
 
-/* ป้ายหลักสูตร / สาขา แยกกันให้เด่นชัดเจน เรียงเป็นแถวตั้งคนละบรรทัด แต่ละป้ายไม่ตัดคำ (มีเฉพาะการ์ดนักศึกษา) */
-.about-student-tags {
+/* ป้ายใต้ชื่อแต่ละคน แยกกันให้เด่นชัดเจน เรียงเป็นแถวตั้งคนละบรรทัด (นักศึกษา = หลักสูตร/สาขา, อาจารย์ = สังกัดภาควิชา) */
+.about-person-tags {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,6 +172,15 @@
   white-space: nowrap;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ป้ายสังกัดภาควิชาของอาจารย์ ข้อความยาวกว่าของนักศึกษา เลยยอมให้ตัดบรรทัดได้
+   แต่ font-size / padding / ระยะห่างไอคอน ใช้ค่าเดียวกับป้ายของนักศึกษา (.about-tag) ให้ดูเป็นชุดเดียวกัน */
+.about-tag-wrap {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 260px;
 }
 
 .about-tag:hover {
@@ -306,15 +314,20 @@
   .about-team-section {
     margin: 40px auto 45px;
   }
+  /* จอเล็ก: เรียงตั้งทีละคนแทนทรงพีระมิด (นักศึกษา -> อาจารย์หลัก -> อาจารย์ร่วม) */
   .about-team-row {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'student'
+      'advisor1'
+      'advisor2';
+    justify-items: center;
     gap: 34px;
   }
-  /* flex-basis กลายเป็นความสูงตอนสลับเป็น flex-direction: column ต้องล้างค่าไม่งั้นการ์ดจะสูงเกินจริง */
-  .about-team-card,
-  .about-team-card:first-child {
-    flex-basis: auto;
+  .about-team-card:nth-child(1),
+  .about-team-card:nth-child(2),
+  .about-team-card:nth-child(3) {
+    justify-self: center;
     width: 100%;
     max-width: 300px;
   }
