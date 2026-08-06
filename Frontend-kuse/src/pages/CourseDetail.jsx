@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { API_BASE, ENDPOINTS, unwrap, fileUrl } from '../config/api';
+import CURRICULUM_SOCIAL_LINKS from '../config/curriculumSocialLinks';
 import '../styles/courseDetail.css';
 
 // แตกข้อความหลายบรรทัดในฟอร์มแอดมิน (กด Enter คั่นแต่ละหัวข้อ) ให้เป็นรายการ
@@ -128,6 +129,7 @@ const CourseDetail = () => {
   const coverUrl = course.Images ? fileUrl(`curriculum/images/${course.Images}`) : '';
   const shopUrl = course.shopPhoto ? fileUrl(`curriculum/images/${course.shopPhoto}`) : '';
   const hasCareerSection = Boolean(course.jobOpportunities) || careerPrivateItems.length > 0 || careerGovItems.length > 0;
+  const socialLinks = CURRICULUM_SOCIAL_LINKS[course.deptNameTH] || [];
 
   return (
     <>
@@ -160,6 +162,7 @@ const CourseDetail = () => {
           {hasCareerSection && <a href="#career">เส้นทางอาชีพ</a>}
           {shopUrl && <a href="#shop">เสื้อช็อป</a>}
           {pdfList.length > 0 && <a href="#docs">เอกสารหลักสูตร</a>}
+          {socialLinks.length > 0 && <a href="#follow">ติดตามหลักสูตร</a>}
         </div>
       </nav>
 
@@ -270,6 +273,31 @@ const CourseDetail = () => {
                     <span className="course-pdf-arrow"><i className="fas fa-arrow-up-right-from-square"></i></span>
                   </a>
                 </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {socialLinks.length > 0 && (
+          <section id="follow" className="course-section reveal-on-scroll">
+            <h3 className="course-sub-title course-sub-title-center"><i className="fas fa-heart me-2"></i>ติดตามข่าวสารหลักสูตร</h3>
+            <div className="course-social-grid">
+              {socialLinks.map((s) => (
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="course-social-card"
+                  key={s.url}
+                  style={{ '--card-gradient': s.gradient }}
+                >
+                  <span className="course-social-icon"><i className={s.icon}></i></span>
+                  <span className="course-social-info">
+                    <span className="course-social-label">{s.label}</span>
+                    <span className="course-social-hint">คลิกเพื่อติดตามช่องทางนี้</span>
+                  </span>
+                  <span className="course-social-arrow"><i className="fas fa-arrow-up-right-from-square"></i></span>
+                </a>
               ))}
             </div>
           </section>
