@@ -573,9 +573,10 @@
   margin: 0;
 }
 
-/* ===== Download cards: เรียงแถวเดียวกันเสมอบนจอกว้าง แบ่งพื้นที่เท่าๆ กัน ===== */
+/* ===== Download cards: เรียงแถวเดียวกันเมื่อพื้นที่พอ ถ้าแคบ (เช่นจอไอแพด) ให้ตกบรรทัดแทนบีบจนแน่น ===== */
 .ad-download-flex {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   gap: 22px;

@@ -31,8 +31,11 @@ const PublicLayout = () => {
             <img src="/images/KUSE_Logo_2021.png" alt="KUSE Logo" />
             <div className="brand-text-content">
               <span className="brand-text-top">KUSE Admission</span>
-              <span className="brand-text-bottom">
+              <span className="brand-text-bottom brand-text-bottom-full">
                 มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตเฉลิมพระเกียรติ จังหวัดสกลนคร
+              </span>
+              <span className="brand-text-bottom brand-text-bottom-short">
+                คณะวิทยาศาสตร์และวิศวกรรมศาสตร์
               </span>
             </div>
           </Link>

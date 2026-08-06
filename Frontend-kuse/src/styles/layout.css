@@ -24,6 +24,8 @@
     display: flex !important;
     align-items: center;
     text-decoration: none;
+    min-width: 0;
+    flex: 1 1 auto;
 }
 
 .navbar-brand img {
@@ -42,6 +44,7 @@
     border-left: 1px solid #595656;
     padding-left: 15px;
     margin-left: 15px;
+    min-width: 0;
 }
 
 .brand-text-top {
@@ -57,6 +60,13 @@
     font-weight: 600;
     line-height: 1.2;
     font-family: 'IBM Plex Sans Thai', sans-serif;
+    overflow-wrap: break-word;
+}
+
+/* จอกว้าง (แท็บเล็ต/เดสก์ท็อป): โชว์ชื่อเต็มมหาวิทยาลัย ซ่อนชื่อคณะแบบย่อ */
+.brand-text-bottom-short {
+    display: none;
+    white-space: nowrap;
 }
 
 .nav-link {
@@ -82,6 +92,7 @@
     color: var(--maroon);
     padding: 8px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 /* ===== Footer ===== */
@@ -255,9 +266,17 @@
         font-size: 1rem;
         margin-bottom: 2px;
     }
-    /* จอมือถือ (โทรศัพท์) ตัดข้อความ "มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขต..." ออก
-       เพราะยาวเกินจนแน่นนำบาร์ อุปกรณ์อื่น (แท็บเล็ต/เดสก์ท็อป) ยังโชว์ตามเดิม */
     .brand-text-bottom {
+        font-size: 0.7rem;
+        line-height: 1.3;
+    }
+    /* จอมือถือ (โทรศัพท์): ชื่อมหาวิทยาลัยเต็มยาวเกินไปจนเบียดปุ่มแฮมเบอร์เกอร์
+       สลับไปโชว์แค่ชื่อคณะแบบย่อแทน (.navbar-brand หด/.nav-toggle-btn ห้ามหดที่ประกาศไว้ด้านบน
+       ช่วยกันการทับกันของสองฝั่งนี้อยู่แล้ว แต่ข้อความสั้นลงยิ่งชัวร์ขึ้น) */
+    .brand-text-bottom-full {
         display: none;
+    }
+    .brand-text-bottom-short {
+        display: block;
     }
 }
