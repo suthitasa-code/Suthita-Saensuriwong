@@ -321,18 +321,30 @@ const AnnouncementDetail = () => {
               href="https://misreg.csc.ku.ac.th/admission/"
               target="_blank"
               rel="noreferrer"
-              className="ad-btn-dl ad-btn-dl-primary"
+              className="ad-dl-card ad-dl-card-primary"
             >
-              <i className="fas fa-arrow-up-right-from-square"></i>สมัครออนไลน์ผ่านเว็บไซต์
+              <span className="ad-dl-icon"><i className="fas fa-arrow-up-right-from-square"></i></span>
+              <span className="ad-dl-info">
+                <span className="ad-dl-title">สมัครออนไลน์ผ่านเว็บไซต์</span>
+                <span className="ad-dl-hint">ไปยังระบบรับสมัครของมหาวิทยาลัย</span>
+              </span>
             </a>
             {item.manualPdf && (
-              <a href={fileUrl(`announcements/${item.manualPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-black">
-                <i className="fas fa-book-open"></i>คู่มือการสมัคร
+              <a href={fileUrl(`announcements/${item.manualPdf}`)} target="_blank" rel="noreferrer" className="ad-dl-card ad-dl-card-info">
+                <span className="ad-dl-icon"><i className="fas fa-book-open"></i></span>
+                <span className="ad-dl-info">
+                  <span className="ad-dl-title">คู่มือการสมัคร</span>
+                  <span className="ad-dl-hint">ไฟล์ PDF ขั้นตอนการสมัคร</span>
+                </span>
               </a>
             )}
             {item.announcementPdf && (
-              <a href={fileUrl(`announcements/${item.announcementPdf}`)} target="_blank" rel="noreferrer" className="ad-btn-dl ad-btn-dl-gray">
-                <i className="fas fa-file-arrow-down"></i>ดาวน์โหลดประกาศรับสมัคร
+              <a href={fileUrl(`announcements/${item.announcementPdf}`)} target="_blank" rel="noreferrer" className="ad-dl-card ad-dl-card-accent">
+                <span className="ad-dl-icon"><i className="fas fa-file-arrow-down"></i></span>
+                <span className="ad-dl-info">
+                  <span className="ad-dl-title">ดาวน์โหลดประกาศรับสมัคร</span>
+                  <span className="ad-dl-hint">ไฟล์ PDF ประกาศฉบับเต็ม</span>
+                </span>
               </a>
             )}
           </div>

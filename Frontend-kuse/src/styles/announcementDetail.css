@@ -573,80 +573,121 @@
   margin: 0;
 }
 
-/* ===== Download buttons ===== */
+/* ===== Download cards: เรียงแถวเดียวกันเสมอบนจอกว้าง แบ่งพื้นที่เท่าๆ กัน ===== */
 .ad-download-flex {
   display: flex;
   justify-content: center;
+  align-items: stretch;
   gap: 22px;
-  flex-wrap: wrap;
 }
 
-.ad-btn-dl {
+.ad-dl-card {
   position: relative;
   overflow: hidden;
-  padding: 16px 34px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-family: 'IBM Plex Sans Thai', sans-serif;
-  text-decoration: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  transition: 0.35s;
-  font-size: 1.02rem;
-  color: white;
+  gap: 16px;
+  flex: 1 1 260px;
+  max-width: 320px;
+  padding: 20px 24px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #ffffff 0%, #fbfaf8 100%);
+  border: 1px solid #f0ece3;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
-.ad-btn-dl::before {
+.ad-dl-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--dl-accent);
+}
+
+.ad-dl-card::after {
   content: '';
   position: absolute;
   top: 0;
   left: -60%;
   width: 40%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
   transform: skewX(-20deg);
-  transition: left 0.6s ease;
+  transition: left 0.65s ease;
+  pointer-events: none;
 }
 
-.ad-btn-dl:hover::before {
+.ad-dl-card:hover::after {
   left: 130%;
 }
 
-.ad-btn-dl-black {
-  background: linear-gradient(135deg, #3a3a3a 0%, #0d0d0d 100%);
-  border: 2px solid transparent;
-}
+.ad-dl-card-primary { --dl-accent: linear-gradient(180deg, var(--gold), var(--maroon)); }
+.ad-dl-card-info { --dl-accent: linear-gradient(180deg, #4fc3d9, #0891b2); }
+.ad-dl-card-accent { --dl-accent: linear-gradient(180deg, #ffb35c, #d9480f); }
 
-.ad-btn-dl-gray {
-  background: linear-gradient(135deg, #8a97a3 0%, #495057 100%);
-  border: 2px solid transparent;
-}
-
-.ad-btn-dl-primary {
-  background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-maroon) 100%);
-  border: 2px solid transparent;
-}
-
-.ad-btn-dl:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+.ad-dl-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
   color: white;
+  background: var(--dl-accent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  transition: transform 0.35s ease;
 }
 
-.ad-btn-dl-primary:hover {
-  border-color: var(--gold);
-  box-shadow: 0 0 20px rgba(176, 141, 87, 0.6), 0 12px 25px rgba(0, 0, 0, 0.2);
+.ad-dl-card:hover .ad-dl-icon {
+  transform: scale(1.08) rotate(-6deg);
 }
 
-.ad-btn-dl-black:hover {
-  border-color: #999;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 12px 25px rgba(0, 0, 0, 0.35);
+.ad-dl-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
-.ad-btn-dl-gray:hover {
-  border-color: #cfd6db;
-  box-shadow: 0 0 20px rgba(138, 151, 163, 0.5), 0 12px 25px rgba(0, 0, 0, 0.2);
+.ad-dl-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+}
+
+.ad-dl-hint {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.8rem;
+  color: #8a8f96;
+}
+
+.ad-dl-card:hover {
+  transform: translateY(-6px);
+  color: inherit;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
+}
+
+.ad-dl-card-primary:hover {
+  border-color: rgba(176, 141, 87, 0.5);
+  box-shadow: 0 16px 34px rgba(128, 0, 0, 0.18);
+}
+
+.ad-dl-card-info:hover {
+  border-color: rgba(8, 145, 178, 0.4);
+  box-shadow: 0 16px 34px rgba(8, 145, 178, 0.18);
+}
+
+.ad-dl-card-accent:hover {
+  border-color: rgba(217, 72, 15, 0.4);
+  box-shadow: 0 16px 34px rgba(217, 72, 15, 0.18);
 }
 
 /* ===== Lightbox ===== */
@@ -792,6 +833,14 @@
   }
   .ad-clickable-img.ad-mini-img {
     max-width: 100%;
+  }
+  .ad-download-flex {
+    flex-direction: column;
+  }
+  .ad-dl-card {
+    flex-basis: auto;
+    max-width: none;
+    padding: 18px 20px;
   }
   .ad-section {
     margin-bottom: 32px;
