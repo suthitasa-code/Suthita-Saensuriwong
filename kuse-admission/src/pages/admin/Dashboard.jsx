@@ -209,31 +209,64 @@ const Dashboard = () => {
 
   // ===== Chart configs (ApexCharts) =====
   const donutOptions = {
-    chart: { type: 'donut', fontFamily: FONT_FAMILY },
+    chart: {
+      type: 'donut',
+      fontFamily: FONT_FAMILY,
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 700,
+        animateGradually: { enabled: true, delay: 150 },
+        dynamicAnimation: { enabled: true, speed: 400 },
+      },
+    },
     labels: ['กำลังเปิดรับ', 'รอเปิดรับ', 'ปิดรับแล้ว'],
-    colors: ['#1cc88a', '#f39c12', '#c0392b'],
-    stroke: { width: 3, colors: ['#fff'] },
-    legend: { position: 'bottom', fontSize: '12.5px', markers: { size: 6 }, itemMargin: { horizontal: 10 } },
+    colors: ['#1cc88a', '#f39c12', '#e0473a'],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'light',
+        type: 'vertical',
+        shadeIntensity: 0.65,
+        gradientToColors: ['#6be0b4', '#ffc766', '#ff7d6b'],
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [0, 100],
+      },
+    },
+    stroke: { width: 5, colors: ['#fff'], lineCap: 'round' },
+    states: {
+      hover: { filter: { type: 'lighten', value: 0.06 } },
+      active: { filter: { type: 'darken', value: 0.05 } },
+    },
+    legend: {
+      position: 'bottom',
+      fontSize: '12.5px',
+      markers: { size: 7, shape: 'circle' },
+      itemMargin: { horizontal: 10, vertical: 4 },
+    },
     dataLabels: {
       enabled: true,
-      style: { fontSize: '11px', fontWeight: 600 },
+      style: { fontSize: '11px', fontWeight: 700 },
       formatter: (val) => `${val.toFixed(0)}%`,
       dropShadow: { enabled: false },
     },
     plotOptions: {
       pie: {
+        expandOnClick: true,
         donut: {
-          size: '70%',
+          size: '62%',
           labels: {
             show: true,
             total: {
               show: true,
               label: 'ทั้งหมด',
-              fontSize: '13px',
+              fontSize: '12.5px',
+              fontWeight: 600,
               color: '#9aa0a6',
               formatter: () => distTotal,
             },
-            value: { fontSize: '22px', fontWeight: 700, color: '#1a1a2e' },
+            value: { fontSize: '26px', fontWeight: 700, color: '#1a1a2e', offsetY: -2 },
           },
         },
       },
@@ -345,6 +378,7 @@ const Dashboard = () => {
           title="สัดส่วนสถานะประกาศ"
           icon="fa-chart-pie"
           subtitle="กำลังเปิดรับ / รอเปิดรับ / ปิดรับแล้ว"
+          className="chart-card-donut"
         >
           {distTotal === 0 ? (
             <div className="panel-empty">

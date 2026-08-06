@@ -554,6 +554,76 @@ input[type="reset"],
     margin: 2px 0 0;
 }
 
+/* การ์ดกราฟแท่ง + การ์ดกราฟวงกลม: พื้นหลังโทน mesh-gradient จางๆ + จุดประกายชุดเดียวกันทั้งคู่ */
+.chart-card-donut,
+.chart-card-wide {
+    position: relative;
+    overflow: hidden;
+}
+
+/* พื้นการ์ดโทน mesh-gradient จางๆ ตามสีสถานะ ให้มีมิติโดยไม่ใช้แสงฟุ้งเป็นก้อนใหญ่ */
+.chart-card-donut::before,
+.chart-card-wide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 8%, rgba(28, 200, 138, 0.06), transparent 45%),
+        radial-gradient(circle at 90% 12%, rgba(243, 156, 18, 0.06), transparent 45%),
+        radial-gradient(circle at 50% 96%, rgba(224, 71, 58, 0.06), transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.chart-card-donut .apexcharts-canvas,
+.chart-card-wide .apexcharts-canvas {
+    position: relative;
+    z-index: 1;
+}
+
+.chart-card-donut .apexcharts-canvas svg {
+    filter: drop-shadow(0 10px 16px rgba(26, 26, 46, 0.12));
+}
+
+/* แต่ละชิ้นของโดนัทนูนขึ้นแบบ 3D เบาๆ และเด้งออกมาเมื่อชี้เมาส์ ให้รู้สึกกดได้จริง */
+.chart-card-donut .apexcharts-pie-series path {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: center;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12)) drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.5));
+}
+
+.chart-card-donut .apexcharts-pie-series path:hover {
+    transform: scale(1.06) translateY(-3px);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.2)) drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.6));
+}
+
+/* ตัวเลขรวมกลางวง เด้งเข้ามาแบบสปริงตอนกราฟโหลดเสร็จ */
+.chart-card-donut .apexcharts-datalabels-group {
+    animation: donut-center-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: 0.5s;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+@keyframes donut-center-pop {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.chart-card-donut .apexcharts-datalabels text {
+    font-weight: 700;
+}
+
+.chart-card-donut .apexcharts-legend-series {
+    transition: transform 0.2s ease;
+}
+
+.chart-card-donut .apexcharts-legend-series:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
 /* ภาพรวมข้อมูลในระบบ: การ์ดสถิติ + กราฟเปรียบเทียบ */
 .dashboard-content-overview {
     display: flex;
