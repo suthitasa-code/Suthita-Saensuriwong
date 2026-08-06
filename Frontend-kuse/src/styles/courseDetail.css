@@ -809,7 +809,9 @@ html {
     height: 30px;
     font-size: 0.72rem;
   }
+  /* จอมือถือ: ถ้ามีหลายลิงก์ ให้แต่ละอันกว้างเท่ากันเสมอ (เต็มแถว) แทนที่จะกว้างตามความยาวข้อความของตัวเอง */
   .course-social-card {
+    width: 100%;
     max-width: 100%;
     padding: 9px 18px 9px 9px;
     gap: 11px;
