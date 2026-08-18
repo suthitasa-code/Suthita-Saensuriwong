@@ -131,6 +131,9 @@ const AnnouncementDetail = () => {
 
   const label = getLabelStatus(item);
   const posterUrl = (name) => fileUrl(`announcements/${name}`);
+  // แต่ละประกาศกำหนดลิงก์สมัครออนไลน์ของตัวเองได้ (เช่น รอบที่ใช้ mytcas.com แทนระบบของ ม.เกษตรฯ)
+  // ถ้าไม่ได้ตั้งไว้ (ส่วนใหญ่) ใช้ลิงก์เริ่มต้นของระบบรับสมัคร ม.เกษตรฯ
+  const applyUrl = item.applyLink || 'https://misreg.csc.ku.ac.th/admission/';
 
   return (
     <div className="ad-page">
@@ -171,7 +174,7 @@ const AnnouncementDetail = () => {
           </div>
 
           <a
-            href="https://misreg.csc.ku.ac.th/admission/"
+            href={applyUrl}
             target="_blank"
             rel="noreferrer"
             className="ad-hero-apply-btn"
@@ -318,7 +321,7 @@ const AnnouncementDetail = () => {
         <section id="downloads" className="ad-section reveal-on-scroll">
           <div className="ad-download-flex">
             <a
-              href="https://misreg.csc.ku.ac.th/admission/"
+              href={applyUrl}
               target="_blank"
               rel="noreferrer"
               className="ad-dl-card ad-dl-card-primary"

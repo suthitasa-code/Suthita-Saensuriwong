@@ -5,13 +5,14 @@ const AnnouncementRepository = {
   save: async (data) => {
     const query = `
       INSERT INTO announcement
-      (title, subtitle, tcasRound, academicYear, totalQuota, totalScholarships, candidateDetail, conditions, notes, openDate, closeDate, status, posterImg, scheduleImg, majorTableImg, manualPdf, announcementPdf, adminID)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (title, subtitle, tcasRound, academicYear, totalQuota, totalScholarships, candidateDetail, conditions, notes, openDate, closeDate, status, posterImg, scheduleImg, majorTableImg, manualPdf, announcementPdf, applyLink, adminID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
       data.title, data.subtitle || null, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
       data.candidateDetail, data.conditions, data.notes, data.openDate, data.closeDate, data.status || '1',
       data.posterImg || null, data.scheduleImg || null, data.majorTableImg || null, data.manualPdf || null, data.announcementPdf || null,
+      data.applyLink || null,
       data.adminID
     ];
     const [res] = await pool.query(query, values);
@@ -57,7 +58,7 @@ const AnnouncementRepository = {
       UPDATE announcement SET
         title = ?, subtitle = ?, tcasRound = ?, academicYear = ?, totalQuota = ?, totalScholarships = ?,
         candidateDetail = ?, conditions = ?, notes = ?, openDate = ?, closeDate = ?,
-        status = ?, posterImg = ?, scheduleImg = ?, majorTableImg = ?, manualPdf = ?, announcementPdf = ?,
+        status = ?, posterImg = ?, scheduleImg = ?, majorTableImg = ?, manualPdf = ?, announcementPdf = ?, applyLink = ?,
         updatedBy = ?, updatedAt = NOW()
       WHERE announcementID = ?
     `;
@@ -65,6 +66,7 @@ const AnnouncementRepository = {
       data.title, data.subtitle || null, data.tcasRound, data.academicYear, data.totalQuota || null, data.totalScholarships || null,
       data.candidateDetail, data.conditions, data.notes, data.openDate, data.closeDate,
       data.status, data.posterImg, data.scheduleImg, data.majorTableImg, data.manualPdf, data.announcementPdf,
+      data.applyLink || null,
       data.adminID,
       id
     ];

@@ -9,6 +9,10 @@ import Swal from 'sweetalert2';
 export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 export const UPLOAD_URL = `${API_BASE}/uploads/announcements`;
 
+// ลิงก์ปุ่ม "สมัครออนไลน์" ที่ใช้เป็นค่าเริ่มต้นเมื่อประกาศนั้นไม่ได้ตั้ง applyLink ไว้เอง
+// (ต้องตรงกับ fallback ที่ Frontend-kuse/src/pages/AnnouncementDetail.jsx ใช้จริง)
+export const DEFAULT_APPLY_LINK = 'https://misreg.csc.ku.ac.th/admission/';
+
 // เช็คว่าประกาศแต่ละอันตอนนี้ "เปิดรับ / รอเปิด / ปิดแล้ว" โดยเทียบวันที่ปัจจุบันกับ
 // วันเปิด-ปิดรับสมัครที่แอดมินกรอกไว้ (ไม่ได้ให้แอดมินมากดปิดเอง ระบบคำนวณให้อัตโนมัติ)
 export const getLabelStatus = (item) => {

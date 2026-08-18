@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/manageTcas.css';
 import AnnouncementViewModal from '../../components/AnnouncementViewModal';
-import { API_BASE, UPLOAD_URL, getLabelStatus, statusBadge, openImageLightbox } from '../../utils/tcasHelpers';
+import { API_BASE, UPLOAD_URL, DEFAULT_APPLY_LINK, getLabelStatus, statusBadge, openImageLightbox } from '../../utils/tcasHelpers';
 
 // ================================================================
 // หน้านี้คือ "จัดการประกาศรับสมัคร" ใช้เพิ่ม/แก้ไข/ลบประกาศ TCAS
@@ -26,6 +26,7 @@ const emptyForm = {
   closeDate: '',
   totalQuota: '',
   totalScholarships: '',
+  applyLink: '',
   status: '1',
 };
 
@@ -282,6 +283,7 @@ export default function ManageTcas() {
         closeDate: d.closeDate ? d.closeDate.slice(0, 10) : '',
         totalQuota: d.totalQuota || '',
         totalScholarships: d.totalScholarships || '',
+        applyLink: d.applyLink || '',
         status: d.status || '1',
       });
       setExistingFiles({
@@ -604,6 +606,20 @@ export default function ManageTcas() {
                         <option value="1">เปิดใช้งาน</option>
                         <option value="0">ปิดใช้งาน</option>
                       </select>
+                    </div>
+
+                    <div className="form-col-12">
+                      <label className="filter-label fw-bold">ลิงก์ปุ่ม "สมัครออนไลน์" สำหรับประกาศนี้โดยเฉพาะ</label>
+                      <input type="url" className="form-control filter-control" placeholder="เช่น https://student.mytcas.com"
+                        value={form.applyLink} onChange={e => setForm(p => ({ ...p, applyLink: e.target.value }))} />
+                      <small className="text-muted d-block mt-1">
+                        ใส่เมื่อรอบนี้ต้องสมัครผ่านเว็บอื่น (เช่น mytcas.com) แทนระบบรับสมัครปกติของ ม.เกษตรฯ —
+                        ถ้าเว้นว่างไว้ ปุ่ม "สมัครออนไลน์" ของประกาศนี้จะพาไปที่ลิงก์ด้านล่างแทน (ค่าเริ่มต้นของระบบ)
+                      </small>
+                      <small className="text-muted d-block">
+                        ตอนนี้ปุ่มจะพาไปที่: <a href={form.applyLink || DEFAULT_APPLY_LINK} target="_blank" rel="noreferrer">{form.applyLink || DEFAULT_APPLY_LINK}</a>
+                        {!form.applyLink && ' (ค่าเริ่มต้น)'}
+                      </small>
                     </div>
                   </div>
                 </div>

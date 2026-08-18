@@ -1,4 +1,4 @@
-import { UPLOAD_URL, getLabelStatus, statusBadge, openImageLightbox } from '../utils/tcasHelpers';
+import { UPLOAD_URL, DEFAULT_APPLY_LINK, getLabelStatus, statusBadge, openImageLightbox } from '../utils/tcasHelpers';
 import '../styles/announcementView.css';
 
 // ================================================================
@@ -110,6 +110,18 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
               <DetailRow icon="fas fa-flag-checkered" label="วันที่สิ้นสุดสมัคร" value={formatDate(item.closeDate)} />
               <DetailRow icon="fas fa-users" label="จำนวนรับ (คน)" value={item.totalQuota} />
               <DetailRow icon="fas fa-award" label="ทุนเรียนดี (ทุน)" value={item.totalScholarships} />
+              <DetailRow
+                icon="fas fa-link"
+                label='ลิงก์ปุ่ม "สมัครออนไลน์" ของประกาศนี้'
+                value={
+                  <>
+                    <a href={item.applyLink || DEFAULT_APPLY_LINK} target="_blank" rel="noreferrer">
+                      {item.applyLink || DEFAULT_APPLY_LINK}
+                    </a>
+                    {!item.applyLink && <span className="view-empty"> (ค่าเริ่มต้นของระบบ ยังไม่ได้ตั้งค่าเอง)</span>}
+                  </>
+                }
+              />
             </div>
           </div>
 
