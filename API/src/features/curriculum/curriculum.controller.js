@@ -13,7 +13,7 @@ const curriculumController = {
     try {
       const data = await curriculumRepository.findById(req.params.id);
       if (!data) {
-        return res.status(404).json({ success: false, message: "ไม่พบหลักสูตรนี้ค่ะ" });
+        return res.status(404).json({ success: false, message: "ไม่พบหลักสูตรนี้" });
       }
       res.json({ success: true, data });
     } catch (err) { next(err); }

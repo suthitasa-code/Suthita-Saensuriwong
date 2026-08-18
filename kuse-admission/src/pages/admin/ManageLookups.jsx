@@ -141,7 +141,7 @@ const ManageLookups = () => {
             text: `"${option.name}" จะถูกลบออกจากระบบถาวร ประกาศ/หลักสูตรเก่าที่เคยใช้ชื่อนี้จะไม่หายไป แค่จะไม่มีในตัวเลือกให้เลือกอีก`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'ลบเลย',
+            confirmButtonText: 'ยืนยันการลบ',
             cancelButtonText: 'ยกเลิก',
             confirmButtonColor: '#c0392b',
             cancelButtonColor: '#6c757d',
@@ -165,7 +165,7 @@ const ManageLookups = () => {
         return (
             <div className="lookup-no-access">
                 <i className="fas fa-lock fa-2x mb-3"></i>
-                <p>เฉพาะ Super Admin เท่านั้นที่เข้าหน้านี้ได้ค่ะ</p>
+                <p>เฉพาะ Super Admin เท่านั้นที่เข้าหน้านี้ได้</p>
             </div>
         );
     }

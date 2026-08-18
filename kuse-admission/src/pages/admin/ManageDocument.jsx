@@ -82,7 +82,7 @@ const ManageDocument = () => {
             const result = await response.json();
 
             if (result.success) {
-                Swal.fire({ title: 'อัปโหลดสำเร็จ!', text: result.message, icon: 'success', confirmButtonColor: '#800000' });
+                Swal.fire({ title: 'อัปโหลดสำเร็จ', text: result.message, icon: 'success', confirmButtonColor: '#800000' });
                 fetchDocuments();
                 if (fileInputRef.current) fileInputRef.current.value = "";
             } else {
@@ -117,7 +117,7 @@ const ManageDocument = () => {
             const result = await response.json();
 
             if (result.success) {
-                Swal.fire({ title: 'แก้ไขสำเร็จ!', text: result.message, icon: 'success', confirmButtonColor: '#800000' });
+                Swal.fire({ title: 'แก้ไขสำเร็จ', text: result.message, icon: 'success', confirmButtonColor: '#800000' });
                 setShowModal(false);
                 fetchDocuments();
             } else {
@@ -131,7 +131,7 @@ const ManageDocument = () => {
     const handleDeleteClick = (id) => {
         Swal.fire({
             title: 'ยืนยันการลบไฟล์?',
-            text: "เมื่อลบแล้วไฟล์ตัวจริงและข้อมูลในระบบจะหายไปทันที!",
+            text: "เมื่อลบแล้ว ไฟล์ตัวจริงและข้อมูลในระบบจะถูกลบออกทันทีและไม่สามารถกู้คืนได้",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#800000',
@@ -144,7 +144,7 @@ const ManageDocument = () => {
                     const response = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
                     const data = await response.json();
                     if (data.success) {
-                        Swal.fire('ลบเรียบร้อย!', data.message, 'success');
+                        Swal.fire('ลบข้อมูลสำเร็จ', data.message, 'success');
                         fetchDocuments();
                     } else {
                         Swal.fire('ลบล้มเหลว', data.message, 'error');

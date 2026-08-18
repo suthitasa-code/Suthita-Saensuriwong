@@ -4,14 +4,14 @@ const { body, validationResult } = require("express-validator");
 const documentValidation = [
   body("adminID")
     .notEmpty()
-    .withMessage("กรุณาระบุ adminID คนที่จัดการข้อมูลด้วยนะจ๊ะลูกวิป!"),
-    
+    .withMessage("กรุณาระบุ adminID ของผู้จัดการข้อมูล"),
+
   // ตรวจสอบประเภทเอกสารให้รองรับตามกลุ่มประเภทหลักของระบบ
   body("fileCategory")
     .notEmpty()
-    .withMessage("กรุณาระบุหมวดหมู่ประเภทเอกสารด้วยนะคะ!")
+    .withMessage("กรุณาระบุหมวดหมู่ประเภทเอกสาร")
     .isIn(["COURSE", "TCAS", "MEDIA", "OTHER"])
-    .withMessage("ประเภทหมวดหมู่เอกสารไม่ถูกต้องตามระบบกำหนดค่ะ!"),
+    .withMessage("ประเภทหมวดหมู่เอกสารไม่ถูกต้องตามที่ระบบกำหนด"),
 
   (req, res, next) => {
     const errors = validationResult(req);

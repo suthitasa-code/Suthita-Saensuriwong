@@ -33,7 +33,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error("ระบบรองรับเฉพาะไฟล์นามสกุล .pdf, .jpg, .jpeg และ .png เท่านั้นค่ะ!"), false);
+    cb(new Error("ระบบรองรับเฉพาะไฟล์นามสกุล .pdf, .jpg, .jpeg และ .png เท่านั้น"), false);
   }
 };
 

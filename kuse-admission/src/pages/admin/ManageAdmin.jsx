@@ -42,7 +42,7 @@ const ManageAdmin = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'ปฏิเสธการเข้าถึง',
-                text: 'ขออภัยค่ะ เฉพาะบัญชีสิทธิ์ Super Admin เท่านั้นที่มีสิทธิ์เข้าจัดการระบบในส่วนนี้',
+                text: 'ขออภัย เฉพาะบัญชีสิทธิ์ Super Admin เท่านั้นที่มีสิทธิ์เข้าจัดการระบบในส่วนนี้',
                 confirmButtonColor: '#800000'
             });
             setLoading(false);

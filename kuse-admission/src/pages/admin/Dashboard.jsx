@@ -367,7 +367,7 @@ const Dashboard = () => {
           {yearBreakdown.years.length === 0 ? (
             <div className="panel-empty">
               <i className="fas fa-chart-column fa-2x mb-2 text-muted"></i>
-              <p className="text-muted m-0">ยังไม่มีข้อมูลประกาศเพียงพอสำหรับแสดงกราฟค่ะ</p>
+              <p className="text-muted m-0">ยังไม่มีข้อมูลประกาศเพียงพอสำหรับแสดงกราฟ</p>
             </div>
           ) : (
             <Chart options={yearChartOptions} series={yearChartSeries} type="bar" height={300} />
@@ -383,7 +383,7 @@ const Dashboard = () => {
           {distTotal === 0 ? (
             <div className="panel-empty">
               <i className="fas fa-chart-pie fa-2x mb-2 text-muted"></i>
-              <p className="text-muted m-0">ยังไม่มีประกาศที่ระบุวันรับสมัครค่ะ</p>
+              <p className="text-muted m-0">ยังไม่มีประกาศที่ระบุวันรับสมัคร</p>
             </div>
           ) : (
             <Chart options={donutOptions} series={donutSeries} type="donut" height={300} />
@@ -424,7 +424,7 @@ const Dashboard = () => {
           {recentAnnouncements.length === 0 ? (
             <div className="panel-empty">
               <i className="fas fa-inbox fa-2x mb-2 text-muted"></i>
-              <p className="text-muted m-0">ยังไม่มีประกาศในระบบค่ะ</p>
+              <p className="text-muted m-0">ยังไม่มีประกาศในระบบ</p>
             </div>
           ) : (
             <div className="table-responsive">
@@ -465,7 +465,7 @@ const Dashboard = () => {
           {recentDocuments.length === 0 ? (
             <div className="panel-empty">
               <i className="fas fa-folder-open fa-2x mb-2 text-muted"></i>
-              <p className="text-muted m-0">ยังไม่มีเอกสารในคลังค่ะ</p>
+              <p className="text-muted m-0">ยังไม่มีเอกสารในคลัง</p>
             </div>
           ) : (
             <ul className="recent-doc-list">

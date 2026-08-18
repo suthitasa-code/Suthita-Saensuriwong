@@ -51,7 +51,7 @@ async function getAdminByEmail(email) {
   const admin = await adminRepository.getAdminByEmail(email.trim());
 
   if (!admin) {
-    const error = new Error("อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบจัดการหลังบ้านค่ะ");
+    const error = new Error("อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบจัดการหลังบ้าน");
     error.statusCode = 404;
     throw error;
   }

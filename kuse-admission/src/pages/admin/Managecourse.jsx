@@ -250,7 +250,7 @@ const ManageCourse = () => {
             const result = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(result.message || 'บันทึกข้อมูลไม่สำเร็จ');
 
-            await Swal.fire({ title: 'สำเร็จ!', text: 'ข้อมูลถูกบันทึกเรียบร้อย', icon: 'success', confirmButtonColor: '#800000' });
+            await Swal.fire({ title: 'บันทึกข้อมูลสำเร็จ', text: 'ข้อมูลหลักสูตรได้รับการบันทึกเรียบร้อยแล้ว', icon: 'success', confirmButtonColor: '#800000' });
             closeModal();
             fetchCourses(); // รีเฟรชตาราง -> ฝั่งผู้ใช้งานจะเห็นข้อมูลใหม่ทันทีที่ดึง API ครั้งถัดไป
         } catch (err) {
@@ -282,7 +282,7 @@ const ManageCourse = () => {
             if (!res.ok) throw new Error('ลบข้อมูลไม่สำเร็จ');
 
             setCourses((prev) => prev.filter((c) => c.curriculumID !== course.curriculumID));
-            Swal.fire({ title: 'ลบสำเร็จ!', text: 'หลักสูตรนี้ถูกลบออกจากระบบแล้ว', icon: 'success', timer: 1500, showConfirmButton: false });
+            Swal.fire({ title: 'ลบข้อมูลสำเร็จ', text: 'หลักสูตรนี้ถูกลบออกจากระบบเรียบร้อยแล้ว', icon: 'success', timer: 1500, showConfirmButton: false });
         } catch (err) {
             Swal.fire({ title: 'เกิดข้อผิดพลาด', text: err.message, icon: 'error', confirmButtonColor: '#800000' });
         }
@@ -365,7 +365,7 @@ const ManageCourse = () => {
                     <div className="course-empty">
                         <div className="course-state-icon"><i className="fas fa-folder-open"></i></div>
                         <div>ยังไม่มีข้อมูลหลักสูตร</div>
-                        <small className="text-muted">กดปุ่ม "เพิ่มหลักสูตรใหม่" เพื่อเริ่มต้นเพิ่มข้อมูลค่ะ</small>
+                        <small className="text-muted">กดปุ่ม "เพิ่มหลักสูตรใหม่" เพื่อเริ่มต้นเพิ่มข้อมูล</small>
                     </div>
                 )}
 

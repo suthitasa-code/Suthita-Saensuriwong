@@ -41,7 +41,7 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
       Swal.fire({
         icon: 'warning',
         title: 'เลือกรูปเกินจำนวนที่กำหนด',
-        text: `เลือกได้สูงสุด ${maxFiles} รูป ระบบจะเก็บไว้ให้ ${maxFiles} รูปแรกเท่านั้นนะคะ`,
+        text: `เลือกได้สูงสุด ${maxFiles} รูป ระบบจะเก็บไว้ให้เฉพาะ ${maxFiles} รูปแรกเท่านั้น`,
         confirmButtonColor: '#800000',
       });
       chosen = chosen.slice(0, maxFiles);
@@ -309,7 +309,7 @@ export default function ManageTcas() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.tcasRound || !form.academicYear || !form.openDate || !form.closeDate) {
-      Swal.fire({ title: 'กรอกข้อมูลไม่ครบ', text: 'กรุณากรอกหัวข้อ, รอบ, ปีการศึกษา และวันเปิด-ปิดรับสมัครด้วยนะคะ!', icon: 'warning', confirmButtonColor: '#800000' });
+      Swal.fire({ title: 'กรอกข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกหัวข้อ รอบ ปีการศึกษา และวันเปิด-ปิดรับสมัครให้ครบถ้วน', icon: 'warning', confirmButtonColor: '#800000' });
       return;
     }
 
@@ -343,14 +343,14 @@ export default function ManageTcas() {
       const json = await res.json();
 
       if (json.success) {
-        Swal.fire({ title: editId ? 'แก้ไขสำเร็จแล้วค่ะ!' : 'เพิ่มประกาศสำเร็จแล้วค่ะ!', icon: 'success', confirmButtonColor: '#800000' });
+        Swal.fire({ title: editId ? 'บันทึกการแก้ไขเรียบร้อยแล้ว' : 'เพิ่มประกาศเรียบร้อยแล้ว', icon: 'success', confirmButtonColor: '#800000' });
         setModalOpen(false);
         fetchAll();
       } else {
         throw new Error(json.message);
       }
     } catch (err) {
-      Swal.fire({ title: 'บันทึกไม่สำเร็จ', text: err.message || 'กรุณาลองใหม่อีกครั้งค่ะ', icon: 'error', confirmButtonColor: '#800000' });
+      Swal.fire({ title: 'บันทึกไม่สำเร็จ', text: err.message || 'กรุณาลองใหม่อีกครั้ง', icon: 'error', confirmButtonColor: '#800000' });
     } finally {
       setSubmitting(false);
     }
@@ -373,7 +373,7 @@ export default function ManageTcas() {
           const res = await fetch(`${API_BASE}/api/announcement/${id}`, { method: 'DELETE' });
           const json = await res.json();
           if (json.success) {
-            Swal.fire({ title: 'ลบสำเร็จ!', icon: 'success', confirmButtonColor: '#800000' });
+            Swal.fire({ title: 'ลบข้อมูลสำเร็จ', icon: 'success', confirmButtonColor: '#800000' });
             fetchAll();
           } else throw new Error(json.message);
         } catch (err) {
@@ -485,7 +485,7 @@ export default function ManageTcas() {
                   <tr>
                     <td colSpan={6} className="empty-row">
                       <i className="fas fa-inbox fa-2x mb-2 text-muted"></i>
-                      <br />ไม่พบข้อมูลประกาศในระบบค่ะ
+                      <br />ไม่พบข้อมูลประกาศในระบบ
                     </td>
                   </tr>
                 ) : paginated.map(item => {

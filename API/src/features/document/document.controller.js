@@ -17,7 +17,7 @@ const documentController = {
       const file = req.file; 
       
       const newDoc = await documentService.createNewDocument(file, fileCategory, adminID);
-      res.status(201).json({ status: 201, success: true, message: "เพิ่มไฟล์ลงคลังสำเร็จแล้วค่ะ!", data: newDoc });
+      res.status(201).json({ status: 201, success: true, message: "เพิ่มไฟล์ลงคลังสำเร็จ", data: newDoc });
     } catch (error) {
       res.status(500).json({ status: 500, success: false, message: error.message });
     }
@@ -30,11 +30,11 @@ const documentController = {
       const file = req.file;
 
       if (!fileCategory) {
-        return res.status(400).json({ status: 400, success: false, message: "กรุณาระบุหมวดหมู่ประเภทเอกสารด้วยค่ะ!" });
+        return res.status(400).json({ status: 400, success: false, message: "กรุณาระบุหมวดหมู่ประเภทเอกสาร" });
       }
 
       const updatedDoc = await documentService.updateDocument(id, file, fileCategory, adminID);
-      res.status(200).json({ status: 200, success: true, message: "แก้ไขข้อมูลเอกสารสำเร็จแล้วค่ะ!", data: updatedDoc });
+      res.status(200).json({ status: 200, success: true, message: "แก้ไขข้อมูลเอกสารสำเร็จ", data: updatedDoc });
     } catch (error) {
       res.status(500).json({ status: 500, success: false, message: error.message });
     }
@@ -44,7 +44,7 @@ const documentController = {
     try {
       const { id } = req.params;
       await documentService.deleteDocument(id);
-      res.status(200).json({ status: 200, success: true, message: "ลบไฟล์ออกจากคลังเรียบร้อยแล้วค่ะ!" });
+      res.status(200).json({ status: 200, success: true, message: "ลบไฟล์ออกจากคลังเรียบร้อยแล้ว" });
     } catch (error) {
       res.status(500).json({ status: 500, success: false, message: error.message });
     }

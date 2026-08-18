@@ -118,7 +118,7 @@ const BannerManagerPanel = ({
             }
 
             Swal.fire({
-                title: 'สำเร็จ!',
+                title: 'บันทึกข้อมูลสำเร็จ',
                 text: 'บันทึกข้อมูลแบนเนอร์เรียบร้อยแล้ว',
                 icon: 'success',
                 confirmButtonColor: '#800000'
@@ -135,7 +135,7 @@ const BannerManagerPanel = ({
     const handleDeleteClick = (id) => {
         Swal.fire({
             title: 'ยืนยันการลบ?',
-            text: "คุณจะไม่สามารถกู้คืนรูปภาพแบนเนอร์นี้ได้!",
+            text: "คุณจะไม่สามารถกู้คืนรูปภาพแบนเนอร์นี้ได้",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#800000',
@@ -150,7 +150,7 @@ const BannerManagerPanel = ({
                     });
                     if (!response.ok) throw new Error('ลบข้อมูลล้มเหลว');
 
-                    Swal.fire('ลบเรียบร้อย!', 'ลบแบนเนอร์ออกจากฐานข้อมูลแล้ว', 'success');
+                    Swal.fire('ลบข้อมูลสำเร็จ', 'ลบแบนเนอร์ออกจากฐานข้อมูลเรียบร้อยแล้ว', 'success');
                     fetchBanners(); // รีเฟรชหน้าจอหลังจากลบเสร็จ
                 } catch (error) {
                     Swal.fire('เกิดข้อผิดพลาด', error.message, 'error');

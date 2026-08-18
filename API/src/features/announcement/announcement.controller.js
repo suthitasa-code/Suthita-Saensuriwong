@@ -27,7 +27,7 @@ exports.create = (req, res) => {
     const insertedId = result && result.insertId ? result.insertId : null;
     return res.status(201).json({ 
       success: true, 
-      message: "สร้างประกาศสำเร็จแล้วค่ะ!", 
+      message: "สร้างประกาศสำเร็จ",
       id: insertedId 
     });
   });
@@ -45,7 +45,7 @@ exports.getAll = (req, res) => {
 exports.getById = (req, res) => {
   AnnouncementService.getAnnouncementById(req.params.id, (err, data) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
-    if (!data) return res.status(404).json({ success: false, message: "ไม่พบประกาศนี้ค่ะ" });
+    if (!data) return res.status(404).json({ success: false, message: "ไม่พบประกาศนี้" });
     return res.status(200).json({ success: true, data });
   });
 };
@@ -57,7 +57,7 @@ exports.update = (req, res) => {
 
   AnnouncementService.getAnnouncementForDelete(id, (err, results) => {
     if (err || !results || (Array.isArray(results) && results.length === 0)) {
-      return res.status(404).json({ success: false, message: "ไม่พบประกาศที่จะแก้ไขค่ะ" });
+      return res.status(404).json({ success: false, message: "ไม่พบประกาศที่ต้องการแก้ไข" });
     }
     
     const oldData = Array.isArray(results) ? results[0] : results;
@@ -73,7 +73,7 @@ exports.update = (req, res) => {
 
     AnnouncementService.updateAnnouncement(id, announcementData, files, (err) => {
       if (err) return res.status(500).json({ success: false, message: err.message });
-      return res.status(200).json({ success: true, message: "แก้ไขประกาศเรียบร้อยแล้วค่ะ!" });
+      return res.status(200).json({ success: true, message: "แก้ไขประกาศเรียบร้อยแล้ว" });
     });
   });
 };
@@ -105,7 +105,7 @@ exports.delete = (req, res) => {
       }
 
       // ✅ STEP 3: ส่ง response กลับ Postman ทันที
-      res.status(200).json({ success: true, message: "ลบประกาศออกจากระบบเรียบร้อยแล้วค่ะ!" });
+      res.status(200).json({ success: true, message: "ลบประกาศออกจากระบบเรียบร้อยแล้ว" });
 
       // ✅ STEP 4: ลบไฟล์เบื้องหลัง ใช้ข้อมูลที่ดึงมาตั้งแต่ STEP 1 ได้เลย ไม่ต้องเรียก DB อีกรอบ
       const fileFields = ['posterImg', 'scheduleImg', 'majorTableImg', 'manualPdf', 'announcementPdf'];
