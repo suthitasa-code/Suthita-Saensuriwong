@@ -733,7 +733,7 @@ input[type="reset"],
 .dashboard-recent-table th {
     font-size: 0.72rem;
     text-transform: uppercase;
-    color: #9aa0a6;
+    color: #800000;
     border-top: none;
     font-weight: 600;
     position: sticky;
