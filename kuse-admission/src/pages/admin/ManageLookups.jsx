@@ -187,7 +187,7 @@ const ManageLookups = () => {
             <div className="report-section">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <p className="text-muted small mb-0">
-                        ตัวเลือกในหมวดนี้จะไปโผล่เป็น dropdown ในฟอร์มที่เกี่ยวข้องทันที ไม่ต้องแก้โค้ด
+                        ตัวเลือกในหมวดนี้จะไปปรากฎใน Dropdown List ในแบบฟอร์มที่เกี่ยวข้อง
                     </p>
                     <button className="btn btn-add-lookup" onClick={handleOpenAdd}>
                         <i className="fas fa-plus-circle me-2"></i>เพิ่มตัวเลือกใหม่
