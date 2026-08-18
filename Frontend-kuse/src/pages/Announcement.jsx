@@ -3,6 +3,7 @@ import { API_BASE, ENDPOINTS, unwrap } from '../config/api';
 import AnnouncementCard from '../components/AnnouncementCard';
 import AnnouncementFilterCard from '../components/AnnouncementFilterCard';
 import { useAnnouncementFilters } from '../hooks/useAnnouncementFilters';
+import { extractRoundNumber } from '../utils/announcementStatus';
 import '../styles/announcement.css';
 
 const Announcement = () => {
@@ -35,7 +36,10 @@ const Announcement = () => {
   // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด (ไม่ใช่ผลที่ถูกกรองแล้ว) เพื่อให้ป้าย "ล่าสุด" คงที่เสมอ
   const latestYear = yearOptions[0];
 
-  // จัดกลุ่มประกาศตามปีการศึกษา เรียงปีล่าสุดขึ้นก่อน แล้วเรียงรอบ TCAS จากใหม่ไปเก่าในแต่ละปี (4 การ์ดต่อแถวต่อปี)
+  // จัดกลุ่มประกาศตามปีการศึกษา เรียงปีล่าสุดขึ้นก่อน แล้วเรียงรอบ TCAS จากรอบล่าสุดไปเก่าสุด (4 -> 3 -> 2 -> 1)
+  // ในแต่ละปี ให้รอบที่เพิ่งเปิดล่าสุด (เลขรอบสูงสุด) เป็นการ์ดแรกเสมอ
+  // ยึดตามเลขรอบที่แฝงอยู่ใน tcasRound เสมอ ไม่ใช่ลำดับที่แอดมินกดเพิ่มประกาศเข้าระบบ (announcementID)
+  // เพราะถ้าแอดมินเพิ่มรอบ 4 ก่อนรอบ 3 การเรียงตาม ID จะทำให้รอบ 3 (เพิ่มทีหลัง) ดันไปอยู่การ์ดแรกแทนที่จะเป็นรอบ 4
   const groupedByYear = useMemo(() => {
     const groups = {};
     filteredAnnouncements.forEach((item) => {
@@ -48,7 +52,7 @@ const Announcement = () => {
       .sort((a, b) => Number(b) - Number(a))
       .map((year) => ({
         year,
-        items: groups[year].sort((a, b) => (b.announcementID || 0) - (a.announcementID || 0)),
+        items: groups[year].sort((a, b) => extractRoundNumber(b.tcasRound) - extractRoundNumber(a.tcasRound)),
       }));
   }, [filteredAnnouncements]);
 

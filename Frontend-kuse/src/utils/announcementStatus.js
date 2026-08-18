@@ -22,3 +22,10 @@ export const formatDateTh = (dateStr) => {
   if (isNaN(d)) return '-';
   return d.toLocaleDateString('th-TH', { day: '2-digit', month: 'short', year: 'numeric' });
 };
+
+// ดึงเลขรอบที่แฝงอยู่ในชื่อ (เช่น "รอบที่ 3 Admission" -> 3) ใช้เรียงลำดับรอบ TCAS ให้เป็น 1 -> 2 -> 3 -> 4
+// เสมอ ไม่ว่าแอดมินจะเพิ่มประกาศแต่ละรอบเข้าระบบตามลำดับไหนก็ตาม (ห้ามอิง announcementID/ลำดับที่เพิ่ม)
+export const extractRoundNumber = (tcasRound) => {
+  const match = (tcasRound || '').match(/\d+/);
+  return match ? Number(match[0]) : Infinity;
+};
