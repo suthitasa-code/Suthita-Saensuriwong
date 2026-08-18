@@ -114,12 +114,9 @@ export default function AnnouncementViewModal({ item, onClose, onEdit }) {
                 icon="fas fa-link"
                 label='ลิงก์ปุ่ม "สมัครออนไลน์" ของประกาศนี้'
                 value={
-                  <>
-                    <a href={item.applyLink || DEFAULT_APPLY_LINK} target="_blank" rel="noreferrer">
-                      {item.applyLink || DEFAULT_APPLY_LINK}
-                    </a>
-                    {!item.applyLink && <span className="view-empty"> (ค่าเริ่มต้นของระบบ ยังไม่ได้ตั้งค่าเอง)</span>}
-                  </>
+                  <a href={item.applyLink || DEFAULT_APPLY_LINK} target="_blank" rel="noreferrer">
+                    {item.applyLink || DEFAULT_APPLY_LINK}
+                  </a>
                 }
               />
             </div>
