@@ -73,8 +73,8 @@ const Announcement = () => {
       {!loading && groupedByYear.length === 0 && (
         <div className="announcement-empty">
           {announcements.length === 0
-            ? 'ยังไม่มีประกาศรับสมัครในระบบค่ะ'
-            : 'ไม่พบข้อมูลที่ค้นหา ลองค้นหาใหม่อีกครั้งนะคะ'}
+            ? 'ยังไม่มีประกาศรับสมัครในระบบ'
+            : 'ไม่พบข้อมูลที่ค้นหา กรุณาลองค้นหาใหม่อีกครั้ง'}
         </div>
       )}
 

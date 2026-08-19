@@ -121,7 +121,7 @@ const AnnouncementDetail = () => {
     return (
       <div className="container px-4 py-5 text-center ad-notfound">
         <i className="fas fa-triangle-exclamation fa-3x mb-3"></i>
-        <h3>ไม่พบประกาศนี้ค่ะ</h3>
+        <h3>ไม่พบประกาศนี้</h3>
         <Link to="/announcement" className="ad-back-btn-fallback mt-3">
           <i className="fas fa-chevron-left me-2"></i>กลับไปหน้าประกาศรับสมัคร
         </Link>

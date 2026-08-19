@@ -114,7 +114,7 @@ const Curriculum = () => {
         {loading && <div className="curriculum-loading">กำลังโหลดข้อมูลหลักสูตร...</div>}
 
         {!loading && curriculums.length === 0 && (
-          <div className="curriculum-empty">ยังไม่มีข้อมูลหลักสูตรในระบบค่ะ</div>
+          <div className="curriculum-empty">ยังไม่มีข้อมูลหลักสูตรในระบบ</div>
         )}
 
         {!loading && groupedByDegree.map(({ level, typeGroups }) => (
