@@ -78,6 +78,17 @@ const AnnouncementRepository = {
   delete: async (id) => {
     const [res] = await pool.query('DELETE FROM announcement WHERE announcementID = ?', [id]);
     return res;
+  },
+
+  // 6. เช็คว่ารอบ TCAS นี้ในปีการศึกษานี้เคยถูกเพิ่มไปแล้วหรือยัง (แต่ละรอบเพิ่มได้แค่ 1 ประกาศต่อปี)
+  // excludeId ใช้ตอนแก้ไข เพื่อไม่ให้เช็คชนกับประกาศตัวเองที่กำลังแก้อยู่
+  findByRoundAndYear: async (tcasRound, academicYear, excludeId = null) => {
+    const query = excludeId
+      ? 'SELECT announcementID FROM announcement WHERE tcasRound = ? AND academicYear = ? AND announcementID != ? LIMIT 1'
+      : 'SELECT announcementID FROM announcement WHERE tcasRound = ? AND academicYear = ? LIMIT 1';
+    const params = excludeId ? [tcasRound, academicYear, excludeId] : [tcasRound, academicYear];
+    const [rows] = await pool.query(query, params);
+    return rows;
   }
 };
 

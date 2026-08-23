@@ -313,6 +313,23 @@ export default function ManageTcas() {
       return;
     }
 
+    // เช็คก่อนส่งขึ้นเซิร์ฟเวอร์ว่ารอบ TCAS นี้ในปีการศึกษานี้ถูกเพิ่มไปแล้วหรือยัง (แต่ละรอบเพิ่มได้แค่ 1 ประกาศต่อปี)
+    // เช็คฝั่งนี้ก่อนกันแอดมินเสียเวลาอัปโหลดไฟล์แล้วค่อยไปเจอ error ตอนบันทึกจริง (แต่หลังบ้านก็เช็คซ้ำอีกชั้นอยู่ดี)
+    const isDuplicateRound = announcements.some(a =>
+      a.announcementID !== editId &&
+      a.tcasRound === form.tcasRound &&
+      String(a.academicYear) === String(form.academicYear)
+    );
+    if (isDuplicateRound) {
+      Swal.fire({
+        title: 'ประกาศรอบนี้ถูกเพิ่มไปแล้ว',
+        text: `ประกาศ "${form.tcasRound}" ปีการศึกษา ${form.academicYear} มีอยู่ในระบบแล้ว แต่ละรอบสามารถเพิ่มประกาศได้เพียง 1 รายการต่อปีการศึกษา กรุณาแก้ไขประกาศเดิมแทนหากต้องการเปลี่ยนแปลงข้อมูล`,
+        icon: 'warning',
+        confirmButtonColor: '#800000',
+      });
+      return;
+    }
+
     setSubmitting(true);
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => fd.append(k, v));
