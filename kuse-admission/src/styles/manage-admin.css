@@ -176,6 +176,11 @@
     flex-grow: 1;
 }
 
+/* ไอคอนหน้าหัวข้อในฟอร์มเพิ่ม/แก้ไขผู้ดูแลระบบ — สีเหลืองทองเข้ม */
+.form-label-icon-gold {
+    color: #B8860B;
+}
+
 /* --- Input & Select Styling --- */
 .form-control-kuse, .form-select-kuse {
     padding: 10px 16px;

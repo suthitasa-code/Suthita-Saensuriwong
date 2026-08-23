@@ -564,13 +564,13 @@ const ManageAdmin = () => {
                                     {/* แถว ชื่อจริง - นามสกุล */}
                                     <div className="form-row-group mb-3">
                                         <div className="form-row-half">
-                                            <label className="form-label-left"><i className="fas fa-user text-muted me-2"></i>ชื่อจริง</label>
+                                            <label className="form-label-left"><i className="fas fa-user form-label-icon-gold me-2"></i>ชื่อจริง</label>
                                             <div className="form-input-right">
                                                 <input type="text" className="form-control-kuse" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="กรอกชื่อจริง" />
                                             </div>
                                         </div>
                                         <div className="form-row-half">
-                                            <label className="form-label-left"><i className="fas fa-address-card text-muted me-2"></i>นามสกุล</label>
+                                            <label className="form-label-left"><i className="fas fa-address-card form-label-icon-gold me-2"></i>นามสกุล</label>
                                             <div className="form-input-right">
                                                 <input type="text" className="form-control-kuse" required value={formData.lastname} onChange={(e) => setFormData({...formData, lastname: e.target.value})} placeholder="กรอกนามสกุล" />
                                             </div>
@@ -579,7 +579,7 @@ const ManageAdmin = () => {
 
                                     {/* แถว อีเมลแอดมิน */}
                                     <div className="form-row-single mb-3">
-                                        <label className="form-label-left"><i className="fas fa-envelope text-muted me-2"></i>อีเมลแอดมิน</label>
+                                        <label className="form-label-left"><i className="fas fa-envelope form-label-icon-gold me-2"></i>อีเมลแอดมิน</label>
                                         <div className="form-input-right">
                                             <input type="email" className="form-control-kuse" required disabled={isEditMode} value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="example@kuse.com" />
                                         </div>
@@ -602,7 +602,7 @@ const ManageAdmin = () => {
                                     {(!isEditMode || allowEditPass) && (
                                         <>
                                             <div className="form-row-single mb-3">
-                                                <label className="form-label-left"><i className="fas fa-lock text-muted me-2"></i>รหัสผ่านระบบ {isEditMode && '(ใหม่)'}</label>
+                                                <label className="form-label-left"><i className="fas fa-lock form-label-icon-gold me-2"></i>รหัสผ่านระบบ {isEditMode && '(ใหม่)'}</label>
                                                 <div className="form-input-right position-relative">
                                                     <input type={showPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="ตั้งรหัสผ่านขั้นต่ำ 6 ตัวอักษร" />
                                                     <div className="pass-toggle-wrapper" onClick={() => setShowPassword(!showPassword)}>
@@ -613,7 +613,7 @@ const ManageAdmin = () => {
 
                                             {/* แถว ยืนยันรหัสผ่านใหม่ */}
                                             <div className="form-row-single mb-3">
-                                                <label className="form-label-left"><i className="fas fa-shield-alt text-muted me-2"></i>ยืนยันรหัสผ่าน</label>
+                                                <label className="form-label-left"><i className="fas fa-shield-alt form-label-icon-gold me-2"></i>ยืนยันรหัสผ่าน</label>
                                                 <div className="form-input-right position-relative">
                                                     <input type={showConfirmPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน" />
                                                     <div className="pass-toggle-wrapper" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -626,7 +626,7 @@ const ManageAdmin = () => {
 
                                     {/* แถว ระดับสิทธิ์ */}
                                     <div className="form-row-single mb-4">
-                                        <label className="form-label-left"><i className="fas fa-user-tag text-muted me-2"></i>ระดับสิทธิ์</label>
+                                        <label className="form-label-left"><i className="fas fa-user-tag form-label-icon-gold me-2"></i>ระดับสิทธิ์</label>
                                         <div className="form-input-right">
                                             <select className="form-select-kuse" value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}>
                                                 <option value="Admin">Admin (ผู้ดูแลระบบ)</option>
