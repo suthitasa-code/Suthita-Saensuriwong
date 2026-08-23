@@ -5,6 +5,7 @@ import HeroCarousel from '../components/HeroCarousel';
 import AnnouncementCard from '../components/AnnouncementCard';
 import AnnouncementFilterCard from '../components/AnnouncementFilterCard';
 import { useAnnouncementFilters } from '../hooks/useAnnouncementFilters';
+import { extractRoundNumber } from '../utils/announcementStatus';
 import '../styles/home.css';
 
 const Home = () => {
@@ -37,12 +38,18 @@ const Home = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // ประกาศรับสมัคร 4 รอบล่าสุด เรียงจากใหม่ไปเก่าตามลำดับที่เพิ่มเข้าระบบ
+  // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด (ถ้าเพิ่งเพิ่มประกาศปีใหม่เข้ามา ให้ถือว่าปีนั้นคือปีล่าสุดทันที)
+  const latestYear = useMemo(() => {
+    if (announcements.length === 0) return null;
+    return Math.max(...announcements.map((item) => Number(item.academicYear) || 0));
+  }, [announcements]);
+
+  // แสดงเฉพาะประกาศของ "ปีการศึกษาล่าสุด" เท่านั้น ไม่ปนกับประกาศปีเก่า เรียงรอบจากใหม่ไปเก่า (4 -> 3 -> 2 -> 1)
   const latestAnnouncements = useMemo(
-    () => [...announcements]
-      .sort((a, b) => (b.announcementID || 0) - (a.announcementID || 0))
-      .slice(0, 4),
-    [announcements]
+    () => announcements
+      .filter((item) => Number(item.academicYear) === latestYear)
+      .sort((a, b) => extractRoundNumber(b.tcasRound) - extractRoundNumber(a.tcasRound)),
+    [announcements, latestYear]
   );
 
   const filters = useAnnouncementFilters(announcements);
