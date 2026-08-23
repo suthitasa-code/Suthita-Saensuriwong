@@ -17,5 +17,10 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // ปิดกฎนี้: มันเตือนแม้แต่โค้ดรูปแบบมาตรฐาน (fetch ข้อมูลตอน mount แล้ว setLoading/setState)
+      // ที่ใช้อยู่ทั่วทั้งโปรเจกต์และทำงานถูกต้องอยู่แล้ว ไม่ใช่บั๊ก
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])

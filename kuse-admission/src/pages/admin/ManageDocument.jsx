@@ -88,7 +88,7 @@ const ManageDocument = () => {
             } else {
                 Swal.fire('อัปโหลดล้มเหลว', result.message, 'error');
             }
-        } catch (error) {
+        } catch {
             Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         }
     };
@@ -123,7 +123,7 @@ const ManageDocument = () => {
             } else {
                 Swal.fire('แก้ไขล้มเหลว', result.message, 'error');
             }
-        } catch (error) {
+        } catch {
             Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถแก้ไขข้อมูลได้', 'error');
         }
     };
@@ -149,7 +149,7 @@ const ManageDocument = () => {
                     } else {
                         Swal.fire('ลบล้มเหลว', data.message, 'error');
                     }
-                } catch (error) {
+                } catch {
                     Swal.fire('เกิดข้อผิดพลาด', 'ลบข้อมูลล้มเหลว', 'error');
                 }
             }

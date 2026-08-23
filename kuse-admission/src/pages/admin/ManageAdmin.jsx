@@ -37,20 +37,6 @@ const ManageAdmin = () => {
         status: 1
     });
 
-    useEffect(() => {
-        if (!isSuperAdmin) {
-            Swal.fire({
-                icon: 'error',
-                title: 'ปฏิเสธการเข้าถึง',
-                text: 'ขออภัย เฉพาะบัญชีสิทธิ์ Super Admin เท่านั้นที่มีสิทธิ์เข้าจัดการระบบในส่วนนี้',
-                confirmButtonColor: '#800000'
-            });
-            setLoading(false);
-            return;
-        }
-        fetchAdmins();
-    }, [isSuperAdmin]);
-
     // ----- ดึงรายชื่อแอดมินทั้งหมดจาก API มาโชว์ -----
     const fetchAdmins = async () => {
         try {
@@ -74,6 +60,20 @@ const ManageAdmin = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (!isSuperAdmin) {
+            Swal.fire({
+                icon: 'error',
+                title: 'ปฏิเสธการเข้าถึง',
+                text: 'ขออภัย เฉพาะบัญชีสิทธิ์ Super Admin เท่านั้นที่มีสิทธิ์เข้าจัดการระบบในส่วนนี้',
+                confirmButtonColor: '#800000'
+            });
+            setLoading(false);
+            return;
+        }
+        fetchAdmins();
+    }, [isSuperAdmin]);
 
     // ----- เปิด modal โหมด "เพิ่มแอดมินใหม่" (ฟอร์มว่างเปล่า) -----
     const handleOpenAddModal = () => {
@@ -313,7 +313,7 @@ const ManageAdmin = () => {
 
                     Swal.fire({ icon: 'success', title: 'คืนสิทธิ์การใช้งานสำเร็จ', timer: 1500, showConfirmButton: false });
                     fetchAdmins();
-                } catch (error) {
+                } catch {
                     Swal.fire({ icon: 'error', title: 'ไม่สามารถคืนสิทธิ์ได้', confirmButtonColor: '#800000' });
                 }
             }

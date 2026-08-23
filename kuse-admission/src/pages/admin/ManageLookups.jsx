@@ -129,7 +129,7 @@ const ManageLookups = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             fetchOptions(activeTab);
-        } catch (error) {
+        } catch {
             Swal.fire({ icon: 'error', title: 'เปลี่ยนสถานะไม่สำเร็จ', confirmButtonColor: '#800000' });
         }
     };
