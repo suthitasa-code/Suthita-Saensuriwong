@@ -106,6 +106,45 @@
     color: white;
 }
 
+/* ปุ่มดาวน์โหลดไล่เฉดทอง — แยกจากปุ่มปิดหน้าต่างสีแดงเข้มให้ชัดเจน */
+.btn-gold-gradient {
+    background: linear-gradient(135deg, #f4d160, #d4af37 55%, #b8860b);
+    color: #4a2e00;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-family: 'Anuphan', sans-serif;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 14px rgba(184, 134, 11, 0.35);
+}
+
+.btn-gold-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(184, 134, 11, 0.5);
+    color: #3a2400;
+}
+
+/* ปุ่มปิด (กากบาท) มุมขวาบนของหน้าต่างดูไฟล์เอกสาร/รูปภาพ */
+.doc-preview-popup .swal2-close {
+    color: #800000;
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f8f1e7;
+    border: 1px solid rgba(128, 0, 0, 0.15);
+    top: 14px;
+    right: 14px;
+    transition: 0.25s ease;
+}
+
+.doc-preview-popup .swal2-close:hover {
+    background: #800000;
+    color: #fff;
+    transform: rotate(90deg);
+}
+
 /* สไตล์ตารางคลังเอกสาร */
 .custom-table-card {
     background: white;

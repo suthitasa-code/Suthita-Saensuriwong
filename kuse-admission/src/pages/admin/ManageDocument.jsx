@@ -164,20 +164,27 @@ const ManageDocument = () => {
         if (['.jpg', '.jpeg', '.png'].includes(fileExt)) {
             Swal.fire({
                 title: originalThaiName || 'ตัวอย่างไฟล์รูปภาพ',
-                imageUrl: fileUrl,
-                imageAlt: realServerFileName,
-                width: 'auto',
-                maxWidth: '80%',
-                confirmButtonColor: '#800000',
-                confirmButtonText: 'ปิดหน้าต่าง'
+                html: `
+                    <div style="width:100%; height:500px; display:flex; align-items:center; justify-content:center; background:#f8f9fa; border-radius:12px; overflow:hidden;">
+                        <img src="${fileUrl}" alt="${realServerFileName}" style="max-width:100%; max-height:100%; object-fit:contain;" />
+                    </div>
+                    <a href="${fileUrl}" download="${originalThaiName || realServerFileName}" class="btn-gold-gradient" style="display:inline-flex; align-items:center; gap:6px; margin-top:16px; text-decoration:none;">
+                        <i class="fas fa-download"></i> ดาวน์โหลดรูปภาพ
+                    </a>
+                `,
+                width: '80%',
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: { popup: 'doc-preview-popup' }
             });
         } else if (fileExt === '.pdf') {
             Swal.fire({
                 title: originalThaiName || 'ตัวอย่างไฟล์เอกสาร PDF',
                 html: `<iframe src="${fileUrl}" width="100%" height="500px" style="border:none; border-radius:12px;"></iframe>`,
                 width: '80%',
-                confirmButtonColor: '#800000',
-                confirmButtonText: 'ปิดหน้าต่าง'
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: { popup: 'doc-preview-popup' }
             });
         } else {
             window.open(fileUrl, '_blank');
