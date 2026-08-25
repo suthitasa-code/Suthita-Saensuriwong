@@ -31,14 +31,13 @@ const Announcement = () => {
   }, []);
 
   const filters = useAnnouncementFilters(announcements);
-  const { filteredAnnouncements, yearOptions } = filters;
+  const { filteredAnnouncements, yearOptions, isFiltering } = filters;
 
   // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด (ไม่ใช่ผลที่ถูกกรองแล้ว) เพื่อให้ป้าย "ล่าสุด" คงที่เสมอ
   const latestYear = yearOptions[0];
 
   // จัดกลุ่มประกาศตามปีการศึกษา เรียงปีล่าสุดขึ้นก่อน แล้วเรียงรอบ TCAS จากรอบล่าสุดไปเก่าสุด (4 -> 3 -> 2 -> 1)
   // ในแต่ละปี ให้รอบที่เพิ่งเปิดล่าสุด (เลขรอบสูงสุด) เป็นการ์ดแรกเสมอ
-  // เพราะถ้าแอดมินเพิ่มรอบ 4 ก่อนรอบ 3 การเรียงตาม ID จะทำให้รอบ 3 (เพิ่มทีหลัง) ดันไปอยู่การ์ดแรกแทนที่จะเป็นรอบ 4
   const groupedByYear = useMemo(() => {
     const groups = {};
     filteredAnnouncements.forEach((item) => {
@@ -55,6 +54,16 @@ const Announcement = () => {
       }));
   }, [filteredAnnouncements]);
 
+  // ตอนกำลังค้นหา/กรอง: โชว์การ์ดที่เจอทั้งหมดเรียงแถวเดียวกัน (แต่ละการ์ดมีป้ายปีการศึกษาอยู่แล้ว)
+  // ไม่ต้องแยกเป็นคนละ section ตามปีเหมือนมุมมองปกติ กันไม่ให้ต้องเลื่อนหาผลลัพธ์ปีอื่น
+  const sortedFilteredAnnouncements = useMemo(
+    () => [...filteredAnnouncements].sort((a, b) =>
+      (Number(b.academicYear) || 0) - (Number(a.academicYear) || 0)
+      || extractRoundNumber(b.tcasRound) - extractRoundNumber(a.tcasRound)
+    ),
+    [filteredAnnouncements]
+  );
+
   return (
     <div className="container px-4">
       <div className="header-section">
@@ -69,7 +78,7 @@ const Announcement = () => {
 
       {loading && <div className="announcement-loading">กำลังโหลดข้อมูลประกาศ...</div>}
 
-      {!loading && groupedByYear.length === 0 && (
+      {!loading && filteredAnnouncements.length === 0 && (
         <div className="announcement-empty">
           {announcements.length === 0
             ? 'ยังไม่มีประกาศรับสมัครในระบบ'
@@ -77,7 +86,17 @@ const Announcement = () => {
         </div>
       )}
 
-      {!loading && groupedByYear.map(({ year, items }) => (
+      {!loading && filteredAnnouncements.length > 0 && isFiltering && (
+        <div className="row g-4 mb-5">
+          {sortedFilteredAnnouncements.map((item) => (
+            <div className="col-md-6 col-lg-3" key={item.announcementID}>
+              <AnnouncementCard item={item} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!loading && filteredAnnouncements.length > 0 && !isFiltering && groupedByYear.map(({ year, items }) => (
         <div key={year} className="year-section">
           <h4 className="year-header">
             ปีการศึกษา {year}
