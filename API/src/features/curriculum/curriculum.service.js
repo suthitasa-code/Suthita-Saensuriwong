@@ -23,8 +23,9 @@ const curriculumService = {
     // adminID ที่ frontend ส่งมาตอนแก้ไข คือคนที่ "กำลังแก้ไขอยู่ตอนนี้" ไม่ใช่คนสร้าง
     // เลยไม่เขียนทับคอลัมน์ adminID (คนสร้างเดิม) อีกต่อไป แต่ไปลง updatedBy/updatedAt แทน
     // เพื่อให้ยังรู้เสมอว่าใครเป็นคนสร้างหลักสูตรนี้ตอนแรก
+    // existing_pdfFiles เป็นแค่ฟิลด์ควบคุม (บอกว่าไฟล์ PDF เดิมไฟล์ไหนเหลืออยู่) ไม่ใช่คอลัมน์ในตาราง จัดการแยกด้านล่าง
     Object.keys(body).forEach(key => {
-      if (key === "adminID") return;
+      if (key === "adminID" || key === "existing_pdfFiles") return;
       if (body[key] !== undefined && body[key] !== "") {
         updateData[key] = body[key];
       }
@@ -38,9 +39,14 @@ const curriculumService = {
     if (files) {
       if (files.Images) updateData.Images = files.Images[0].filename;
       if (files.shopPhoto) updateData.shopPhoto = files.shopPhoto[0].filename;
-      if (files.pdfFiles) {
-        const fileNames = files.pdfFiles.map(file => file.filename);
-        updateData.pdfFiles = fileNames.join(",");
+
+      // รวมไฟล์ PDF เดิมที่เหลืออยู่ (หลังผู้ใช้กดกากบาทลบบางไฟล์ออก) เข้ากับไฟล์ใหม่ที่เพิ่งอัปโหลดเพิ่ม
+      // แทนที่จะทับของเดิมทั้งหมดทุกครั้งที่มีไฟล์ใหม่
+      if (files.pdfFiles || body.existing_pdfFiles !== undefined) {
+        const kept = (body.existing_pdfFiles || "").split(",").map(name => name.trim()).filter(Boolean);
+        const added = files.pdfFiles ? files.pdfFiles.map(file => file.filename) : [];
+        const combined = [...kept, ...added];
+        updateData.pdfFiles = combined.length > 0 ? combined.join(",") : null;
       }
     }
 

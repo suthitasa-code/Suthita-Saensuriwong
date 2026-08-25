@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import '../../styles/managecourse.css';
 import CourseViewModal from '../../components/CourseViewModal';
@@ -78,8 +78,10 @@ const ManageCourse = () => {
     const [coverPreview, setCoverPreview] = useState('');
     const [shopFile, setShopFile] = useState(null);
     const [shopPreview, setShopPreview] = useState('');
-    const [pdfFiles, setPdfFiles] = useState([]); // File[] ใหม่ (ถ้าเลือก จะแทนที่ของเดิมทั้งหมด)
+    const [pdfFiles, setPdfFiles] = useState([]); // File[] ใหม่ที่เลือกเพิ่ม (สะสมกับของเดิม ไม่ทับ)
     const [existingPdfNames, setExistingPdfNames] = useState([]); // ชื่อไฟล์เดิมที่มีอยู่แล้ว (ตอนแก้ไข)
+    const pdfInputRef = useRef(null);
+    const MAX_CURRICULUM_PDFS = 5;
 
     const authHeaders = () => {
         const token = localStorage.getItem('token');
@@ -131,6 +133,7 @@ const ManageCourse = () => {
         setShopPreview('');
         setPdfFiles([]);
         setExistingPdfNames([]);
+        if (pdfInputRef.current) pdfInputRef.current.value = '';
     };
 
     const openAddModal = () => {
@@ -205,8 +208,37 @@ const ManageCourse = () => {
     };
 
     const handlePdfChange = (e) => {
-        const files = Array.from(e.target.files).slice(0, 5);
-        setPdfFiles(files);
+        const chosen = Array.from(e.target.files);
+        if (!chosen.length) return;
+
+        // นับรวมไฟล์เดิมที่ยังเหลืออยู่ (ยังไม่ถูกลบ) + ไฟล์ใหม่ที่เลือกไว้แล้ว กันไม่ให้รวมกันเกิน 5 ไฟล์
+        const existingTotal = existingPdfNames.length + pdfFiles.length;
+
+        if (existingTotal >= MAX_CURRICULUM_PDFS) {
+            Swal.fire({
+                icon: 'info',
+                title: 'ไฟล์ข้อมูลหลักสูตรครบจำนวนสูงสุดแล้ว',
+                text: `ขณะนี้มีไฟล์ PDF ข้อมูลหลักสูตรครบ ${MAX_CURRICULUM_PDFS} ไฟล์แล้ว หากประสงค์จะเพิ่มไฟล์ใหม่ กรุณาลบไฟล์ที่ไม่ต้องการออกก่อน แล้วจึงอัปโหลดไฟล์ใหม่อีกครั้ง`,
+                confirmButtonColor: '#800000',
+            });
+            if (pdfInputRef.current) pdfInputRef.current.value = '';
+            return;
+        }
+
+        const remainingSlots = MAX_CURRICULUM_PDFS - existingTotal;
+        let accepted = chosen;
+        if (chosen.length > remainingSlots) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'จำนวนไฟล์เกินที่กำหนด',
+                text: `สามารถอัปโหลดไฟล์ PDF ข้อมูลหลักสูตรได้สูงสุด ${MAX_CURRICULUM_PDFS} ไฟล์เท่านั้น ระบบจะจัดเก็บไฟล์ที่เลือกไว้ให้เท่าที่มีจำนวนคงเหลือ`,
+                confirmButtonColor: '#800000',
+            });
+            accepted = chosen.slice(0, remainingSlots);
+        }
+
+        setPdfFiles((prev) => [...prev, ...accepted]);
+        if (pdfInputRef.current) pdfInputRef.current.value = '';
     };
 
     // ===================== บันทึก (เพิ่ม/แก้ไข) =====================
@@ -239,6 +271,8 @@ const ManageCourse = () => {
             if (coverFile) fd.append('Images', coverFile);
             if (shopFile) fd.append('shopPhoto', shopFile);
             pdfFiles.forEach((file) => fd.append('pdfFiles', file));
+            // แจ้งเซิร์ฟเวอร์ว่าไฟล์ PDF เดิมไฟล์ไหนยังเหลืออยู่ (หลังจากกดกากบาทลบบางไฟล์ออก) ให้เอาไปต่อกับไฟล์ใหม่ที่อัปโหลดเพิ่ม
+            if (editingId) fd.append('existing_pdfFiles', existingPdfNames.join(','));
 
             const isEdit = Boolean(editingId);
             const res = await fetch(isEdit ? `${API_URL}/${editingId}` : API_URL, {
@@ -614,9 +648,9 @@ const ManageCourse = () => {
                                                     <div className="pdf-slot">
                                                         <small className="text-muted d-block mb-2">
                                                             <i className="far fa-file-pdf me-1"></i>
-                                                            เลือกไฟล์ PDF ใหม่ (เลือกได้สูงสุด 5 ไฟล์ — ถ้าอัปโหลดใหม่จะแทนที่ไฟล์เดิมทั้งหมด)
+                                                            เลือกไฟล์ PDF ใหม่ (รวมกับไฟล์เดิมที่เหลือได้สูงสุด {MAX_CURRICULUM_PDFS} ไฟล์)
                                                         </small>
-                                                        <input type="file" className="form-control form-control-sm" accept=".pdf" multiple onChange={handlePdfChange} />
+                                                        <input ref={pdfInputRef} type="file" className="form-control form-control-sm" accept=".pdf" multiple onChange={handlePdfChange} />
                                                         {pdfFiles.length > 0 && (
                                                             <div className="mt-2">
                                                                 <small className="text-success d-block mb-1">เลือกแล้ว {pdfFiles.length} ไฟล์:</small>
