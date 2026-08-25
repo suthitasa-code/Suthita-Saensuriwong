@@ -211,6 +211,17 @@
     cursor: not-allowed;
 }
 
+/* กรอบสีเขียว: รหัสผ่านตั้งครบเงื่อนไข / ยืนยันรหัสผ่านตรงกัน */
+.form-control-kuse.input-valid-green {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.12);
+}
+
+.form-control-kuse.input-valid-green:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.18);
+}
+
 /* --- ไอคอนเปิดปิดตา จัดกึ่งกลางแนวตั้งพอดีเป๊ะ --- */
 .pass-toggle-wrapper {
     position: absolute;

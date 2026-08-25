@@ -604,7 +604,7 @@ const ManageAdmin = () => {
                                             <div className="form-row-single mb-3">
                                                 <label className="form-label-left"><i className="fas fa-lock form-label-icon-gold me-2"></i>รหัสผ่านระบบ {isEditMode && '(ใหม่)'}</label>
                                                 <div className="form-input-right position-relative">
-                                                    <input type={showPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="ตั้งรหัสผ่านขั้นต่ำ 6 ตัวอักษร" />
+                                                    <input type={showPassword ? "text" : "password"} className={`form-control-kuse pe-5 ${formData.password.length >= 6 ? 'input-valid-green' : ''}`} required={!isEditMode} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="ตั้งรหัสผ่านขั้นต่ำ 6 ตัวอักษร" />
                                                     <div className="pass-toggle-wrapper" onClick={() => setShowPassword(!showPassword)}>
                                                         <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                                     </div>
@@ -615,7 +615,7 @@ const ManageAdmin = () => {
                                             <div className="form-row-single mb-3">
                                                 <label className="form-label-left"><i className="fas fa-shield-alt form-label-icon-gold me-2"></i>ยืนยันรหัสผ่าน</label>
                                                 <div className="form-input-right position-relative">
-                                                    <input type={showConfirmPassword ? "text" : "password"} className="form-control-kuse pe-5" required={!isEditMode} value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน" />
+                                                    <input type={showConfirmPassword ? "text" : "password"} className={`form-control-kuse pe-5 ${formData.confirmPassword.length > 0 && formData.confirmPassword === formData.password ? 'input-valid-green' : ''}`} required={!isEditMode} value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน" />
                                                     <div className="pass-toggle-wrapper" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                                         <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                                     </div>
