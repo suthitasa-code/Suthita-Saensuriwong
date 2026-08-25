@@ -31,7 +31,7 @@ const emptyForm = {
 };
 
 // Image preview component
-const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, field, maxFiles }) => {
+const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, field, maxFiles, existingCount = 0 }) => {
   const inputRef = useRef(null);
   const previews = files[field] || [];
 
@@ -40,10 +40,10 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
     if (!chosen.length) return;
 
     if (maxFiles) {
-      // เลือกรูปเพิ่มแบบสะสม (ไม่ทับของเดิม) กันจำนวนรวมไม่ให้เกิน maxFiles
-      const existingCount = previews.length;
+      // เลือกรูปเพิ่มแบบสะสม (ไม่ทับของเดิม) กันจำนวนรวม (รูปเดิมที่เหลือ + รูปใหม่) ไม่ให้เกิน maxFiles
+      const existingTotal = existingCount + previews.length;
 
-      if (existingCount >= maxFiles) {
+      if (existingTotal >= maxFiles) {
         Swal.fire({
           icon: 'info',
           title: 'รูปภาพโปสเตอร์ครบจำนวนสูงสุดแล้ว',
@@ -54,7 +54,7 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
         return;
       }
 
-      const remainingSlots = maxFiles - existingCount;
+      const remainingSlots = maxFiles - existingTotal;
       let accepted = chosen;
       if (chosen.length > remainingSlots) {
         Swal.fire({
@@ -119,54 +119,68 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
   );
 };
 
-// Existing image chips (for edit mode)
-const ExistingImageChips = ({ label, icon, iconColor, value, fieldKey, onClear }) => {
+// Existing image chips (for edit mode) — แต่ละรูปมีกากบาทลบทีละรูปได้เอง ไม่ต้องล้างทั้งหมดทีเดียว
+const ExistingImageChips = ({ label, icon, iconColor, value, fieldKey, onRemoveOne }) => {
   if (!value) return null;
-  const names = value.split(',').filter(Boolean);
+  const names = value.split(',').map(n => n.trim()).filter(Boolean);
+  if (names.length === 0) return null;
   return (
     <div className="existing-files">
       <small className="text-muted d-block mb-1"><i className={`fas ${icon} me-1`} style={{ color: iconColor }}></i>{label} (ไฟล์ปัจจุบัน)</small>
-      {names.map((n, i) => (
-        <span key={i} className="file-chip">
-          <img
-            src={`${UPLOAD_URL}/${n.trim()}`}
-            className="chip-thumb"
-            alt=""
-            title="คลิกเพื่อดูรูปขนาดเต็ม"
-            onClick={() => openImageLightbox(`${UPLOAD_URL}/${n.trim()}`, n.trim())}
-          />
-          {n.trim()}
-        </span>
-      ))}
-      <button type="button" className="btn-clear-existing" onClick={() => onClear(fieldKey)}>
-        <i className="fas fa-trash-alt me-1"></i>ล้างรูปเดิม
-      </button>
+      <div className="preview-grid">
+        {names.map((n, i) => (
+          <div key={i} className="preview-wrapper">
+            <img
+              src={`${UPLOAD_URL}/${n}`}
+              className="preview-img"
+              alt=""
+              title="คลิกเพื่อดูรูปขนาดเต็ม"
+              onClick={() => openImageLightbox(`${UPLOAD_URL}/${n}`, n)}
+            />
+            <button type="button" className="btn-remove-img" onClick={() => onRemoveOne(fieldKey, n)} title="ลบรูปนี้">
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-const ExistingPdfChip = ({ label, icon, iconColor, value, fieldKey, onClear }) => {
+// ไฟล์ PDF เดิม (โหมดแก้ไข) โชว์เป็นชิปแบบเดียวกับไฟล์ใหม่ที่เพิ่งเลือก (มีกากบาทลบในตัว) ให้หน้าตาเหมือนกันทั้งตอนเพิ่ม/แก้ไข
+const ExistingPdfChip = ({ value, fieldKey, onClear }) => {
   if (!value) return null;
   return (
-    <div className="existing-files">
-      <small className="text-muted"><i className={`fas ${icon} me-1`} style={{ color: iconColor }}></i>{label} (ไฟล์ปัจจุบัน)</small>
-      <span className="file-chip pdf-chip">
-        <i className="fas fa-file-pdf me-1 text-danger"></i>{value}
-      </span>
-      <button type="button" className="btn-clear-existing" onClick={() => onClear(fieldKey)}>
-        <i className="fas fa-trash-alt me-1"></i>ล้างไฟล์เดิม
+    <div className="file-chip pdf-chip new-file-chip">
+      <i className="fas fa-file-pdf me-1 text-danger"></i>{value}
+      <button type="button" className="btn-remove-chip" onClick={() => onClear(fieldKey)} title="ลบไฟล์นี้">
+        <i className="fas fa-times"></i>
       </button>
     </div>
   );
 };
 
-// PDF upload field: shows the newly chosen file as a chip with an X button to remove it before submitting
+// PDF upload field: อัปโหลดได้สูงสุด 1 ไฟล์ (ทั้งไฟล์เดิม+ไฟล์ใหม่รวมกันแล้วห้ามเกิน) ถ้ามีไฟล์อยู่แล้วต้องลบก่อนถึงจะเพิ่มใหม่ได้
 const PdfUploadField = ({ label, icon, iconColor, inputId, files, setFiles, field, existingValue, onClearExisting }) => {
   const inputRef = useRef(null);
   const selected = files[field]?.[0];
 
   const handleChange = (e) => {
-    setFiles(prev => ({ ...prev, [field]: e.target.files[0] ? [e.target.files[0]] : [] }));
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (existingValue || selected) {
+      Swal.fire({
+        icon: 'info',
+        title: 'มีไฟล์แนบอยู่แล้ว',
+        text: `${label} สามารถแนบได้เพียง 1 ไฟล์เท่านั้น หากต้องการเปลี่ยนไฟล์ กรุณาลบไฟล์เดิมออกก่อน แล้วจึงอัปโหลดไฟล์ใหม่อีกครั้ง`,
+        confirmButtonColor: '#800000',
+      });
+      if (inputRef.current) inputRef.current.value = '';
+      return;
+    }
+
+    setFiles(prev => ({ ...prev, [field]: [file] }));
   };
 
   const removeFile = () => {
@@ -180,8 +194,7 @@ const PdfUploadField = ({ label, icon, iconColor, inputId, files, setFiles, fiel
         <i className={`fas ${icon} me-2`} style={{ color: iconColor }}></i>{label}
       </label>
       {existingValue && (
-        <ExistingPdfChip label={label} icon={icon} iconColor={iconColor}
-          value={existingValue} fieldKey={field} onClear={onClearExisting} />
+        <ExistingPdfChip value={existingValue} fieldKey={field} onClear={onClearExisting} />
       )}
       <input
         ref={inputRef}
@@ -199,7 +212,7 @@ const PdfUploadField = ({ label, icon, iconColor, inputId, files, setFiles, fiel
           </button>
         </div>
       )}
-      <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB)</small>
+      <small className="text-muted">ไฟล์ PDF (ไม่เกิน 50MB) อัปโหลดได้สูงสุด 1 ไฟล์เท่านั้น</small>
     </div>
   );
 };
@@ -329,6 +342,18 @@ export default function ManageTcas() {
     setExistingFiles(prev => ({ ...prev, [fieldKey]: '' }));
   };
 
+  // ลบรูปเดิมออกทีละรูป (ตัดเฉพาะชื่อไฟล์นั้นออกจากรายการ ไม่กระทบรูปอื่นที่เหลือ)
+  const removeExistingFile = (fieldKey, filename) => {
+    setExistingFiles(prev => {
+      const remaining = (prev[fieldKey] || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .filter(n => n !== filename);
+      return { ...prev, [fieldKey]: remaining.join(',') };
+    });
+  };
+
   // ----- กดปุ่ม "บันทึกข้อมูล" ในฟอร์ม เพิ่มใหม่/แก้ไข ทำงานร่วมกันตรงนี้ -----
   // ใช้ FormData เพราะต้องส่งทั้งข้อความและไฟล์ (รูป/PDF) ไปพร้อมกันในคำขอเดียว
   const handleSubmit = async (e) => {
@@ -367,9 +392,13 @@ export default function ManageTcas() {
     if (files['manualPdf']?.[0]) fd.append('manualPdf', files['manualPdf'][0]);
     if (files['announcementPdf']?.[0]) fd.append('announcementPdf', files['announcementPdf'][0]);
 
-    // If editing and user cleared existing files, append empty string so backend keeps old or clears
     if (editId) {
-      ['posterImg', 'scheduleImg', 'majorTableImg', 'manualPdf', 'announcementPdf'].forEach(field => {
+      // ส่งชื่อไฟล์รูปเดิมที่เหลืออยู่ (หลังจากกดกากบาทลบบางรูปออก) ให้ฝั่งเซิร์ฟเวอร์เอาไปต่อกับไฟล์ใหม่ที่อัปโหลดเพิ่ม
+      ['posterImg', 'scheduleImg', 'majorTableImg'].forEach(field => {
+        fd.append(`existing_${field}`, existingFiles[field] || '');
+      });
+      // ไฟล์ PDF ใช้เก็บได้ทีละไฟล์อยู่แล้ว ถ้าล้างของเดิมออกแล้วไม่ได้เลือกใหม่ ให้แจ้งเซิร์ฟเวอร์ว่าล้างจริง
+      ['manualPdf', 'announcementPdf'].forEach(field => {
         if (!existingFiles[field] && !files[field]?.length) {
           fd.append(`_clear_${field}`, '1');
         }
@@ -704,7 +733,7 @@ export default function ManageTcas() {
                     <div className="form-col-4">
                       {editId && existingFiles.scheduleImg && (
                         <ExistingImageChips label="กำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
-                          value={existingFiles.scheduleImg} fieldKey="scheduleImg" onClear={clearExisting} />
+                          value={existingFiles.scheduleImg} fieldKey="scheduleImg" onRemoveOne={removeExistingFile} />
                       )}
                       <ImagePreviewField label="1. รูปภาพกำหนดการรับสมัคร" icon="fa-calendar-alt" iconColor="#f59e0b"
                         inputId="file_schedule" files={files} setFiles={setFiles} field="scheduleImg" />
@@ -712,7 +741,7 @@ export default function ManageTcas() {
                     <div className="form-col-4">
                       {editId && existingFiles.majorTableImg && (
                         <ExistingImageChips label="สาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
-                          value={existingFiles.majorTableImg} fieldKey="majorTableImg" onClear={clearExisting} />
+                          value={existingFiles.majorTableImg} fieldKey="majorTableImg" onRemoveOne={removeExistingFile} />
                       )}
                       <ImagePreviewField label="2. รูปภาพสาขาวิชาที่เปิดรับ" icon="fa-list-ul" iconColor="#06b6d4"
                         inputId="file_majors" files={files} setFiles={setFiles} field="majorTableImg" />
@@ -720,10 +749,11 @@ export default function ManageTcas() {
                     <div className="form-col-4">
                       {editId && existingFiles.posterImg && (
                         <ExistingImageChips label="โปสเตอร์ประชาสัมพันธ์" icon="fa-image" iconColor="#22c55e"
-                          value={existingFiles.posterImg} fieldKey="posterImg" onClear={clearExisting} />
+                          value={existingFiles.posterImg} fieldKey="posterImg" onRemoveOne={removeExistingFile} />
                       )}
                       <ImagePreviewField label="3. รูปภาพโปสเตอร์ประชาสัมพันธ์ (สูงสุด 5 รูป)" icon="fa-image" iconColor="#22c55e"
-                        inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" maxFiles={5} />
+                        inputId="file_poster" files={files} setFiles={setFiles} field="posterImg" maxFiles={5}
+                        existingCount={editId ? (existingFiles.posterImg ? existingFiles.posterImg.split(',').filter(Boolean).length : 0) : 0} />
                     </div>
 
                     <div className="form-col-6">

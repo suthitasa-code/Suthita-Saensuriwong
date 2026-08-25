@@ -8,6 +8,19 @@ const combineFileNames = (filesArray) => {
   return filesArray.map(file => file.filename).join(',');
 };
 
+// รวมรายชื่อไฟล์รูปเดิมที่เหลืออยู่ (ส่งมาจากฟอร์มแก้ไข หลังผู้ใช้กดกากบาทลบบางรูปออก)
+// เข้ากับไฟล์ใหม่ที่เพิ่งอัปโหลดเพิ่ม แทนที่จะทับของเดิมทั้งหมดทุกครั้งที่มีไฟล์ใหม่
+const mergeImageField = (existingCsv, newFilesArray, oldValue) => {
+  if (existingCsv === undefined) {
+    // ฟอร์มเก่าที่ไม่ได้ส่ง existing_<field> มาด้วย -> ใช้พฤติกรรมเดิม (ไฟล์ใหม่ทับของเก่าทั้งหมด)
+    return newFilesArray ? combineFileNames(newFilesArray) : oldValue;
+  }
+  const kept = existingCsv.split(',').map(name => name.trim()).filter(Boolean);
+  const added = (newFilesArray || []).map(file => file.filename);
+  const combined = [...kept, ...added];
+  return combined.length > 0 ? combined.join(',') : null;
+};
+
 // 1. ฟังก์ชันสร้างประกาศใหม่ (Create)
 exports.create = (req, res) => {
   const files = req.files || {};
@@ -64,9 +77,9 @@ exports.update = (req, res) => {
 
     const announcementData = {
       ...req.body,
-      posterImg: files['posterImg'] ? combineFileNames(files['posterImg']) : oldData.posterImg,
-      scheduleImg: files['scheduleImg'] ? combineFileNames(files['scheduleImg']) : oldData.scheduleImg,
-      majorTableImg: files['majorTableImg'] ? combineFileNames(files['majorTableImg']) : oldData.majorTableImg,
+      posterImg: mergeImageField(req.body.existing_posterImg, files['posterImg'], oldData.posterImg),
+      scheduleImg: mergeImageField(req.body.existing_scheduleImg, files['scheduleImg'], oldData.scheduleImg),
+      majorTableImg: mergeImageField(req.body.existing_majorTableImg, files['majorTableImg'], oldData.majorTableImg),
       manualPdf: files['manualPdf'] ? files['manualPdf'][0].filename : oldData.manualPdf,
       announcementPdf: files['announcementPdf'] ? files['announcementPdf'][0].filename : oldData.announcementPdf
     };
