@@ -36,16 +36,41 @@ const ImagePreviewField = ({ label, icon, iconColor, inputId, files, setFiles, f
   const previews = files[field] || [];
 
   const handleChange = (e) => {
-    let chosen = Array.from(e.target.files);
-    if (maxFiles && chosen.length > maxFiles) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'เลือกรูปเกินจำนวนที่กำหนด',
-        text: `เลือกได้สูงสุด ${maxFiles} รูป ระบบจะเก็บไว้ให้เฉพาะ ${maxFiles} รูปแรกเท่านั้น`,
-        confirmButtonColor: '#800000',
-      });
-      chosen = chosen.slice(0, maxFiles);
+    const chosen = Array.from(e.target.files);
+    if (!chosen.length) return;
+
+    if (maxFiles) {
+      // เลือกรูปเพิ่มแบบสะสม (ไม่ทับของเดิม) กันจำนวนรวมไม่ให้เกิน maxFiles
+      const existingCount = previews.length;
+
+      if (existingCount >= maxFiles) {
+        Swal.fire({
+          icon: 'info',
+          title: 'รูปภาพโปสเตอร์ครบจำนวนสูงสุดแล้ว',
+          text: `ขณะนี้มีรูปภาพโปสเตอร์ประชาสัมพันธ์ครบ ${maxFiles} รูปแล้ว หากประสงค์จะเพิ่มรูปภาพใหม่ กรุณาลบรูปภาพที่ไม่ต้องการออกก่อน แล้วจึงอัปโหลดรูปภาพใหม่อีกครั้ง`,
+          confirmButtonColor: '#800000',
+        });
+        if (inputRef.current) inputRef.current.value = '';
+        return;
+      }
+
+      const remainingSlots = maxFiles - existingCount;
+      let accepted = chosen;
+      if (chosen.length > remainingSlots) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'จำนวนรูปภาพเกินที่กำหนด',
+          text: `สามารถอัปโหลดรูปภาพโปสเตอร์ประชาสัมพันธ์ได้สูงสุด ${maxFiles} รูปเท่านั้น ระบบจะจัดเก็บรูปภาพที่เลือกไว้ให้เท่าที่มีจำนวนคงเหลือ`,
+          confirmButtonColor: '#800000',
+        });
+        accepted = chosen.slice(0, remainingSlots);
+      }
+
+      setFiles(prev => ({ ...prev, [field]: [...(prev[field] || []), ...accepted] }));
+      if (inputRef.current) inputRef.current.value = '';
+      return;
     }
+
     setFiles(prev => ({ ...prev, [field]: chosen }));
   };
 
