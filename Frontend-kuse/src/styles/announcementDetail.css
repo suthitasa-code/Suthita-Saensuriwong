@@ -255,6 +255,11 @@
   color: white;
 }
 
+.ad-subnav-inner a.ad-subnav-active {
+  background: var(--maroon);
+  color: white;
+}
+
 /* ===== Content sections ===== */
 .ad-content-padding {
   padding: 40px 40px 45px;

@@ -44,6 +44,7 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [shopLightboxOpen, setShopLightboxOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -157,13 +158,13 @@ const CourseDetail = () => {
 
       <nav className="course-subnav">
         <div className="container course-subnav-inner">
-          {course.highlights && <a href="#highlights">จุดเด่น</a>}
-          {whatWeLearnItems.length > 0 && <a href="#learn">เราเรียนอะไร</a>}
-          {insideItems.length > 0 && <a href="#inside">INSIDE</a>}
-          {hasCareerSection && <a href="#career">เส้นทางอาชีพ</a>}
-          {shopUrl && <a href="#shop">เสื้อช็อป</a>}
-          {pdfList.length > 0 && <a href="#docs">เอกสารหลักสูตร</a>}
-          {socialLinks.length > 0 && <a href="#follow">ติดตามหลักสูตร</a>}
+          {course.highlights && <a href="#highlights" className={activeTab === 'highlights' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('highlights')}>จุดเด่น</a>}
+          {whatWeLearnItems.length > 0 && <a href="#learn" className={activeTab === 'learn' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('learn')}>เราเรียนอะไร</a>}
+          {insideItems.length > 0 && <a href="#inside" className={activeTab === 'inside' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('inside')}>INSIDE</a>}
+          {hasCareerSection && <a href="#career" className={activeTab === 'career' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('career')}>เส้นทางอาชีพ</a>}
+          {shopUrl && <a href="#shop" className={activeTab === 'shop' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('shop')}>เสื้อช็อป</a>}
+          {pdfList.length > 0 && <a href="#docs" className={activeTab === 'docs' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('docs')}>เอกสารหลักสูตร</a>}
+          {socialLinks.length > 0 && <a href="#follow" className={activeTab === 'follow' ? 'course-subnav-active' : ''} onClick={() => setActiveTab('follow')}>ติดตามหลักสูตร</a>}
         </div>
       </nav>
 

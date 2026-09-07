@@ -47,6 +47,7 @@ const AnnouncementDetail = () => {
   const [posterIndex, setPosterIndex] = useState(0);
   const [posterPaused, setPosterPaused] = useState(false);
   const [lightbox, setLightbox] = useState(null); // { url, downloadName } | null
+  const [activeTab, setActiveTab] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -186,13 +187,13 @@ const AnnouncementDetail = () => {
 
       <nav className="ad-subnav">
         <div className="ad-subnav-inner">
-          {posterList.length > 0 && <a href="#poster">โปสเตอร์</a>}
-          {item.candidateDetail && <a href="#candidate">คุณสมบัติผู้สมัคร</a>}
-          {item.conditions && <a href="#conditions">เงื่อนไขการสมัคร</a>}
-          {scheduleList.length > 0 && <a href="#schedule">กำหนดการ</a>}
-          {majorList.length > 0 && <a href="#majors">สาขาที่เปิดรับ</a>}
-          {item.notes && <a href="#notes">หมายเหตุ</a>}
-          <a href="#downloads">เอกสารดาวน์โหลด</a>
+          {posterList.length > 0 && <a href="#poster" className={activeTab === 'poster' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('poster')}>โปสเตอร์</a>}
+          {item.candidateDetail && <a href="#candidate" className={activeTab === 'candidate' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('candidate')}>คุณสมบัติผู้สมัคร</a>}
+          {item.conditions && <a href="#conditions" className={activeTab === 'conditions' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('conditions')}>เงื่อนไขการสมัคร</a>}
+          {scheduleList.length > 0 && <a href="#schedule" className={activeTab === 'schedule' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('schedule')}>กำหนดการ</a>}
+          {majorList.length > 0 && <a href="#majors" className={activeTab === 'majors' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('majors')}>สาขาที่เปิดรับ</a>}
+          {item.notes && <a href="#notes" className={activeTab === 'notes' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('notes')}>หมายเหตุ</a>}
+          <a href="#downloads" className={activeTab === 'downloads' ? 'ad-subnav-active' : ''} onClick={() => setActiveTab('downloads')}>เอกสารดาวน์โหลด</a>
         </div>
       </nav>
 
