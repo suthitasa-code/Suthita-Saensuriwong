@@ -126,10 +126,31 @@ const ManageAdmin = () => {
             return;
         }
 
+        // เพิ่มแอดมินใหม่ (ไม่ใช่โหมดแก้ไข) ต้องขอยืนยันจาก Super Admin ก่อนบันทึกจริง
+        if (!isEditMode) {
+            const result = await Swal.fire({
+                title: 'ยืนยันการเพิ่มผู้ดูแลระบบ?',
+                text: `ต้องการเพิ่ม ${formData.name} ${formData.lastname} เป็นผู้ดูแลระบบใหม่ใช่หรือไม่`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ตกลง',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-success px-4 rounded-pill mx-2 shadow',
+                    cancelButton: 'btn btn-light px-4 rounded-pill mx-2',
+                    popup: 'kuse-swal-popup',
+                    title: 'kuse-swal-title'
+                },
+                buttonsStyling: false
+            });
+            if (!result.isConfirmed) return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const payload = { ...formData };
-            
+
             delete payload.confirmPassword;
             if (isEditMode && !allowEditPass) {
                 delete payload.password;
