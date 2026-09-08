@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import '../../styles/login.css';
 import { useNavigate } from 'react-router-dom'; // 👑 นำเข้า useNavigate เพื่อใช้เปลี่ยนหน้าแทน window.location.href
 import axios from 'axios'; // 👑 นำเข้า axios เพื่อยิงหาหลังบ้าน

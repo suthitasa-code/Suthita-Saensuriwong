@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import '../../styles/managecourse.css';
 import CourseViewModal from '../../components/CourseViewModal';
 import { API_BASE, API_URL, fileUrl, degreeSlug } from '../../utils/courseHelpers';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import axios from 'axios';
 import '../../styles/manageLookups.css';
 

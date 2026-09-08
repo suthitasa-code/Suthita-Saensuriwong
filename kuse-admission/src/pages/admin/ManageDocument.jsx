@@ -1,6 +1,6 @@
 // --- src/pages/admin/ManageDocument.jsx ---
 import { useState, useEffect, useRef } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import '../../styles/manageDocument.css';
 
 const API_BASE_URL = 'http://localhost:5000/api/document';

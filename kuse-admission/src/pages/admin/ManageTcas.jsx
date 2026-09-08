@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import '../../styles/manageTcas.css';
 import AnnouncementViewModal from '../../components/AnnouncementViewModal';
 import { API_BASE, UPLOAD_URL, DEFAULT_APPLY_LINK, getLabelStatus, statusBadge, openImageLightbox } from '../../utils/tcasHelpers';

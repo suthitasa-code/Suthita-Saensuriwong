@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import Swal from '../utils/swal';
 
 // 🌟 หัวข้อของแต่ละหน้า จะเปลี่ยนตาม path ที่กำลังใช้งานอยู่
 const PAGE_HEADERS = {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../utils/swal';
 import '../styles/manageBanner.css';
 
 // 🌟 กล่องจัดการแบนเนอร์แบบใช้ซ้ำได้ — ควบคุมด้วย pageTarget ว่าเป็นแบนเนอร์ของหน้าไหน

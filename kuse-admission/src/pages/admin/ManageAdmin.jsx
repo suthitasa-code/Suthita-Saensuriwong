@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import Swal from '../../utils/swal';
 import Chart from 'react-apexcharts';
 import '../../styles/manage-admin.css';
 import axios from 'axios';
