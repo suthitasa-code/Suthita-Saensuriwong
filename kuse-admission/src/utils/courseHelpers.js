@@ -4,7 +4,9 @@
 // แยกออกมาไว้ที่นี่ที่เดียว กันโค้ดซ้ำ 2 ที่ (แพทเทิร์นเดียวกับ tcasHelpers.js)
 // ================================================================
 
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+import { API_BASE } from '../config/api';
+
+export { API_BASE };
 export const API_URL = `${API_BASE}/api/curriculum`;
 export const UPLOAD_URL = `${API_BASE}/uploads`;
 

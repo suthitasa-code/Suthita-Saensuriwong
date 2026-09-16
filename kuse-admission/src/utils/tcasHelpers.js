@@ -1,4 +1,5 @@
 import Swal from './swal';
+import { API_BASE } from '../config/api';
 
 // ================================================================
 // รวมฟังก์ชัน/ค่าคงที่ที่ใช้ร่วมกันระหว่างหน้า "จัดการประกาศรับสมัคร"
@@ -6,7 +7,7 @@ import Swal from './swal';
 // แยกออกมาไว้ที่นี่ที่เดียว กันโค้ดซ้ำ 2 ที่
 // ================================================================
 
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+export { API_BASE };
 export const UPLOAD_URL = `${API_BASE}/uploads/announcements`;
 
 // ลิงก์ปุ่ม "สมัครออนไลน์" ที่ใช้เป็นค่าเริ่มต้นเมื่อประกาศนั้นไม่ได้ตั้ง applyLink ไว้เอง

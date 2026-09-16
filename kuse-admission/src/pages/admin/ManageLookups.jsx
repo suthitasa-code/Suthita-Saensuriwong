@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Swal from '../../utils/swal';
 import axios from 'axios';
+import { API_BASE } from '../../config/api';
 import '../../styles/manageLookups.css';
 
 // ================================================================
@@ -9,7 +10,6 @@ import '../../styles/manageLookups.css';
 // โดยไม่ต้องแก้โค้ดแล้ว deploy ใหม่ทุกครั้งที่มีรอบ/ระดับ/ประเภทใหม่เพิ่มมา
 // ================================================================
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 // แท็บหมวดที่จัดการได้ ต้องตรงกับค่า category ที่ backend รู้จัก (lookup.repository.js -> CATEGORIES)
 // namePlaceholder ตั้งใจให้ต่างกันแต่ละหมวด กันคนพิมพ์ตัวอย่างของหมวดอื่นมาใส่ผิดที่

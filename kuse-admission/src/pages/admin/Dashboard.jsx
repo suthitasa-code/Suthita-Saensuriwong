@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Chart from 'react-apexcharts';
 import '../../styles/dashboard.css';
+import { API_BASE } from '../../config/api';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 const FONT_FAMILY = "'IBM Plex Sans Thai', 'Anuphan', sans-serif";
 
 const ENDPOINTS = {

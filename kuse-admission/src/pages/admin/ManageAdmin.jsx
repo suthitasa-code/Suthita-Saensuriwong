@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import '../../styles/manage-admin.css';
 import axios from 'axios';
 import AdminViewModal from '../../components/AdminViewModal';
+import { API_BASE } from '../../config/api';
 
 // ================================================================
 // หน้านี้คือ "จัดการบัญชีผู้ดูแลระบบ" เฉพาะ Super Admin เท่านั้นที่เข้าได้
@@ -42,7 +43,7 @@ const ManageAdmin = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/admins', {
+            const response = await axios.get(`${API_BASE}/api/admins`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data && response.data.data) {
@@ -157,12 +158,12 @@ const ManageAdmin = () => {
             }
 
             if (isEditMode) {
-                await axios.put(`http://localhost:5000/api/admins/${editId}`, payload, {
+                await axios.put(`${API_BASE}/api/admins/${editId}`, payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 Swal.fire({ icon: 'success', title: 'อัปเดตข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
             } else {
-                await axios.post('http://localhost:5000/api/admins', payload, {
+                await axios.post(`${API_BASE}/api/admins`, payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 Swal.fire({ icon: 'success', title: 'เพิ่มผู้ดูแลระบบสำเร็จ', timer: 1500, showConfirmButton: false });
@@ -186,7 +187,7 @@ const ManageAdmin = () => {
     const handleViewPassword = async (admin) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:5000/api/admins/${admin.adminID}/password`, {
+            const response = await axios.get(`${API_BASE}/api/admins/${admin.adminID}/password`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const password = response.data.data.password;
@@ -213,7 +214,7 @@ const ManageAdmin = () => {
     const handleViewAllPasswords = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/admins/passwords', {
+            const response = await axios.get(`${API_BASE}/api/admins/passwords`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const list = response.data.data;
@@ -284,7 +285,7 @@ const ManageAdmin = () => {
                         role: admin.role,
                         status: 0
                     };
-                    await axios.put(`http://localhost:5000/api/admins/${admin.adminID}`, payload, {
+                    await axios.put(`${API_BASE}/api/admins/${admin.adminID}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     Swal.fire({ icon: 'success', title: 'ระงับสิทธิ์เรียบร้อยแล้ว', confirmButtonColor: '#800000' });
@@ -328,7 +329,7 @@ const ManageAdmin = () => {
                         status: 1
                     };
 
-                    await axios.put(`http://localhost:5000/api/admins/${admin.adminID}`, payload, {
+                    await axios.put(`${API_BASE}/api/admins/${admin.adminID}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
 

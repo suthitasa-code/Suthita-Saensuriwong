@@ -1,10 +1,11 @@
 // --- src/pages/admin/ManageDocument.jsx ---
 import { useState, useEffect, useRef } from 'react';
 import Swal from '../../utils/swal';
+import { API_BASE } from '../../config/api';
 import '../../styles/manageDocument.css';
 
-const API_BASE_URL = 'http://localhost:5000/api/document';
-const DOWNLOAD_BASE_URL = 'http://localhost:5000/uploads/documents'; 
+const API_BASE_URL = `${API_BASE}/api/document`;
+const DOWNLOAD_BASE_URL = `${API_BASE}/uploads/documents`;
 
 const ManageDocument = () => {
     const [documents, setDocuments] = useState([]);

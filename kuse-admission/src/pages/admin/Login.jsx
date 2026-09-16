@@ -3,6 +3,7 @@ import Swal from '../../utils/swal';
 import '../../styles/login.css';
 import { useNavigate } from 'react-router-dom'; // 👑 นำเข้า useNavigate เพื่อใช้เปลี่ยนหน้าแทน window.location.href
 import axios from 'axios'; // 👑 นำเข้า axios เพื่อยิงหาหลังบ้าน
+import { API_BASE } from '../../config/api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ const Login = () => {
         try {
             // 👑 ยิงอีเมล+รหัสผ่านไปให้ backend เช็คเองทั้งหมด (ไม่ผ่าน Firebase แล้ว)
             // backend จะเทียบรหัสผ่านกับ hash ที่เก็บไว้ใน MySQL แล้วออก token (JWT) กลับมาให้ถ้าถูกต้อง
-            const response = await axios.post('http://localhost:5000/api/admins/login', {
+            const response = await axios.post(`${API_BASE}/api/admins/login`, {
                 email,
                 password
             });
