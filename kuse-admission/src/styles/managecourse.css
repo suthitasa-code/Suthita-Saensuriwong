@@ -488,6 +488,12 @@
   gap: 8px;
 }
 
+@media (max-width: 480px) {
+  .icon-group-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .icon-opt {
   position: relative;
   aspect-ratio: 1/1;
