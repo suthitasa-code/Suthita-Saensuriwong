@@ -33,7 +33,7 @@ const Login = () => {
         });
 
         try {
-            // 👑 ยิงอีเมล+รหัสผ่านไปให้ backend เช็คเองทั้งหมด (ไม่ผ่าน Firebase แล้ว)
+            // 👑 ยิงอีเมล+รหัสผ่านไปให้ backend เช็คเองทั้งหมด 
             // backend จะเทียบรหัสผ่านกับ hash ที่เก็บไว้ใน MySQL แล้วออก token (JWT) กลับมาให้ถ้าถูกต้อง
             const response = await axios.post(`${API_BASE}/api/admins/login`, {
                 email,

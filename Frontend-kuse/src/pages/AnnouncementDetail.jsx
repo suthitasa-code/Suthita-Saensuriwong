@@ -4,7 +4,6 @@ import { API_BASE, ENDPOINTS, unwrap, fileUrl } from '../config/api';
 import { getLabelStatus, statusBadgeClass, formatDateTh } from '../utils/announcementStatus';
 import '../styles/announcementDetail.css';
 
-// posterImg/scheduleImg/majorTableImg เก็บเป็นชื่อไฟล์คั่นด้วยจุลภาคถ้ามีหลายไฟล์
 const parseFileList = (val) =>
   (val || '').split(',').map((s) => s.trim()).filter(Boolean);
 
@@ -82,7 +81,7 @@ const AnnouncementDetail = () => {
   const scheduleList = useMemo(() => parseFileList(item?.scheduleImg), [item]);
   const majorList = useMemo(() => parseFileList(item?.majorTableImg), [item]);
 
-  // โปสเตอร์เลื่อนเองได้ด้วย แต่หยุดชั่วคราวเวลาเอาเมาส์ไปวางเพื่อกดดูรูป/ดาวน์โหลด
+  // โปสเตอร์เลื่อนเองได้ แต่หยุดชั่วคราวเวลาเอาเมาส์ไปวางเพื่อกดดูรูป/ดาวน์โหลด
   useEffect(() => {
     if (posterList.length <= 1 || posterPaused) return undefined;
     const timer = setInterval(() => {

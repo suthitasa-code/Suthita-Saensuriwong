@@ -4,7 +4,7 @@ import { API_BASE, ENDPOINTS, unwrap, fileUrl } from '../config/api';
 import CURRICULUM_SOCIAL_LINKS from '../config/curriculumSocialLinks';
 import '../styles/courseDetail.css';
 
-// แตกข้อความหลายบรรทัดในฟอร์มแอดมิน (กด Enter คั่นแต่ละหัวข้อ) ให้เป็นรายการ
+// (กด Enter คั่นแต่ละหัวข้อ) ให้เป็นรายการ
 // ถ้าแอดมินพิมพ์รวดเดียวไม่ขึ้นบรรทัดใหม่ ก็จะได้รายการเดียว แสดงเป็นย่อหน้าปกติ
 const splitLines = (text) =>
   (text || '')
@@ -12,15 +12,11 @@ const splitLines = (text) =>
     .map((s) => s.trim())
     .filter(Boolean);
 
-// ชื่อไฟล์ที่อัปโหลดจะอยู่ในรูปแบบ pdfFiles-<timestamp>-<random>.pdf เราดึงเวลาที่แนบมา
-// ในชื่อไฟล์ออกมาเทียบหาไฟล์ที่อัปโหลดล่าสุดให้เอง (ใช้แค่จัดลำดับ/ติดป้าย ไม่โชว์วันที่)
 const parsePdfTimestamp = (filename) => {
   const match = (filename || '').match(/-(\d{10,})-/);
   return match ? Number(match[1]) : null;
 };
 
-// ดาวน์โหลดไฟล์ข้ามโดเมน (frontend / API คนละพอร์ตกัน) ต้องดึงมาเป็น blob ก่อน
-// เพราะ attribute download เฉยๆ ใช้ไม่ได้กับลิงก์ข้ามโดเมน เบราว์เซอร์จะเปิดไฟล์แทนการดาวน์โหลด
 const downloadFile = async (url, filename) => {
   try {
     const res = await fetch(url);
@@ -87,7 +83,7 @@ const CourseDetail = () => {
       .map((f) => ({ ...f, isLatest: withMeta.length > 1 && f.timestamp === latestTimestamp && f.timestamp !== null }));
   }, [course]);
 
-  // เอฟเฟกต์ fade-in ทีละส่วนตอนเลื่อนจอลงมาเจอ (สังเกตด้วย IntersectionObserver)
+  // เอฟเฟกต์ fade-in ทีละส่วนตอนเลื่อนจอลงมาเจอ 
   useEffect(() => {
     if (!course) return undefined;
     const els = document.querySelectorAll('.reveal-on-scroll');

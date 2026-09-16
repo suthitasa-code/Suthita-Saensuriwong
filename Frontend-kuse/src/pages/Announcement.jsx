@@ -33,7 +33,7 @@ const Announcement = () => {
   const filters = useAnnouncementFilters(announcements);
   const { filteredAnnouncements, yearOptions, isFiltering } = filters;
 
-  // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด (ไม่ใช่ผลที่ถูกกรองแล้ว) เพื่อให้ป้าย "ล่าสุด" คงที่เสมอ
+  // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด  เพื่อให้ป้าย "ล่าสุด" 
   const latestYear = yearOptions[0];
 
   // จัดกลุ่มประกาศตามปีการศึกษา เรียงปีล่าสุดขึ้นก่อน แล้วเรียงรอบ TCAS จากรอบล่าสุดไปเก่าสุด (4 -> 3 -> 2 -> 1)
