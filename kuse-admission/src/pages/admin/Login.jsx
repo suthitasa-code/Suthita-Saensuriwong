@@ -41,7 +41,7 @@ const Login = () => {
             });
 
             if (response.data.success) {
-                const { token, admin: adminData } = response.data.data; // { token, admin: { adminID, name, lastname, role, ... } }
+                const { token, admin: adminData } = response.data.data; 
 
                 // เก็บ token + ข้อมูลแอดมินไว้ใช้งานต่อทั้งระบบ (ยิง API อื่นก็แนบ token ตัวนี้ไปด้วยทุกครั้ง)
                 localStorage.setItem('token', token);
