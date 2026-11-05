@@ -16,7 +16,7 @@ router.get("/passwords", verifyToken, requireSuperAdmin, adminController.revealA
 router.get("/", verifyToken, adminController.getAllAdmins);
 router.get("/:id", verifyToken, adminController.getAdminById);
 router.post("/", verifyToken, adminController.createAdmin);
-router.put("/:id", verifyToken, adminController.updateAdmin);
+router.put("/:id", verifyToken, requireSuperAdmin, adminController.updateAdmin);
 router.delete("/:id", verifyToken, adminController.deleteAdmin);
 
 // ดูรหัสผ่านจริงของแอดมินคนไหนก็ได้ -> ต้องล็อกอินอยู่ (verifyToken) และต้องเป็น Super Admin เท่านั้น (requireSuperAdmin)

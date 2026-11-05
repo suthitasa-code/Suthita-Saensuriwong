@@ -22,10 +22,8 @@ const emptySummary = {
   admins: [],
 };
 
-// รองรับทั้งรูปแบบ response ที่ห่อด้วย { success, data } และแบบส่ง array ตรงๆ
 const unwrap = (json) => (Array.isArray(json) ? json : json?.data ?? []);
 
-// เกณฑ์ตัดสินสถานะประกาศ ใช้ตรรกะเดียวกับหน้า "จัดการประกาศรับสมัคร" เพื่อให้ตัวเลขตรงกันทุกหน้า
 const getLabelStatus = (item) => {
   if (item.labelStatus) return item.labelStatus;
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -297,24 +295,6 @@ const Dashboard = () => {
     { name: 'ปิดรับแล้ว', data: yearBreakdown.closed },
   ];
 
-  const contentBarOptions = {
-    chart: { type: 'bar', toolbar: { show: false }, fontFamily: FONT_FAMILY },
-    plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '42%', distributed: true } },
-    xaxis: {
-      categories: ['หลักสูตร', 'เอกสาร', 'แบนเนอร์หน้าแรก', 'แบนเนอร์หลักสูตร', 'แอดมิน'],
-      labels: { style: { fontSize: '11px', colors: '#9aa0a6' } },
-    },
-    colors: ['#800000', '#0891b2', '#7c3aed', '#d9480f', '#1a1a2e'],
-    dataLabels: { enabled: true, style: { fontSize: '11px', fontWeight: 700, colors: ['#fff'] } },
-    legend: { show: false },
-    grid: { borderColor: '#f1f1f4', strokeDashArray: 4 },
-    tooltip: { y: { formatter: (val) => `${val} รายการ` } },
-  };
-  const contentBarSeries = [{
-    name: 'จำนวน',
-    data: [curriculums.length, documents.length, homeBannerCount, curriculumBannerCount, activeAdminCount],
-  }];
-
   if (loading) {
     return (
       <div className="dashboard-loading-state">
@@ -403,13 +383,6 @@ const Dashboard = () => {
           <StatCard iconClass="ic-9" icon="fa-panorama" number={padNum(curriculumBannerCount)} label="แบนเนอร์หลักสูตร" delay={150} />
           <StatCard iconClass="ic-8" icon="fa-user-shield" number={padNum(activeAdminCount)} label="ผู้ดูแลระบบ" delay={180} />
         </div>
-        <ChartCard
-          title="ภาพรวมข้อมูลในระบบ"
-          icon="fa-chart-simple"
-          className="content-bar-card"
-        >
-          <Chart options={contentBarOptions} series={contentBarSeries} type="bar" height={220} />
-        </ChartCard>
       </div>
 
       {/* ===== แถวที่ 4: รายการล่าสุด ===== */}

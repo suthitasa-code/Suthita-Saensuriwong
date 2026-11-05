@@ -10,20 +10,16 @@ const DOWNLOAD_BASE_URL = `${API_BASE}/uploads/documents`;
 const ManageDocument = () => {
     const [documents, setDocuments] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const fileInputRef = useRef(null);
-
-    // Form State 
+    const fileInputRef = useRef(null); 
     const [selectedDocId, setSelectedDocId] = useState(null);
     const [editFile, setEditFile] = useState(null);
     const [uploadCategory, setUploadCategory] = useState('COURSE'); 
     const [editCategory, setEditCategory] = useState('OTHER'); 
-
-    // 🔍 🛠️ State สำหรับระบบค้นหาและตัวกรอง (Filters)
     const [activeTab, setActiveTab] = useState('ALL'); 
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedExtension, setSelectedExtension] = useState('ALL'); 
 
-    // 🔄 ดึงไฟล์เอกสารจาก Database
+    
     const fetchDocuments = async () => {
         try {
             const response = await fetch(API_BASE_URL);
@@ -53,7 +49,6 @@ const ManageDocument = () => {
         }
     };
 
-    // 🎯 Logic การกรองข้อมูล - เปลี่ยนไปค้นหาจากฟิลด์ชื่อไทย (originalFileName) ทำให้แอดมินพิมพ์หาภาษาไทยได้เลย!
     const filteredDocuments = documents.filter((doc) => {
         const matchesTab = activeTab === 'ALL' || doc.fileCategory === activeTab;
         

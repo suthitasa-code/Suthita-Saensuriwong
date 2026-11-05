@@ -37,11 +37,13 @@ async function getAdminById(id) {
 }
 
 // ค้นหา Admin ด้วย Email สำหรับเช็กสิทธิ์ระบบหลังบ้าน
-async function getAdminByEmail(email) {
+// login ต้องค้นหาบัญชีที่ถูกระงับได้ด้วย เพื่อส่งข้อความแจ้งเตือนที่ถูกต้อง
+async function getAdminByEmail(email, includeSuspended = false) {
+  const statusCondition = includeSuspended ? "" : "AND status = 1";
   const sql = `
     SELECT ${adminSelectFields}
     FROM admin
-    WHERE email = ? AND status = 1
+    WHERE email = ? ${statusCondition}
     LIMIT 1
   `;
 

@@ -1,6 +1,4 @@
 import '../styles/announcement.css';
-
-// การ์ดค้นหา+กรองข้อมูลประกาศ (ตัว UI ล้วนๆ ส่วนตรรกะกรองอยู่ใน useAnnouncementFilters)
 const AnnouncementFilterCard = ({
   searchQuery, setSearchQuery,
   yearFilter, setYearFilter,

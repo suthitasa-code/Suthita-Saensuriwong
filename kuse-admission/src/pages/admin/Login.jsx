@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import Swal from '../../utils/swal';
 import '../../styles/login.css';
-import { useNavigate } from 'react-router-dom'; // 👑 นำเข้า useNavigate เพื่อใช้เปลี่ยนหน้าแทน window.location.href
-import axios from 'axios'; // 👑 นำเข้า axios เพื่อยิงหาหลังบ้าน
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios'; 
 import { API_BASE } from '../../config/api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate(); // 👑 เรียกใช้งานฟังก์ชันนำทางของ React Router
+    const navigate = useNavigate(); 
 
     const handleForgotPassword = (e) => {
         e.preventDefault();
@@ -48,7 +48,7 @@ const Login = () => {
                 localStorage.setItem('admin_id', adminData.adminID);
                 localStorage.setItem('admin_name', adminData.name);
                 localStorage.setItem('admin_lastname', adminData.lastname);
-                localStorage.setItem('admin_role', adminData.role); // เก็บค่าสิทธิ์จริงจาก DB เช่น 'Super Admin' หรือ 'Admin'
+                localStorage.setItem('admin_role', adminData.role); 
 
                 Swal.fire({
                     icon: 'success',

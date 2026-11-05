@@ -14,17 +14,13 @@ const PublicLayout = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  // หน้ารายละเอียด (เช่น /curriculum/CS หรือ /announcement/12) ให้เมนู "หลักสูตร"/"ประกาศรับสมัคร" ยัง active อยู่ด้วย
   const isActive = (path) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
-  // ปิดเมนูมือถืออัตโนมัติทุกครั้งที่เปลี่ยนหน้า
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  // เลื่อนจอลงเกินนิดหน่อยแล้วให้นาวบาร์หดเล็กลง + เงาเข้มขึ้น ดูมีมิติตอนสกอลล์
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();

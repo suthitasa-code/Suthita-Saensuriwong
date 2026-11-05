@@ -30,7 +30,6 @@ const statusLabelIcon = {
   ปิดรับแล้ว: 'fa-lock',
 };
 
-// รูปที่คลิกได้ทุกรูปในหน้านี้ (โปสเตอร์/กำหนดการ/สาขาที่เปิดรับ) ใช้ปุ่มซูม+ดาวน์โหลดชุดเดียวกัน
 const ClickableImage = ({ src, alt, onZoom, className, style }) => (
   <button type="button" className={`ad-clickable-img ${className || ''}`} style={style} onClick={onZoom} title="คลิกเพื่อดูรูปขนาดเต็ม">
     <img src={src} alt={alt} />
@@ -81,7 +80,6 @@ const AnnouncementDetail = () => {
   const scheduleList = useMemo(() => parseFileList(item?.scheduleImg), [item]);
   const majorList = useMemo(() => parseFileList(item?.majorTableImg), [item]);
 
-  // โปสเตอร์เลื่อนเองได้ แต่หยุดชั่วคราวเวลาเอาเมาส์ไปวางเพื่อกดดูรูป/ดาวน์โหลด
   useEffect(() => {
     if (posterList.length <= 1 || posterPaused) return undefined;
     const timer = setInterval(() => {
@@ -132,7 +130,7 @@ const AnnouncementDetail = () => {
   const label = getLabelStatus(item);
   const posterUrl = (name) => fileUrl(`announcements/${name}`);
   // แต่ละประกาศกำหนดลิงก์สมัครออนไลน์ของตัวเองได้ (เช่น รอบที่ใช้ mytcas.com แทนระบบของ ม.เกษตรฯ)
-  // ถ้าไม่ได้ตั้งไว้ (ส่วนใหญ่) ใช้ลิงก์เริ่มต้นของระบบรับสมัคร ม.เกษตรฯ
+  // ถ้าไม่ได้ตั้งไว้ ใช้ลิงก์เริ่มต้นของระบบรับสมัคร ม.เกษตรฯ
   const applyUrl = item.applyLink || 'https://misreg.csc.ku.ac.th/admission/';
 
   return (

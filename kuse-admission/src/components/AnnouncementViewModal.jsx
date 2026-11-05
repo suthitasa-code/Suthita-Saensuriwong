@@ -1,26 +1,17 @@
 import { UPLOAD_URL, DEFAULT_APPLY_LINK, getLabelStatus, statusBadge, openImageLightbox } from '../utils/tcasHelpers';
 import '../styles/announcementView.css';
 
-// ================================================================
-// Modal "ดูรายละเอียดประกาศ" — โหมดดูอย่างเดียว ไม่มีฟอร์มให้แก้ไข
-// แยกออกมาจาก ManageTcas.jsx เพราะฟอร์มเพิ่ม/แก้ไขในไฟล์นั้นยาวอยู่แล้ว
-// ถ้าอัดโค้ดดูรายละเอียดเข้าไปอีกจะยิ่งอ่านยาก แยกไฟล์ไว้จัดการง่ายกว่า
-// ================================================================
 
 const formatDate = (d) => d
   ? new Date(d).toLocaleDateString('th-TH', { day: '2-digit', month: 'long', year: 'numeric' })
   : '-';
 
-// ใช้กับ createdAt/updatedAt ที่เป็น datetime เต็ม (โชว์ทั้งวันที่และเวลา)
 const formatDateTime = (d) => d
   ? new Date(d).toLocaleString('th-TH', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   : '-';
 
-// รวมชื่อ-นามสกุลแอดมิน ถ้าไม่มีข้อมูล (เช่น บัญชีถูกลบไปแล้ว) ให้ขึ้น "ไม่ทราบชื่อ"
 const fullAdminName = (name, lastname) => (name ? `${name} ${lastname || ''}`.trim() : 'ไม่ทราบชื่อ');
 
-// แถวข้อมูล มีไอคอนวงกลมนำหน้า label กันดูรกและติดกันเกินไป (แพทเทิร์นเดียวกับ
-// CourseViewModal.jsx / AdminViewModal.jsx)
 const DetailRow = ({ icon, label, value }) => (
   <div className="view-detail-row">
     <div className="view-detail-label">
@@ -31,7 +22,6 @@ const DetailRow = ({ icon, label, value }) => (
   </div>
 );
 
-// การ์ดแสดงรูปภาพที่แนบมากับประกาศ (คลิกเพื่อดูขนาดเต็ม)
 const ImageGroup = ({ icon, label, value }) => {
   if (!value) return null;
   const names = value.split(',').filter(Boolean);

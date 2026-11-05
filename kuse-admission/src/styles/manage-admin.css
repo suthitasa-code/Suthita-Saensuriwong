@@ -420,6 +420,15 @@
     cursor: not-allowed;
 }
 
+/* จัดตำแหน่งปุ่มจัดการบัญชีให้ตรงกันทุกแถว
+   กันพื้นที่ไว้เท่ากับ 3 ปุ่ม แม้ Super Admin จะแสดงเพียง 2 ปุ่ม */
+.admin-action-group {
+    width: 118px;
+    justify-content: flex-start !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .action-view-detail {
     background: linear-gradient(135deg, #4fd1c5, #319795);
     box-shadow: 0 4px 10px rgba(49, 151, 149, 0.3);

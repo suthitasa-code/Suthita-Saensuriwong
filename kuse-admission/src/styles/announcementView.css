@@ -1,7 +1,3 @@
-/* ===== announcementView.css =====
-   สไตล์เฉพาะของ modal "ดูรายละเอียดประกาศ" (โหมดอ่านอย่างเดียว)
-   ใช้ .tcas-modal-overlay / .tcas-modal-box / .tcas-form-section ฯลฯ
-   ร่วมกับ manageTcas.css อยู่ (import แยกไว้เฉพาะคลาสที่เพิ่มใหม่) */
 
 .view-title-block {
   margin-bottom: 20px;

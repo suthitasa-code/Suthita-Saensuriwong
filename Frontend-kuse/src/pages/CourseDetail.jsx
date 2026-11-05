@@ -48,6 +48,7 @@ const CourseDetail = () => {
     setNotFound(false);
     setCourse(null);
 
+//ตรงนี้เป็นส่วนที่หน้าแสดงรายละเอียดหลักสูตรเรียกข้อมูลจาก Backend โดยใช้รหัสของหลักสูตร ได้รับข้อมูลมา ระบบจะเก็บข้อมูลไว้ในตัวแปร course
     const load = async () => {
       try {
         const res = await fetch(`${API_BASE}${ENDPOINTS.curriculums}/${id}`);

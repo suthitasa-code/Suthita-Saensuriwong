@@ -1,11 +1,7 @@
-/* ==========================================================================
-   💎 KUSE ADMISSION — MODERN FLOATING DASHBOARD (ตรงตาม Prototype 100%)
-   ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
-/* ===== CSS Variables ===== */
 :root {
     --side-gradient: linear-gradient(180deg, #800000 0%, #4a0000 100%);
     --kuse-gold: #D4AF37;
@@ -16,7 +12,6 @@
     --bg-page: #f4f7fe;
 }
 
-/* ===== Reset & Base ===== */
 *,
 *::before,
 *::after {
@@ -35,9 +30,6 @@ html,
     overflow-x: hidden;
 }
 
-/* ==========================================================================
-   🎯 เจาะจงแก้ฟอนต์ปุ่มกดทุกชนิด และกล่อง Modal แจ้งเตือน (เช่น ปุ่มยกเลิก / ยืนยัน)
-   ========================================================================== */
 button,
 input[type="button"],
 input[type="submit"],

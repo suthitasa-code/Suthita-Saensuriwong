@@ -1,11 +1,4 @@
 import '../styles/adminView.css';
-
-// ================================================================
-// Modal "ดูรายละเอียดผู้ดูแลระบบ" — โหมดดูอย่างเดียว ไม่มีฟอร์มให้แก้ไข
-// แยกออกมาจาก ManageAdmin.jsx เพื่อไม่ให้ไฟล์นั้นยาวเกิน (แพทเทิร์นเดียวกับ
-// AnnouncementViewModal.jsx / CourseViewModal.jsx)
-// ================================================================
-
 const formatDateTime = (d) => d
   ? new Date(d).toLocaleString('th-TH', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   : '-';

@@ -77,6 +77,15 @@ async function updateAdmin(id, adminData) {
 
   const validData = validateAdmin(adminData, true); // true = โหมดแก้ไขข้อมูล
 
+  // รองรับการเปลี่ยนเฉพาะ status เช่น Super Admin กดคืนสิทธิ์
+  validData.name = validData.name || currentAdmin.name;
+  validData.lastname = validData.lastname || currentAdmin.lastname;
+  validData.email = validData.email || currentAdmin.email;
+  validData.role = validData.role || currentAdmin.role;
+  if (adminData.status === undefined) {
+    validData.status = currentAdmin.status;
+  }
+
   if (validData.password) {
     // มีการตั้งรหัสผ่านใหม่เข้ามา -> เข้ารหัสใหม่ก่อนเก็บ
     validData.password = encryptPassword(validData.password);
@@ -118,7 +127,7 @@ async function loginAdmin(email, password) {
     throw error;
   }
 
-  const admin = await adminRepository.getAdminByEmail(String(email).trim());
+  const admin = await adminRepository.getAdminByEmail(String(email).trim(), true);
 
   // ข้อความ error ตั้งใจให้เหมือนกันทั้ง 2 กรณี (ไม่เจออีเมล / รหัสผ่านผิด)
   // กันไม่ให้คนร้ายเดาได้ว่าอีเมลนี้มีอยู่ในระบบจริงไหมจากข้อความ error
@@ -127,6 +136,12 @@ async function loginAdmin(email, password) {
 
   if (!admin) {
     throw wrongCredentialError;
+  }
+
+  if (Number(admin.status) !== 1) {
+    const suspendedError = new Error("เข้าสู่ระบบไม่สำเร็จ บัญชีของท่านถูกระงับการใช้งาน");
+    suspendedError.statusCode = 403;
+    throw suspendedError;
   }
 
   // ถอดรหัสผ่านที่เก็บไว้ออกมา แล้วเทียบกับรหัสผ่านที่พิมพ์เข้ามาตรงๆ

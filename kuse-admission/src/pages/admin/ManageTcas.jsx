@@ -4,16 +4,7 @@ import '../../styles/manageTcas.css';
 import AnnouncementViewModal from '../../components/AnnouncementViewModal';
 import { API_BASE, UPLOAD_URL, DEFAULT_APPLY_LINK, getLabelStatus, statusBadge, openImageLightbox } from '../../utils/tcasHelpers';
 
-// ================================================================
-// หน้านี้คือ "จัดการประกาศรับสมัคร" ใช้เพิ่ม/แก้ไข/ลบประกาศ TCAS
-// แต่ละรอบ แล้วดึงมาโชว์เป็นตาราง มีช่องค้นหา+กรองข้อมูลด้วย
-// (ตัว modal "ดูรายละเอียด" แบบอ่านอย่างเดียวแยกไปไว้ที่
-// components/AnnouncementViewModal.jsx กันไฟล์นี้ยาวเกินไป)
-// ================================================================
-
 const ADMIN_ID = localStorage.getItem('admin_id') || 1;
-
-// ค่าเริ่มต้นของฟอร์ม เวลากดปุ่ม "เพิ่มประกาศใหม่" จะรีเซ็ตฟอร์มกลับมาเป็นแบบนี้
 const emptyForm = {
   title: '',
   subtitle: '',
@@ -684,8 +675,8 @@ export default function ManageTcas() {
                       <input type="url" className="form-control filter-control" placeholder="เช่น https://student.mytcas.com"
                         value={form.applyLink} onChange={e => setForm(p => ({ ...p, applyLink: e.target.value }))} />
                       <small className="text-muted d-block mt-1">
-                        ใส่เมื่อรอบนี้ต้องสมัครผ่านเว็บอื่น (เช่น mytcas.com) แทนระบบรับสมัครปกติของ ม.เกษตรฯ —
-                        ถ้าเว้นว่างไว้ ปุ่ม "สมัครออนไลน์" ของประกาศนี้จะพาไปที่ลิงก์ด้านล่างแทน (ค่าเริ่มต้นของระบบ)
+                        ส่วนนี้เป็นช่องสำหรับระบุลิงก์สมัครออนไลน์ หากประกาศรอบนั้นมีการสมัครผ่านเว็บไซต์ภายนอก เช่น mytcas.com 
+                        ผู้ดูแลระบบสามารถนำลิงก์สมัครของรอบนั้นมาใส่ไว้ได้ แต่ถ้าไม่ได้ระบุลิงก์ ระบบจะใช้ลิงก์สมัครออนไลน์ของมหาวิทยาลัยเป็นค่าเริ่มต้นค่ะ
                       </small>
                       <small className="text-muted d-block">
                         ตอนนี้ปุ่มจะพาไปที่: <a href={form.applyLink || DEFAULT_APPLY_LINK} target="_blank" rel="noreferrer">{form.applyLink || DEFAULT_APPLY_LINK}</a>

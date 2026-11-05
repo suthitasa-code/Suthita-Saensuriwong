@@ -32,12 +32,8 @@ const Announcement = () => {
 
   const filters = useAnnouncementFilters(announcements);
   const { filteredAnnouncements, yearOptions, isFiltering } = filters;
-
-  // ปีการศึกษาล่าสุด อิงจากข้อมูลทั้งหมด  เพื่อให้ป้าย "ล่าสุด" 
   const latestYear = yearOptions[0];
 
-  // จัดกลุ่มประกาศตามปีการศึกษา เรียงปีล่าสุดขึ้นก่อน แล้วเรียงรอบ TCAS จากรอบล่าสุดไปเก่าสุด (4 -> 3 -> 2 -> 1)
-  // ในแต่ละปี ให้รอบที่เพิ่งเปิดล่าสุด (เลขรอบสูงสุด) เป็นการ์ดแรกเสมอ
   const groupedByYear = useMemo(() => {
     const groups = {};
     filteredAnnouncements.forEach((item) => {
@@ -54,8 +50,6 @@ const Announcement = () => {
       }));
   }, [filteredAnnouncements]);
 
-  // ตอนกำลังค้นหา/กรอง: โชว์การ์ดที่เจอทั้งหมดเรียงแถวเดียวกัน (แต่ละการ์ดมีป้ายปีการศึกษาอยู่แล้ว)
-  // ไม่ต้องแยกเป็นคนละ section ตามปีเหมือนมุมมองปกติ กันไม่ให้ต้องเลื่อนหาผลลัพธ์ปีอื่น
   const sortedFilteredAnnouncements = useMemo(
     () => [...filteredAnnouncements].sort((a, b) =>
       (Number(b.academicYear) || 0) - (Number(a.academicYear) || 0)

@@ -6,22 +6,14 @@ import axios from 'axios';
 import AdminViewModal from '../../components/AdminViewModal';
 import { API_BASE } from '../../config/api';
 
-// ================================================================
-// หน้านี้คือ "จัดการบัญชีผู้ดูแลระบบ" เฉพาะ Super Admin เท่านั้นที่เข้าได้
-// ใช้เพิ่ม/แก้ไข/ระงับสิทธิ์บัญชีแอดมินคนอื่น ๆ ในระบบ (ไม่มีปุ่มลบถาวรแล้ว)
-// ================================================================
 
 const ManageAdmin = () => {
-    // เช็คสิทธิ์จาก localStorage ว่าคนที่ล็อกอินอยู่ตอนนี้เป็น Super Admin ไหม
-    // ถ้าไม่ใช่ จะโดนกันไม่ให้เพิ่ม/แก้/ระงับสิทธิ์ใคร (ดูได้อย่างเดียว)
     const currentAdminRole = localStorage.getItem('admin_role') || 'Admin';
     const isSuperAdmin = currentAdminRole === 'Super Admin';
-
     const [admins, setAdmins] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [showModal, setShowModal] = useState(false);
-    const [viewAdmin, setViewAdmin] = useState(null); // แอดมินที่กำลังเปิดดูรายละเอียดแบบอ่านอย่างเดียว (null = ไม่ได้เปิด)
+    const [viewAdmin, setViewAdmin] = useState(null); 
     const [isEditMode, setIsEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
@@ -494,7 +486,7 @@ const ManageAdmin = () => {
                                                 )}
                                             </td>
                                             <td className="text-center">
-                                                <div className="d-flex justify-content-center gap-2">
+                                                <div className="d-flex justify-content-center gap-2 admin-action-group">
                                                     {isSuperAdmin && (
                                                         <button className="admin-action-btn action-view-detail" onClick={() => setViewAdmin(admin)} title="ดูรายละเอียด">
                                                             <i className="fas fa-eye"></i>
@@ -503,24 +495,26 @@ const ManageAdmin = () => {
                                                     <button className="admin-action-btn action-edit" onClick={() => handleOpenEditModal(admin)} title="แก้ไขข้อมูล">
                                                         <i className="fas fa-edit"></i>
                                                     </button>
-                                                    {isActive ? (
-                                                        <button
-                                                            className="admin-action-btn action-suspend"
-                                                            onClick={() => handleSuspend(admin)}
-                                                            disabled={!isSuperAdmin}
-                                                            title="ระงับการใช้งานบัญชี"
-                                                        >
-                                                            <i className="fas fa-user-slash"></i>
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            className="admin-action-btn action-restore"
-                                                            onClick={() => handleRestore(admin)}
-                                                            disabled={!isSuperAdmin}
-                                                            title="คืนสิทธิ์การใช้งานบัญชี"
-                                                        >
-                                                            <i className="fas fa-user-check"></i>
-                                                        </button>
+                                                    {!isSuper && (
+                                                        isActive ? (
+                                                            <button
+                                                                className="admin-action-btn action-suspend"
+                                                                onClick={() => handleSuspend(admin)}
+                                                                disabled={!isSuperAdmin}
+                                                                title="ระงับการใช้งานบัญชี"
+                                                            >
+                                                                <i className="fas fa-user-slash"></i>
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="admin-action-btn action-restore"
+                                                                onClick={() => handleRestore(admin)}
+                                                                disabled={!isSuperAdmin}
+                                                                title="คืนสิทธิ์การใช้งานบัญชี"
+                                                            >
+                                                                <i className="fas fa-user-check"></i>
+                                                            </button>
+                                                        )
                                                     )}
                                                 </div>
                                             </td>

@@ -21,14 +21,14 @@ const curriculumController = {
 
   createCurriculum: async (req, res, next) => {
     try {
-      const result = await curriculumService.createCurriculum(req.body, req.files);
+      const result = await curriculumService.createCurriculum(req.body, req.files, req.admin.adminID);
       res.status(201).json({ message: "Created!", id: result.insertId });
     } catch (err) { next(err); }
   },
 
   updateCurriculum: async (req, res, next) => {
     try {
-      await curriculumService.updateCurriculum(req.params.id, req.body, req.files);
+      await curriculumService.updateCurriculum(req.params.id, req.body, req.files, req.admin.adminID);
       res.json({ message: "Updated!" });
     } catch (err) { next(err); }
   },

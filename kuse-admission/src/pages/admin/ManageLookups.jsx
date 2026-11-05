@@ -4,23 +4,15 @@ import axios from 'axios';
 import { API_BASE } from '../../config/api';
 import '../../styles/manageLookups.css';
 
-// ================================================================
 // หน้านี้คือ "จัดการตัวเลือกระบบ" เฉพาะ Super Admin เท่านั้นที่แก้ไขได้
 // ใช้คุมรายชื่อที่โผล่เป็น dropdown ในฟอร์มอื่นๆ (รอบ TCAS / ระดับการศึกษา / ประเภทหลักสูตร)
-// โดยไม่ต้องแก้โค้ดแล้ว deploy ใหม่ทุกครั้งที่มีรอบ/ระดับ/ประเภทใหม่เพิ่มมา
-// ================================================================
 
-
-// แท็บหมวดที่จัดการได้ ต้องตรงกับค่า category ที่ backend รู้จัก (lookup.repository.js -> CATEGORIES)
-// namePlaceholder ตั้งใจให้ต่างกันแต่ละหมวด กันคนพิมพ์ตัวอย่างของหมวดอื่นมาใส่ผิดที่
 const TABS = [
     { key: 'tcas_round', label: 'รอบ TCAS', icon: 'fas fa-bullhorn', hasIconColor: false, namePlaceholder: 'เช่น รอบที่ 5 รับตรงพิเศษ' },
     { key: 'degree_level', label: 'ระดับการศึกษา', icon: 'fas fa-user-graduate', hasIconColor: false, namePlaceholder: 'เช่น ประกาศนียบัตรบัณฑิต' },
     { key: 'curriculum_type', label: 'ประเภทหลักสูตร', icon: 'fas fa-graduation-cap', hasIconColor: true, namePlaceholder: 'เช่น หลักสูตรวิศวกรรมศาสตรบัณฑิต (วศ.บ.)' },
 ];
 
-// ไอคอนให้เลือกสำหรับ "ประเภทหลักสูตร" คัดมาแค่ที่ใช้บ่อยกับหมวดวุฒิ/สาขาระดับกว้างๆ
-// (ไอคอนเฉพาะทางแยกย่อยของแต่ละสาขา เช่น สาขาโยธา/ไฟฟ้า อยู่ในฟอร์ม "จัดการหลักสูตร" อยู่แล้ว คนละจุดกัน)
 const ICON_CHOICES = [
     'fas fa-hard-hat',
     'fas fa-flask',

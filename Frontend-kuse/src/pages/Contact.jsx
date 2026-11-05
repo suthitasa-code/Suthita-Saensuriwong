@@ -94,7 +94,7 @@ const Contact = () => (
     <div className="social-follow-section">
       <div className="social-follow-title">
         <h2>ติดตามเราได้ทุกช่องทาง</h2>
-        <p>ไม่พลาดทุกข่าวสาร ประกาศรับสมัคร และกิจกรรมของคณะ</p>
+        <p>ช่องทางการติดตามข่าวสารของคณะ ได้แก่ Facebook, Instagram และ TikTok ซึ่งผู้ใช้งานสามารถกดเข้าสู่ช่องทางต่าง ๆ ได้โดยตรงค่ะ</p>
       </div>
       <div className="row g-4">
         {SOCIAL_LINKS.map((s) => (

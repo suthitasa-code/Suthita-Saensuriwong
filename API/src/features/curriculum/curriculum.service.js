@@ -1,8 +1,9 @@
 const curriculumRepository = require("./curriculum.repository");
 
 const curriculumService = {
-  createCurriculum: async (body, files) => {
+  createCurriculum: async (body, files, adminID) => {
     const data = { ...body };
+    data.adminID = adminID;
 
     // จัดการไฟล์อัปโหลด (รูปหน้าปก, รูปเสื้อช็อป, ไฟล์ PDF)
     if (files) {
@@ -17,7 +18,7 @@ const curriculumService = {
     return await curriculumRepository.create(data);
   },
 
-  updateCurriculum: async (id, body, files) => {
+  updateCurriculum: async (id, body, files, adminID) => {
     const updateData = {};
 
     // adminID ที่ frontend ส่งมาตอนแก้ไข คือคนที่ "กำลังแก้ไขอยู่ตอนนี้" ไม่ใช่คนสร้าง
@@ -30,8 +31,8 @@ const curriculumService = {
         updateData[key] = body[key];
       }
     });
-    if (body.adminID) {
-      updateData.updatedBy = body.adminID;
+    if (adminID) {
+      updateData.updatedBy = adminID;
       updateData.updatedAt = new Date();
     }
 

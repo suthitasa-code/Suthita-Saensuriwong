@@ -8,7 +8,7 @@ import ManageCourse from './pages/admin/Managecourse'
 import ManageBanner from './pages/admin/ManageBanner'
 import ManageCourseBanner from './pages/admin/ManageCourseBanner'
 import ManageDocument from './pages/admin/ManageDocument' 
-import ManageAdmin from './pages/admin/ManageAdmin' // 👑 แทรกนำเข้าหน้าจัดการบัญชีผู้ดูแลระบบตัวใหม่
+import ManageAdmin from './pages/admin/ManageAdmin' 
 import ManageLookups from './pages/admin/ManageLookups'
 
 function App() {

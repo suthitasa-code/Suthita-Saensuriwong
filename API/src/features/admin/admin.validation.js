@@ -21,9 +21,11 @@ function validateRequired(value, fieldName) {
 }
 
 function validateAdmin(data, isUpdate = false) {
-  validateRequired(data.name, "name");
-  validateRequired(data.lastname, "lastname");
-  validateRequired(data.email, "email");
+  if (!isUpdate) {
+    validateRequired(data.name, "name");
+    validateRequired(data.lastname, "lastname");
+    validateRequired(data.email, "email");
+  }
 
   // จะบังคับตรวจสอบรหัสผ่านเฉพาะตอนลงทะเบียน Admin ใหม่เท่านั้น
   if (!isUpdate) {
@@ -41,11 +43,15 @@ function validateAdmin(data, isUpdate = false) {
 
   // เคลียร์และกรองสเปซหน้า-หลังของข้อมูลให้สะอาด
   const cleanedData = {
-    name: String(data.name).trim(),
-    lastname: String(data.lastname).trim(),
-    email: String(data.email).trim(),
-    role: data.role ? String(data.role).trim() : 'Admin',
-    status: data.status !== undefined ? Number(data.status) : 1
+    name: data.name !== undefined ? String(data.name).trim() : undefined,
+    lastname: data.lastname !== undefined ? String(data.lastname).trim() : undefined,
+    email: data.email !== undefined ? String(data.email).trim() : undefined,
+    role: data.role !== undefined
+      ? String(data.role).trim()
+      : (isUpdate ? undefined : 'Admin'),
+    status: data.status !== undefined
+      ? Number(data.status)
+      : (isUpdate ? undefined : 1)
   };
 
   // แนบรหัสผ่านเข้าไปหากพบว่าฝั่งหน้าบ้านส่งค่าชุดใหม่มา

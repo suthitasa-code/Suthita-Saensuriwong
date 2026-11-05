@@ -3,7 +3,7 @@ import Swal from '../utils/swal';
 import { API_BASE } from '../config/api';
 import '../styles/manageBanner.css';
 
-// 🌟 กล่องจัดการแบนเนอร์แบบใช้ซ้ำได้ — ควบคุมด้วย pageTarget ว่าเป็นแบนเนอร์ของหน้าไหน
+//  กล่องจัดการแบนเนอร์แบบใช้ซ้ำได้ — ควบคุมด้วย pageTarget ว่าเป็นแบนเนอร์ของหน้าไหน
 // (เช่น 'home' = หน้าแรก, 'curriculum' = หน้ารวมหลักสูตร) ข้อมูลเก็บรวมกันในตาราง
 // carouselbanner เดียวกัน แต่แต่ละหน้าแอดมินจะเห็น/แก้ไขเฉพาะแบนเนอร์ของ pageTarget ตัวเองเท่านั้น
 const API_BASE_URL = `${API_BASE}/api/carouselbanner`;

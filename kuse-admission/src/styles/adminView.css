@@ -1,8 +1,3 @@
-/* ===== adminView.css =====
-   สไตล์เฉพาะของ modal "ดูรายละเอียดผู้ดูแลระบบ" (โหมดอ่านอย่างเดียว)
-   ใช้ .style-modal-custom / .badge-role / .admin-status-badge ร่วมกับ
-   manage-admin.css อยู่แล้ว (import แยกไว้เฉพาะคลาสที่เพิ่มใหม่)
-   เพิ่มแถบไล่สีทอง-แดงด้านบนการ์ด (ลายเซ็นของระบบ ใช้ทั่วทั้งแอป) ให้เข้าชุดกับหน้าอื่น */
 
 .admin-view-card {
   position: relative;
