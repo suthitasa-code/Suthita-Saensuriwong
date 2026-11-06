@@ -93,7 +93,7 @@ npm install
 
 ## 7. วิดีโอแนะนำโครงงาน (Project Presentation)
 
-[รับชมวิดีโอแนะนำโครงงาน KUSE Admission](ใส่ลิงก์ YouTube ที่นี่)
+[รับชมวิดีโอแนะนำโครงงาน KUSE Admission](https://youtu.be/eGpJwdAFq8I)
 
 ## 8. ผู้พัฒนา (Developer)
 
